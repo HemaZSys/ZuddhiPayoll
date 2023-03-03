@@ -1,0 +1,18 @@
+<table border="1">
+
+            <tr>
+            </tr>
+            @for (int i = 0; i < Form80Settingclist.Count(); i++)
+            {
+                if (section != Form80Settingclist[i].Section)
+                {
+                    <tr>
+                        <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].Section)</th>
+                        <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].SectionName)</th>
+                        <th>Decared Amount in Rs.</th>
+                        <th>Proof Submission in Rs.</th>
+                        <th>Proof Upload</th>
+                    </tr>
+
+                    section = Form80Settingclist[i].Section;
+                }

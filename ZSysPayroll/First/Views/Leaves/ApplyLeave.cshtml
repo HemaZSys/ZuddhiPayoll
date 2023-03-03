@@ -1,0 +1,412 @@
+﻿@model First.Models.EmployeeLeave
+@{
+    ViewBag.Title = "Apply Leave";
+    List<First.Models.Empalldropdown> leavetypelist = ViewBag.Leaveslist;
+    List<First.Models.Empalldropdown> AllEmployeeList = ViewBag.AllEmployeeList;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+
+
+
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .card-layout1 {
+            background: #fff;
+            box-shadow: 0 0 6px #340452;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 2%;
+            background: #dbaaef30;
+            margin: 0;
+        }
+
+        .registerbtn a, .registerbtn a:visited {
+            color: #fff !important;
+        }
+
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            padding: 5px 0px 0px 0px;
+            margin-left: 400px;
+            margin-right: 400px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 3px 5px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 50%;
+            border: 1px solid #fff;
+        }
+
+        th, td {
+            width:auto;
+            text-align: center;
+            padding: 5px 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            padding: 5px 0px 0px 0px;
+        }
+
+
+        #empList {
+            margin-left: 20px;
+            padding: 2px;
+        }
+
+        .glyphicon-pencil {
+            font-weight: bold;
+            color: #ffeb00;
+        }
+
+        .glyphicon-trash {
+            color: red;
+        }
+
+        .fa-calculator {
+            color: #4fe12b;
+        }
+
+        .bottomborder, .bottomborder td {
+            border-bottom: 2px solid black;
+        }
+
+        .row {
+            padding: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    @using (Html.BeginForm("ApplyLeave", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div>          
+                <div id="EmployeeDetail" class=" row card-layout1">
+                    @if (Model.ReportingmanagerId == Model.Id)
+                    {
+                        <div class="heading">Approve Leave</div>
+                    }
+                    else
+                    {
+                        <div class="heading">Apply Leave</div>
+                    }
+                    @*<div class="col-lg-12 row">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Employee Name</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @readonly = "true" })
+                        @Html.HiddenFor(m => m.EmpId, new { @class = "form-control" })
+                        @Html.HiddenFor(m => m.Id, new { @class = "form-control" })
+                        @Html.HiddenFor(m => m.sessionId, new { @class = "form-control" })
+                        @Html.HiddenFor(m => m.LeaveId, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Select the leaves type</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.DropDownListFor(e => e.LeaveType, new SelectList(leavetypelist, "Id", "description"), new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Select the starting date of leave(s)</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(model => model.startDate, new { @class = "form-control", @type = "date", @Value = Model.startDate.ToString("yyyy-MM-dd"), id = "start_date", onchange = "daysDifference()" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Select the Ending date of leave(s)</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "date", @Value = Model.EndDate.ToString("yyyy-MM-dd"), id = "end_date", onchange = "daysDifference()" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Reason for leave</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextAreaFor(m => m.LeaveReason, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Leave Balance</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(m => m.LeaveBalance, new { @class = "form-control", @readonly = "true" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>No. of Leave</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(m => m.NoOfDays, new { @class = "form-control", id = "days" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Leave Status</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(m => m.LeaveStatus, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 lblCaption">
+                        <b>Reporting Manager</b>
+                    </div>
+                    <div class="col-lg-6 formInput">
+                        @Html.TextBoxFor(e => e.Reportingmanager, new { @class = "form-control", @readonly = "true" })
+                        @Html.HiddenFor(m => m.ReportingmanagerId, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                @if (Model.ReportingmanagerId == Model.Id)
+                {
+                    <div class="row">
+                        <div class="col-lg-6 lblCaption">
+                            <b>Approve / Reject</b>
+                        </div>
+                        <div class="alignContainer" style="margin-top: 15px;">
+                            @Html.RadioButtonFor(e => e.ApproveAction, "Approved", "Approved" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Approve </span>
+                            @Html.RadioButtonFor(e => e.ApproveAction, "Rejected", "Rejected" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Reject </span>
+                            @Html.RadioButtonFor(e => e.ApproveAction, "Pending", "Pending" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : new { Checked = "checked" })<span>&nbsp; Pending </span>
+                        </div>
+                    </div>
+                }
+                <div class="col-lg-2">
+                    @if (Model.ReportingmanagerId == Model.Id)
+                    {
+                        <button type="submit" class="btn bg-gradient-success toastsDefaultSuccess" style="float: right;">Approve</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn bg-gradient-success toastsDefaultSuccess" style="float: right;">Apply</button>
+                    }
+                </div>
+            </div>
+
+        </div>*@
+                    <table class="table  table-bordered table-hover table-responsive" id="tblLeaveSetting">
+                        @*<thead>
+
+                <tr>
+                    <th>S.No</th>
+                    <th>Leave Descriptiom</th>
+                    <th>No. of Days</th>
+                </tr>
+
+            </thead>*@
+                        <tbody>
+
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Employee Name</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(m => m.EmpName, new { @class = "form-control", @readonly = "true" })
+                                    @Html.HiddenFor(m => m.EmpId, new { @class = "form-control" })
+                                    @Html.HiddenFor(m => m.Id, new { @class = "form-control" })
+                                    @Html.HiddenFor(m => m.sessionId, new { @class = "form-control" })
+                                    @Html.HiddenFor(m => m.LeaveId, new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Select the leaves type</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DropDownListFor(e => e.LeaveType, new SelectList(leavetypelist, "Id", "description"), new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Select the starting date of leave(s)</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(model => model.startDate, new { @class = "form-control", @type = "date", @Value = Model.startDate.ToString("yyyy-MM-dd"), id = "start_date", onchange = "daysDifference()" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Select the Ending date of leave(s)</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "date", @Value = Model.EndDate.ToString("yyyy-MM-dd"), id = "end_date", onchange = "daysDifference()" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Reason for leave</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextAreaFor(m => m.LeaveReason, new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Leave Balance</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(m => m.LeaveBalance, new { @class = "form-control", @readonly = "true" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>No. of Leave</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(m => m.NoOfDays, new { @class = "form-control", id = "days" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Leave Status</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(m => m.LeaveStatus, new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            <tr class="info">
+                                <td style="text-align: left; width: 350px;">
+                                    <b>Reporting Manager</b>
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.TextBoxFor(e => e.Reportingmanager, new { @class = "form-control", @readonly = "true" })
+                                    @Html.HiddenFor(m => m.ReportingmanagerId, new { @class = "form-control" })
+                                </td>
+                            </tr>
+                            @if (Model.ReportingmanagerId == Model.Id)
+                            {
+                                <tr class="info">
+                                    <td style="text-align: left; width: 350px;">
+                                        <b>Approve / Reject</b>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        @Html.RadioButtonFor(e => e.ApproveAction, "Approved", "Approved" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Approve </span>
+                                        @Html.RadioButtonFor(e => e.ApproveAction, "Rejected", "Rejected" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Reject </span>
+                                        @Html.RadioButtonFor(e => e.ApproveAction, "Pending", "Pending" == Model.ApproveAction.Trim() ? new { Checked = "checked" } : new { Checked = "checked" })<span>&nbsp; Pending </span>
+                                    </td>
+                                </tr>
+                            }
+                        <tr>
+                            @if (Model.ReportingmanagerId == Model.Id)
+                            {
+                            <td colspan="2" style="padding:10px;text-align:center;border:1px solid #fff !important;">                                
+                                <button type="submit" class="btn btn-primary" style="width: 70px;margin:15px 0px -15px 0px;background:#733e95;">Approve</button>
+                            </td>
+                            }
+                else
+                {
+                        <td colspan="2" style="padding:10px;text-align:center;border:1px solid #fff !important;">
+                            <button type="submit" class="btn btn-primary" style="width: 70px;margin:15px 0px -15px 0px;background:#733e95;">Apply</button>                           
+                        </td>
+                }
+                            </tr>
+                        </tbody>
+                    </table>
+                    @*<div>
+                        @if (Model.ReportingmanagerId == Model.Id)
+                        {
+                            <button type="submit" class="btn bg-gradient-success toastsDefaultSuccess" style="float: right;">Approve</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn bg-gradient-success toastsDefaultSuccess" style="float: right;">Apply</button>
+                        }
+                    </div>*@
+                </div>            
+        </div>
+    }
+</body>
+</html>
+
+<script src="~/Js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window.onload = window.history.forward(0);
+        checkLogin();
+        daysDifference();
+       
+    });
+    function daysDifference() {
+
+        var start_date = new Date(document.getElementById('start_date').value);
+        var end_date = new Date(document.getElementById('end_date').value);
+
+        var date1 = new Date(start_date);
+        var date2 = new Date(end_date);
+
+        //Here we will use getTime() function to get the time difference
+        var time_difference = date2.getTime() - date1.getTime();
+        //Here we will divide the above time difference by the no of miliseconds in a day
+        var days_difference = time_difference / (1000 * 3600 * 24);
+        //alert(days);
+        days_difference = days_difference + 1;
+        document.getElementById('days').value = days_difference;
+    }
+    
+    
+</script>
+
+

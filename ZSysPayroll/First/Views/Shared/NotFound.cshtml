@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "NotFound";
+}
+
+<div style="background-color: #A52A2A; color: White; height: 10px;">
+</div>
+<div style="background-color: #F5F5DC; color: White; height: 170px;">
+    <div style=" padding:20px;">
+        <h3>
+            Application Error:
+        </h3>
+        <h4>
+            Sorry, The Page, You are Looking for is not found.
+        </h4>
+        @*<h6>@Html.ActionLink("Go Back To Home Page", "Index", "Home")</h6>*@
+        <br />
+        <br />
+        <div class="col-lg-6">
+            @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+            {
+                @Html.ActionLink("Go Back To Home Page", "Details", "Employee")
+            }
+            else
+            {
+                @Html.ActionLink("Go Back To Home Page", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)
+            }
+        </div>
+    </div>
+</div>
+<div style="background-color: #A52A2A; color: White; height: 20px;">
+</div>

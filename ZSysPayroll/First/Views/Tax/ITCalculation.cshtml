@@ -1,0 +1,584 @@
+﻿@model First.Models.Form80CHeader
+@{
+    ViewBag.Title = "ITCalculation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    List<First.Models.PayslipGradeEntry> PayslipGradeEntryList = ViewBag.payslips as List<First.Models.PayslipGradeEntry>;
+    First.Models.TaxCalculation taxCalculation = ViewBag.taxcalculations as First.Models.TaxCalculation;
+}
+
+<style>
+    .card-body {
+        background: #fff;
+        padding: 30px;
+    }
+
+    th, td {
+        text-align: center;
+        width: 100px;
+    }
+
+    .logout {
+        margin-top: 8px;
+        margin-right: 10px;
+    }
+
+        .logout:hover {
+            font-weight: bold;
+            color: yellow;
+        }
+
+    #datatable-buttons td, #datatable-buttons th {
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+
+    #tblCalculation td {
+        text-align: right;
+        margin-right: 30px;
+    }
+
+        #tblCalculation td:first-child, #datatable-buttons td:first-child {
+            text-align: left;
+            margin-left: 30px;
+        }
+
+    .monthwisetax {
+        width: 25%;
+        margin-bottom: 30px;
+    }
+
+        .monthwisetax td:first-child {
+            width: 75%;
+        }
+
+        .monthwisetax td {
+            padding: 5px;
+            border: 2px solid #733e95;
+        }
+
+        .monthwisetax tr:nth-child(2n+1) {
+            background: #fff;
+            color: #000;
+        }
+
+        .monthwisetax th {
+            padding: 5px;
+            font-size: 18px;
+            border: 2px solid #733e95;
+            font-weight: bold;
+            background: #733e95;
+            color: #fff;
+        }
+
+    #showTax {
+    }
+
+    .clsRegime {
+        margin-left: 30px;
+        border: 3px solid black;
+        padding: 10px;
+        width: 96%;
+        margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+        padding: 5px;
+    }
+    #txt_AvancepaiIncometax {
+        text-align: right;
+        background: #f9f9f9;
+        border-color: 4;
+        font-weight: bold;
+        border: 0px;
+    }
+
+</style>
+
+<body>
+    <div class="container-fluid row">
+        @using (Html.BeginForm("ITCalculation", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="col-12">
+                <div class="container-fluid card" style="margin-bottom:2rem">
+                    <div class="card-body">
+                        <h2 class="mt-0 header-title" style="text-align:center;"><b>Tax Calculation - Submission</b></h2>
+                        <u><h3 class="mb-3" style="text-align:center;"> Statement of Income Tax Calculation for the Year 2021-22</h3></u>
+                        <br />
+                        <div class="col-lg-12 row">
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Employee Name</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p class="clsUser" style="display:none">@Html.DisplayFor(Model => Model.EmployeeName)</p>
+                                        <select class="clsAdmin" style="display:none" id="empNames">
+                                            @foreach (var employee in Employeelist)
+                                            {
+                                                <option value="@employee.Id">@employee.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Employee No.</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.Employeeid)</p>
+                                        <p>@Html.Hidden("txt_Employeeid", Model.Empid, new { @readonly = "readonly" })</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Gender</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.Gender)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Designation</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.DesignationName)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Department</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.DepartmentName)</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Grade</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.GradeName)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Residential Address</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.Address)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>Bank Ac no.</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.Bankacno)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>PF Ac no.</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.PFAccountNo)</p>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p><b>PAN</b></p>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>@Html.DisplayFor(Model => Model.PAN)</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th colspan="8">
+                                        <h5 style="float:left"><b>Income Details</b></h5>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @for (int i = 0; i < PayslipGradeEntryList.Count(); i++)
+                                {
+
+                                    <tr>
+                                        <td class="dt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthYear.ToString().Split(' ')[0]) </td>
+                                        <td class="des">  @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].Description)</td>
+                                        <td class="amt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthlyAmount)  </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+
+
+                        <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Income from Salary</th>
+                                    <th>Deductions from Salary</th>
+                                    <th>Income from Other sources</th>
+                                    <th>Deductions from Other sources</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningpayslip))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionpayslip))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningform80))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80))</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Particulars</th>
+                                    <th>Old Tax Regime (Rs)</th>
+                                    <th>New Tax Regime (Rs)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tax Slab (OLD)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>0 to 2.5 Lakh</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxone))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>2.5 to 5 Lakh at 5%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxtwo))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>5 Lakh to 10 Lakh at 20%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxthree))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Greater than 10 Lakh at 30%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxfour))</td>
+                                    <td>-</td>
+                                </tr>
+
+
+                                <tr>
+                                    <td>Greater than Tax Slab (NEW)</td>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                                <tr>
+                                    <td>0 to 5 Lakh</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxone))</td>
+                                </tr>
+                                <tr>
+                                    <td>2.5 to 5 Lakh at 5%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxtwo))</td>
+                                </tr>
+                                <tr>
+                                    <td>5 to 7.5 Lakh at 10%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxthree))</td>
+                                </tr>
+                                <tr>
+                                    <td>7.5 Lakh to 10 Lakh at 15%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfour))</td>
+                                </tr>
+                                <tr>
+                                    <td>10 Lakh to 12.5 Lakh at 20%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfive))</td>
+                                </tr>
+                                <tr>
+                                    <td>12.5 Lakh to 15 Lakh at 25%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxsix))</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Greater than 15 Lakh at 30%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxseven))</td>
+                                </tr>
+                                <tr>
+                                    <th><b>Income Tax</b></th>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTotalTax))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.TotalTax))</td>
+                                </tr>
+
+                                <tr>
+                                    <th><b>Cess at 4%</b></th>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldEducationcess))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Educationcess))</td>
+                                </tr>
+                                <tr>
+                                    <th><b>Total Tax Outgo</b></th>
+                                    <td id="oldTax">@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxOutGo))</td>
+                                    <td id="newTax">
+                                        @Html.LabelForModel(Convert.ToString(taxCalculation.TaxOutGo))
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="3" style="text-align:right">Total Tax paid till now : 
+                                        @Html.Hidden("txt_OldTaxOutGo", taxCalculation.OldTaxOutGo, new { @readonly = "readonly" })
+                                        @Html.Hidden("txt_TaxOutGo", taxCalculation.TaxOutGo, new { @readonly = "readonly" })
+                                        @Html.TextBox("txt_AvancepaiIncometax", Convert.ToString(taxCalculation.AvancepaiIncometax), new { @readonly = "readonly" })
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <p style="padding:10px;">Under both income tax regimes, tax rebate of up to Rs 12,500 is available to an individual taxpayer under section 87A of the Income-tax Act, 1961. This would effectively mean that individuals having net taxable income of up to Rs 5 lakh would not pay any income tax irrespective of the tax regime chose by them.</p>
+                </div>
+                <div class="clsRegime">
+                    <span style="margin-bottom:10px;font-weight:bold">Select Regime Type: </span><br />
+                    @Html.RadioButton("rdo_oldORnewRegime", "0", taxCalculation.isOldRegimeSelected) <span>Old Regime | </span>
+                    @Html.RadioButton("rdo_oldORnewRegime", "1", taxCalculation.isNewRegimeSelected) <span> New Regime </span>&nbsp;&nbsp;&nbsp;
+                    <input type="submit" value="Submit" class="btnRegister" />
+                </div>
+                <div id="showTax">
+
+                </div>
+            </div>
+            <!-- end col -->
+        }
+    </div>
+</body>
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        checkLogin();
+
+
+
+        if (decrypt($("#userPrivilege").html()) == "Admin") {
+
+            $('.clsUser').each(function (i, obj) {
+                $(this).hide();
+            });
+            $('.clsAdmin').each(function (i, obj) {
+                $(this).show();
+            });
+        }
+        else {
+            $('.clsUser').each(function (i, obj) {
+                $(this).show();
+            });
+
+            $('.clsAdmin').each(function (i, obj) {
+                $(this).hide();
+            });
+        }
+
+
+
+        var tmpURL = document.location.href.split("/");
+        tmpURL = tmpURL[tmpURL.length - 1];
+        $("#empNames").val(tmpURL);
+
+        formatIncome("datatable-buttons");
+
+        var fltTaxAmt = $("#newTax").html().split(">")[1].split(">")[0];
+
+        while (fltTaxAmt.indexOf(",") > -1)
+            fltTaxAmt = fltTaxAmt.replace(",", "");
+        fltTaxAmt = parseFloat(fltTaxAmt);
+
+        fltTaxAmt = Math.ceil(fltTaxAmt);
+        $("#newTax").html("<label for>" + fltTaxAmt.toFixed(2) + "</label>");
+
+        var oldfltTaxAmt = $("#oldTax").html().split(">")[1].split(">")[0];
+        while (oldfltTaxAmt.indexOf(",") > -1)
+            oldfltTaxAmt = oldfltTaxAmt.replace(",", "");
+        oldfltTaxAmt = parseFloat(oldfltTaxAmt);
+        oldfltTaxAmt = Math.ceil(oldfltTaxAmt);
+        $("#oldTax").html("<label for>" + oldfltTaxAmt.toFixed(2) + "</label>");
+        //alert(fltTaxAmt);
+
+        var itPaidTillDate = $("#txt_AvancepaiIncometax").val();
+        var finalTaxableAmt;
+
+        if (fltTaxAmt > oldfltTaxAmt) {
+            finalTaxableAmt = oldfltTaxAmt;
+            $("#newTax").css("background-color", "pink");
+            $("#oldTax").css("background-color", "lightgreen");
+        }
+        else {
+            finalTaxableAmt = fltTaxAmt;
+            $("#newTax").css("background-color", "lightgreen");
+            $("#oldTax").css("background-color", "pink");
+        }
+
+        if (finalTaxableAmt > itPaidTillDate) {
+            projectTax(fltTaxAmt, 6, itPaidTillDate);
+        }
+
+
+        $("#empNames").change(function () {
+            //alert($("#empNames").val())
+            var tmpURL = document.location.href;
+            //alert(tmpURL)
+            tmpURL = tmpURL.split("ITCalculation")[0]
+            document.location.href = tmpURL + "ITCalculation/" + $("#empNames").val();
+        });
+    });
+
+
+
+    function formatIncome(tblName) {
+        var itemsCount = $(".dt").length;
+        //alert(itemsCount);
+        //alert($(".des").length);
+        //alert($(".amt").length);
+        var line = "";
+        var header = "<th>INCOME</th>";
+        var rowitem = "";
+        var rowitems = "";
+        var rowTotal = 0;
+        var TaxableIncome = 0;
+        var colCnt = 0;
+
+
+
+        for (var i = 0; i < itemsCount; i++) {
+            if (line != $($(".dt")[i]).html()) {
+                if (header.indexOf($($(".des")[i]).html()) == -1) {
+                    header += "<th>" + $($(".des")[i]).html() + "</th>";
+                    colCnt++;
+                }
+
+                if (i != 0) {
+                    rowitems += "<tr><td style='text-align:right;padding-right:10px;'>" + formatMonthYear($($(".dt")[i - 1]).html()) + "</td>"
+                        + rowitem + "<td style='text-align:right;padding-right:10px;'><b>" + (rowTotal).toFixed(2) + "</b></td></tr>";
+                    rowitem = "";
+                    TaxableIncome += rowTotal;
+                    //alert(TaxableIncome + " : " + rowTotal);
+                    rowTotal = 0;
+                }
+                rowitem += "<td style='text-align:right;padding-right:10px;'>" + formatAmount($($(".amt")[i]).html()) + "</td>";
+                var tmpAmt = $($(".amt")[i]).html();
+                tmpAmt = tmpAmt.replaceAll(",", "");
+                rowTotal += parseFloat(tmpAmt);
+            }
+            else {
+                if (header.indexOf($($(".des")[i]).html()) == -1) {
+                    header += "<th>" + $($(".des")[i]).html() + "</th>";
+                    colCnt++;
+                }
+
+                rowitem += "<td style='text-align:right;padding-right:10px;'>" + formatAmount($($(".amt")[i]).html()) + "</td>";
+                var tmpAmt = $($(".amt")[i]).html();
+                tmpAmt = tmpAmt.replaceAll(",", "");
+                rowTotal += parseFloat(tmpAmt);
+
+
+            }
+            line = $($(".dt")[i]).html();
+
+            if (i == (itemsCount - 1)) {
+                rowitems += "<tr><td style='text-align:right;padding-right:10px;'>" + formatMonthYear($($(".dt")[i - 1]).html()) + "</td>"
+                    + rowitem + "<td style='text-align:right;padding-right:10px;'><b>" + (rowTotal).toFixed(2) + "</b></td></tr>";
+                TaxableIncome += rowTotal;
+                //alert(TaxableIncome + " : " + rowTotal);
+            }
+        }
+
+
+
+
+
+        header = "<tr>" + header + "<th>Total</th></tr>";
+        rowitems += "<tr><td colspan='" + (colCnt + 1) + "' style='text-align:right;padding-right:10px;'>Taxable Income</td>"
+            + "<td style='font-weight:bold;text-align:right;padding-right:10px;' id='tdTaxableIncome'>" + (TaxableIncome).toFixed(2) + "</td>";
+        $("#" + tblName).html(header + rowitems);
+
+
+
+    }
+
+
+
+    function formatMonthYear(strDt) {
+        var monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var MonYear = strDt.substring(4);
+        //alert(MonYear);
+        MonYear = monthShort[parseInt(MonYear.split("-")[0]) - 1] + "-" + MonYear.split("-")[1];
+        return MonYear;
+    }
+
+
+
+
+    function formatAmount(num) {
+        while (num.indexOf(",") > -1)
+            num = num.replace(",", "");
+        // alert("after " + num);
+        // return num;
+        return parseFloat(num).toFixed(2);
+    }
+
+    //projectTax
+
+    function projectTax(taxAmt, months, ItPaid) {
+        taxAmt = taxAmt - ItPaid;
+        //alert(taxAmt);
+        var monsShort = ['APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR'];
+        var monthlytax = 0;
+        monthlytax = parseFloat(Math.floor(taxAmt / months)).toFixed(2);
+        var balance = parseInt(taxAmt % months);
+
+        var taxStructure = "<tr><th colspan='2'>Tax to be paid on monthly basis</th></tr>";
+        //alert(monthlytax + ":" + balance);
+        for (var i = (12 - months); i < 12; i++) {
+            if (i == (12 - months))
+                taxStructure += "<tr><td>" + " Tax to be paid on month " + monsShort[i] + ": </td><td style='text-align:right'>" + (parseInt(monthlytax) + parseInt(balance)).toFixed(2) + "</td></tr>";
+            else
+                taxStructure += "<tr><td>" + " Tax to be paid on month " + monsShort[i] + ": </td><td style='text-align:right'>" + monthlytax + "</td></tr>";
+        }
+        taxStructure += "<tr><th>" + " Total Tax to be paid : </th><th style='text-align:right'>" + taxAmt.toFixed(2) + "</th></tr>";
+        taxStructure = "<center><table class='monthwisetax'>" + taxStructure + "</table></center>";
+        // alert(taxStructure);
+        $("#showTax").html(taxStructure);
+
+    }
+</script>

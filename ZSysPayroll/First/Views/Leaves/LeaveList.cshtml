@@ -1,0 +1,258 @@
+﻿@model First.Models.LeaveDetailsHeader
+@{
+    ViewBag.Title = "LeaveList";
+    List<First.Models.EmployeeLeave> EmployeeLeaveList = ViewBag.leavelistdetails;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/1.13.2/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/buttons/2.3.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/select/1.6.0/css/select.dataTables.min.css">
+
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/select/1.6.0/js/dataTables.select.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tblLeaveList').DataTable({                
+                select: true
+            });
+        });
+    </script>
+
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .card-layout1 {
+            background: #fff;
+            box-shadow: 0 0 6px #340452;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 2%;
+            background: #dbaaef30;
+            margin: 0;
+        }
+
+        .registerbtn a, .registerbtn a:visited {
+            color: #fff !important;
+        }
+
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 3px 5px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 300px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px 15px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            padding: 5px 0px 0px 0px;
+        }
+
+
+        #empList {
+            margin-left: 20px;
+            padding: 2px;
+        }
+
+        .glyphicon-pencil {
+            font-weight: bold;
+            color: #ffeb00;
+        }
+
+        .glyphicon-trash {
+            color: red;
+        }
+
+        .fa-calculator {
+            color: #4fe12b;
+        }
+
+        .bottomborder, .bottomborder td {
+            border-bottom: 2px solid black;
+        }
+
+        .linkdisabled {
+            cursor: text;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="card card-layout">
+            @using (Html.BeginForm("ApplyLeave", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <div id="EmployeeDetail" class="row card-layout1">
+                <div class="heading">Leave List</div>                
+                <div class="col-lg-12">
+                    <table class="table  table-bordered table-hover table-responsive" id="tblLeaveList">
+                        <thead>
+
+                            <tr>
+                                <th>Emp ID </th>
+                                <th>Name</th>
+                                @*<th>Email</th>*@
+                                <th>From Date</th>
+                                <th>To Date</th>
+                                <th>Reason</th>
+                                <th>Work Status</th>
+                                <th>Reporting Manager</th>
+                                <th>Approve Staus</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>                           
+                                @for (int i = 0; i < Model.EmployeeLeaveList.Count(); i++)
+                                {
+                            <tr class="info">
+                                <td style="text-align:left;">
+                                    @Html.HiddenFor(modelItem => Model.EmployeeLeaveList[i].Id)
+                                    @Html.HiddenFor(modelItem => Model.EmployeeLeaveList[i].sessionId)
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EmpId)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EmpName)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].startDate)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EndDate)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].LeaveReason)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].LeaveStatus)
+                                </td>
+                                <td style="text-align:left;">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].Reportingmanager)
+                                </td>
+
+                                @if (Model.EmployeeLeaveList[i].ApproveAction == "Approved")
+                                {
+                                    <td style="text-align: left; color: green; font-weight:bold">
+                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                    </td>
+                                }
+                                else if (Model.EmployeeLeaveList[i].ApproveAction == "Rejected")
+                                {
+                                    <td style="text-align: left; color: red; font-weight:bold">
+                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="text-align: left; color: dodgerblue; font-weight:bold">
+                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                        </td>
+                                        }                                    
+                                    @if (Model.EmployeeLeaveList[i].ReportingmanagerId == Model.EmployeeLeaveList[i].sessionId)
+                                    {
+                                        <td>@Html.ActionLink("Approve/Reject", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].EmpId, lid = Model.EmployeeLeaveList[i].Id, mode = "Approve" }, new { @class = "btn btn-success" })</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Html.ActionLink("Edit", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].sessionId, lid = Model.EmployeeLeaveList[i].Id, mode = "Apply" }, new { @class = "btn btn-success" })</td>
+                                    }
+                                </tr>
+
+                                }                                      
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }
+            </div>            
+    </div>
+</body>
+</html>
+
+<script>
+    //$(".linkdisabled").click(function () {
+    //    return false;
+    //}
+       $(document).ready(function () {                 
+                    hideOrShow();
+
+                });
+
+        function hideOrShow() {
+            var ctrls = $(".secureMenu");
+            for (var j = 0; j < ctrls.length; j++) {
+                $(ctrls[j]).hide();
+            }           
+        }
+</script>
+

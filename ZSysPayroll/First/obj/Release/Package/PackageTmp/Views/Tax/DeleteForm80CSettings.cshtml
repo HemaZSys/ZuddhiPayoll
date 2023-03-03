@@ -1,0 +1,120 @@
+﻿@model First.Models._TaxDeclFormSetting
+
+@{
+    ViewBag.Title = "DeleteForm80CSettings";
+}
+
+<h2>Delete Form80CSetting </h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.HiddenFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.HiddenFor(model => model.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LineNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LineNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequenceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNumber)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Section)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Section)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SectionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SectionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ControlType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ControlType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaximumValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaximumValue)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentRequired)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentRequired)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentSize)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EarningOrDeduction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EarningOrDeduction)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Form80Csettingslist")
+        </div>
+    }
+</div>
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

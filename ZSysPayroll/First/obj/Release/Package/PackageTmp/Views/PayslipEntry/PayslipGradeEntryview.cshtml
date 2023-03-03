@@ -1,0 +1,1110 @@
+﻿`
+@model First.Models.PayslipGradeHeader
+@{
+    ViewBag.Title = "PayslipEntry";
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    List<First.Models.Empalldropdown> Gradelist = ViewBag.Gradelist;
+    List<First.Models.PayslipGradeEntry> PayslipGradeEntryListHistory = ViewBag.PayslipGradeEntryListHistory as List<First.Models.PayslipGradeEntry>;
+    string section = "";
+}
+
+<html>
+<head>
+    <style>
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+        .registerbtn{
+            font-weight:bold;
+            padding:5px 10px;
+            margin-right:10px;
+        }
+        #totalIT {
+            font-weight: bold;
+            padding: 5px 30px 5px 5px;
+            text-align: right;
+            border: 0px solid black;
+        }
+
+        .textbox {
+            width: 100%;
+            text-align: right;
+        }
+
+        table table-hover {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 720px;
+            border: 1px solid #7e6d90;
+        }
+
+        table td {
+            line-height: 25px;
+            padding-left: 10px;
+        }
+
+        table th {
+            background-color: #7e6d90;
+            color: #fff;
+        }
+
+        th {
+            vertical-align: bottom;
+            text-align: center;
+        }
+
+        td span {
+            -ms-writing-mode: tb-rl;
+            /*-webkit-writing-mode: vertical-rl;*/
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+        }
+
+        input[type='text'], input[type='number'] {
+            text-align: right;
+            padding-right: 5px;
+        }
+
+        .txtGross {
+            width: 75px;
+        }
+
+        #EmployeeGrosspay, #txtLeavesTaken, #txtLOP, #tdMonthDays {
+            width: 70%;
+            text-align: center;
+        }
+
+        .tblcomponents {
+            width: 95%;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="row card-layout1">
+
+        <div style="padding:2%;">
+            <table id="tblPayHistory" style="display:none;" class="table table-striped table-bordered table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">
+                            <label><b>Description</b></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label><b>MonthlyAmount</b></label>
+                        </th>
+                        <th style="text-align:center;">
+                            <label><b>MonthYear</b></label>
+                        </th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (PayslipGradeEntryListHistory.Count > 0)
+                    {
+                        foreach (var item in PayslipGradeEntryListHistory)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MonthlyAmount, new { @class = "inpMonthlyAmt" })
+                                </td>
+                                <td>
+
+                                    @DateTime.Parse(Html.DisplayFor(modelItem => item.MonthYear).ToString()).ToString("dd-MM-yyyy")
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("PayslipGradeEntryview", "PayslipEntry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <!--<div>
+            <label for="ID"><b>Employee Name</b></label>-->
+        @*@Html.DropDownListFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Name"))*@
+        @*@Html.EditorFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Name"))*@
+        @*</div>*@
+        <div class="container" style="width:720px;">
+            <div style="margin-left: 20px;  margin-bottom: 15px; font-size: 15pt; font-weight: bold;"> Payslip for the month of @Html.TextBoxFor(Model => Model.MonthYear, new { type = "Month" })</div>
+            <hr />
+            <table>
+                <tr>
+                    <td>
+                        <label for="Grade"><b>Employee ID : </b></label>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Grade"))
+                    </td>
+                    <td style="width:25%;"><h5><b>Leaves Taken :</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.TextBoxFor(model => Model.LeavesTaken, new { @class = "textbox", type = "decimal", id = "txtLeavesTaken", maxlength = "5", min = "0", max = "31" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ID"><b>Employee Name : </b></label>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.EmployeeName)
+                        @Html.HiddenFor(model => model.EmployeeName)
+                        @Html.HiddenFor(model => model.EmployeeId)
+                        @Html.HiddenFor(model => model.EmpId)
+                    </td>
+                    <td><b>LOP : </b></td>
+                    <td>
+                        @*@Html.TextBoxFor(Model => Model.LOP, new {@class = "textbox", type = "number", id = "txtLOP", maxlength = "2", min = "0", max = "31" })*@
+                        @Html.TextBoxFor(model => Model.LOP, new { @class = "textbox", type = "decimal", id = "txtLOP", maxlength = "5", min = "0", max = "31" })
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:25%;"><h5><b>Designation:</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.DisplayFor(model => model.Designation)
+                    </td>
+                    <td style="width:25%;"><h5><b>Month Days:</b></h5></td>
+                    <td style="padding-top:3px;width:30%;" id="tdMonthDays">
+                        -
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:25%;"><h5><b>Department:</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.DisplayFor(model => model.Department)
+                    </td>
+                    <td style="width:25%;"><h5><b>Payment Mode:</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:25%;"><h5><b>Location:</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.DisplayFor(model => model.Location)
+                    </td>
+                    <td style="width:25%;"><h5><b>DOJ :</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.DisplayFor(model => model.DOJ).ToString().Split(' ')[0]
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Provident Fund No :</b>
+                    </td>
+                    <td id="tdPF">
+                        @Html.DisplayFor(model => model.PFAccountNo)
+                    </td>
+
+                    <td style="width:25%;"><h5><b>DOC :</b></h5></td>
+                    <td style="padding-top:3px;width:30%;">
+                        @Html.DisplayFor(model => model.DOC).ToString().Split(' ')[0]
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Grade :
+                    </td>
+                    <td id="tdPF">
+                        @Html.DisplayFor(model => model.EmployeeGrade)
+                    </td>
+
+                    <td style="width:25%;"><h5><b>Gross Salary :</b></h5></td>
+                    <td style="padding-top:3px;padding-bottom:10px;width:30%;">
+                        @Html.EditorFor(model => model.EmployeeGrosspay, new { type = "text", @class = "Textbox" })
+                    </td>
+                </tr>
+
+                <tr style="color:forestgreen;">
+                    <td style="padding-top:3px;width:28%;height:45px;vertical-align:bottom" colspan="2">
+                        
+                        @if (Convert.ToInt32(Model.OldregimeOrNewregime) == 0)
+                        {
+                            <div class="Regime"> You have selected Old Regime</div>
+                        }
+                        else if (Convert.ToInt32(Model.OldregimeOrNewregime) == 1)
+                        {
+                            <div class="Regime">You have selected New Regime</div>
+                        }
+                        else
+                        {
+                            <div class="Regime">You have Not Selected </div>
+                        }
+                    </td>
+                    <td style="padding-top:3px;width:28%;height:45px;vertical-align:bottom;text-align:right;padding-right:36px;" colspan="2">
+                        <div id="oldtax">Tax as per OLD Regime : @Model.OldTaxProjection.ToString("#0.00")</div>
+                        
+                        <div id="newtax">Tax as per NEW  Regime : @Model.NewTaxProjection.ToString("#0.00")</div>
+                    </td>
+                </tr>
+
+            </table>
+            
+            <br />
+
+            <div id="divItemCount" style="display:none"> @Model.PayslipGradeEntryList.Count()</div>
+
+            <table class="tblcomponents" table-hover border="1">
+                <tr>
+                </tr>
+                @for (int i = 0; i < Model.PayslipGradeEntryList.Count(); i++)
+                {
+
+                    if (section != Model.PayslipGradeEntryList[i].SectionDescription)
+                    {
+            <tr>
+                <th style="width: 72%;">@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</th>
+                <th style="display:none">Annual Amount</th>
+                <th>Monthly Amount</th>
+            </tr>
+
+                        if (Model.PayslipGradeEntryList[i].SectionDescription == "Deductions")
+                        {
+                            <div id="divDedCount" style="display:none">@i</div>
+                        }
+
+                        section = Model.PayslipGradeEntryList[i].SectionDescription;
+                    }
+
+            <tr class="info">
+                <td>
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].PayslipGradeid)
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Id)
+
+                    @Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].Description)
+                </td>
+
+                <td style="display:none">@Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, new { type = "text", @class = "textbox" })</td>
+                <td>
+                    @if (Model.PayslipGradeEntryList[i].Description.ToString() == "IT")
+                    {
+                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox IT" })
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox" })
+                    }
+
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+                </td>
+                @*<td><div class="clsSplits" id="spliti" onclick="ShowSplits(this)">sp    </div></td>*@
+            </tr>
+                }
+
+            </table>
+
+            <table id="tblTotals" style="width: 640px;margin-top:10px;">
+                <tr>
+                    <td style="width: 81%;padding-right:10px;">Gross Salary : </td>
+                    <td style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;"><label class="clsTotals" id="tdTotalGrossPay">@Html.TextBoxFor(Model => Model.GrossSalary, new { type = "number" })</label></td>
+                </tr>
+                <tr>
+                    <td style="width: 81%;padding-right:10px;">Total Deductions :</td>
+                    <td style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;"><label class="clsTotals" id="tdTotalDeduction">@Html.TextBoxFor(Model => Model.TotalDeductions, new { type = "number" })</label></td>
+
+                </tr>
+                <tr>
+                    <td style="width: 81%;padding-right:10px;">Net Salary :</td>
+                    <td style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;"><label class="clsTotals" id="tdTotalNetPay">@Html.TextBoxFor(Model => Model.NetSalary, new { type = "number" })</label></td>
+                </tr>
+                <tr>
+                    <td style="width: 81%;padding-right:10px;">IT collected till now :</td>
+                    <td id="totalIT"> @Html.DisplayFor(Model => Model.taxcollected, new { type = "number" })</td>
+                </tr>
+                <tr>
+                    <td id="tdPayMonthWords" colspan="2">
+                        000.00
+                    </td>
+
+                </tr>
+                <tr>
+                    <td id="tdNote" style="text-align:center" colspan="2">
+                        <i>This is Computer generated Payslip and does not require Signature.</i>
+                    </td>
+
+                </tr>
+            </table>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row" style="text-align:center;margin-top:15px;">
+                    <div class="col-lg-5"></div>
+                    <div class="col-lg-1">
+                        <button type="submit" value="Save" class="registerbtn">Save</button>
+                    </div>
+                    <div class="col-lg-1">
+                        <button type="submit" class="registerbtn">@Html.ActionLink("Back", "Details", "Employee")</button>
+                    </div>
+                    <div class="col-lg-5" style="text-align:right;">
+                        <table><tr><td style="padding-left:30px;">@Html.EditorFor(model => model.isSalaryStructure)</td><td><b>Save as Template</b></td></tr></table>
+                    </div>
+                </div>
+
+                </div>
+        </div>
+        </div>
+    }
+</body>
+</html>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+<script src="~/Js/jquery.validate.min.js"></script>
+<script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+    var MonthDays;
+    var monthShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var monthNums = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+    var arrMonDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var arrValidMonths = [];
+    var curIT = 0;
+
+    var TotalMonthVal = 0;
+    var TotalAnnualVal = 0;
+    var TotalIncomeMonthVal = 0;
+    var TotalIncomeAnnualVal = 0;
+
+    var TotalDeductionMonthVal = 0;
+    var TotalDeductionIncomeAnnualVal = 0;
+
+    var UniqueComp = [];
+    var arrMonAmtTotal = [];
+    var grossPay = 0;
+
+    var d = new Date();
+
+    $(document).ready(function () {
+        checkLogin();
+
+       
+
+        $("#MonthYear").val(d);
+        MonthDays = findNoOfDays(d);
+        $("#tdMonthDays").html(MonthDays);
+        d = d.getFullYear() + "-" + pad((d.getMonth() + 1), 2);
+       
+        $("#MonthYear").change(function () {
+
+            var selectedDate = new Date($(this).val());
+            //alert(selectedDate);
+            MonthDays = findNoOfDays(selectedDate);
+            $("#tdMonthDays").html(MonthDays);
+
+
+            var selmon = $("#MonthYear").val();
+            
+            if (selmon != "" && selmon.indexOf("-") > -1)
+                selmon = parseInt(selmon.split("-")[1]);
+            else if (selmon != "" && selmon.indexOf("/") > -1)
+                selmon = parseInt(selmon.split("/")[1]);
+
+
+            var remMonths = 1;
+            if (selmon < 4)
+                remMonths = 4 - selmon;
+            else
+                remMonths = 16 - selmon;
+            // alert(remMonths);
+            $(".IT").val(Math.ceil(curIT / remMonths).toFixed(2));
+            calcFixedSalaray();
+            findCummulativeTotals($("#MonthYear").val());
+
+
+
+
+            validatePayMonth();
+        });
+
+
+        grossPay = $("#EmployeeGrosspay").val();
+        //alert(grossPay);
+        while (grossPay!= ""  && grossPay.indexOf(",") > -1)
+            grossPay = grossPay.replace(",", "");
+        grossPay = parseFloat(grossPay);
+
+        //alert("pp" + grossPay);
+
+        $('input[class="textbox"]').focus(function () {
+            $(this).select();
+        });
+
+        $('#EmployeeGrosspay').focus(function () {
+            $(this).select();
+        });
+
+
+        var collectedTax = $("#totalIT").html().trim();
+        //alert('c:' + collectedTax);
+        while (collectedTax.indexOf(",") > -1)
+            collectedTax = collectedTax.replace(",", "");
+        collectedTax = parseFloat(collectedTax);
+        //alert("ll" + $("#oldtax").html() + ":");
+        
+        if ($(".Regime").html().indexOf("Old") > -1) {
+
+            curIT = $("#oldtax").html().split(":")[1].trim();
+            //alert(curIT);
+            while (curIT.indexOf(",") > -1)
+                curIT = curIT.replace(",", "");
+
+            curIT = parseFloat(curIT) - collectedTax;
+        }
+        else if ($(".Regime").html().indexOf("New") > -1) {
+            curIT = $("#newtax").html().split(":")[1].trim();
+            while (curIT.indexOf(",") > -1)
+                curIT = curIT.replace(",", "");
+
+            curIT = parseFloat(curIT) - collectedTax;
+        }
+        else if ($(".Regime").html().indexOf("Not") > -1) {
+            var OldTax;
+            OldTax = $("#oldtax").html().split(":")[1].trim();
+            while (OldTax.indexOf(",") > -1)
+                OldTax = OldTax.replace(",", "");
+            OldTax = parseFloat(OldTax);
+            var NewTax = $("#newtax").html().split(":")[1].trim();
+            while (NewTax.indexOf(",") > -1)
+                NewTax = NewTax.replace(",", "");
+            NewTax = parseFloat(NewTax);
+            if (NewTax>OldTax)
+                curIT = OldTax - 100;
+            else
+                curIT = NewTax - collectedTax;
+        }
+        //alert("or: " + curIT);
+        d = new Date();
+
+        var selmon = d.getMonth() + 1;
+        var remMonths = 1;
+
+        if (selmon < 4)
+            remMonths = 4 - selmon;
+        else
+            remMonths = 16 - selmon;
+
+        $(".IT").val(Math.ceil(curIT / remMonths).toFixed(2));
+
+
+        $(".textbox").keyup(function () {
+            findCummulativeTotals($("#MonthYear").val());
+        });
+
+        
+        //alert(selectedDate);
+
+
+
+       // alert(d);
+        calcFixedSalaray();
+        findCummulativeTotals(d);
+
+
+    /*
+    var curDate = new Date();
+    console.log($("#MonthYear").defaultValue);
+    $("#MonthYear").defaultValue=curDate;
+    alert($("#MonthYear").val());*/
+
+
+
+        $("#txtLOP").keyup(function () {
+            findGross();
+        });
+
+        $("#txtLOP").change(function () {
+            findGross();
+        });
+
+        function ShowSplits(ctrl) {
+            var id = ctrl.id;
+            var Advamce = $("#" + id).val();
+            alert(Advance);
+        }
+
+        function findGross() {
+            //alert(MonthDays);
+            if (MonthDays != undefined) {
+               // alert("in:" + MonthDays);
+            if ($("#txtLOP").val() > MonthDays) {
+                $("#txtLOP").val(MonthDays);
+            }
+
+            if ($("#txtLOP").val() < 0) {
+                $("#txtLOP").val(0);
+            }
+
+
+                if ($("#txtLOP").val() > 0) {
+                    grossPay= $("#EmployeeGrosspay").val().replace(",", "");
+                    grossPay = parseFloat(grossPay);
+
+                var LOP = parseFloat($("#txtLOP").val());
+                grossPay = (grossPay / MonthDays) * (MonthDays - LOP);
+                calcFixedSalaray();
+                //alert('yy'+ grossPay);
+                findCummulativeTotals($("#MonthYear").val());
+            }
+            else if ($("#txtLOP").val() == 0) {
+                    grossPay = $("#EmployeeGrosspay").val().replace(",", "");
+                    grossPay = parseFloat(grossPay);
+                calcFixedSalaray();
+                findCummulativeTotals($("#MonthYear").val());
+                }
+            }
+        }
+
+        $(function () {
+
+
+
+        var msg = '@ViewData["result"]';
+        if (msg == '1') {
+            ("Payslip Details Inserted Successfully");
+        }
+        var curDate = new Date();
+
+
+        var curMon = curDate.getMonth() + 1;
+        var curYear = curDate.getFullYear();
+        if (curMon < 10) {
+            curMon = "0" + curMon;
+        }
+        else {
+            curMon = curMon.toString();
+        }
+
+        $("#Month").val(curYear + "-" + curMon);
+
+
+       
+
+
+
+        calcFixedSalaray();
+
+
+
+         /*
+
+        $('#PayslipGradeEntryList_3__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var LTA = $("#PayslipGradeEntryList_3__MonthlyAmount").val();
+            var annAmt = parseFloat(arrMonAmtTotal[UniqueComp.indexOf("LTA")])
+            if (annAmt > 0)
+                $("#PayslipGradeEntryList_3__AnnualAmount").val(parseFloat(LTA) + annAmt);
+        });
+
+        $('#PayslipGradeEntryList_4__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var VP = $("#PayslipGradeEntryList_4__MonthlyAmount").val();
+            var annAmt = parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Variable Pay")])
+            if (annAmt > 0)
+                $("#PayslipGradeEntryList_4__AnnualAmount").val(parseFloat(VP) + annAmt);
+        });
+
+        $('#PayslipGradeEntryList_5__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var Food = $("#PayslipGradeEntryList_5__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_5__AnnualAmount").val(Food + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Food Coupons")]));
+        });
+
+        $('#PayslipGradeEntryList_6__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var Books = $("#PayslipGradeEntryList_6__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_6__AnnualAmount").val(Books + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Books and Periodicals")]));
+        });
+
+        $('#PayslipGradeEntryList_7__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var PF = $("#PayslipGradeEntryList_7__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_7__AnnualAmount").val(PF + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("PF")]));
+        });
+
+        $('#PayslipGradeEntryList_8__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var IT = $("#PayslipGradeEntryList_8__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_8__AnnualAmount").val(IT + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("IT")]));
+        });
+        $('#PayslipGradeEntryList_9__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var PT = $("#PayslipGradeEntryList_9__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_9__AnnualAmount").val(PT + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Professional Tax")]));
+        });
+
+        $('#PayslipGradeEntryList_10__MonthlyAmount').keyup(function (e) {
+            //CalcMonthlyamount(e);
+            var SalAdv = $("#PayslipGradeEntryList_10__MonthlyAmount").val();
+            if (arrMonAmtTotal.length > 0)
+            $("#PayslipGradeEntryList_10__AnnualAmount").val(SalAdv + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Salary Advance")]));
+        });
+        */
+
+        $("input[type='text']").change(function () {
+
+            $(this).val(formatAmount($(this).val()));
+        });
+
+        $("input[type='number']").change(function () {
+
+            $(this).val(formatAmount($(this).val()));
+        });
+
+        calcTotals();
+
+        $("input").keyup(function () {
+            calcTotals();
+        });
+
+           
+
+
+        });
+
+        // FINDING NO of DAYS IN CURRENT MONTH
+
+        function findNoOfDays(dt) {
+            //alert("dt" + dt.getMonth())
+            
+            var NoOfDays = arrMonDays[dt.getMonth()];
+
+
+            //alert(NoOfDays);
+            return NoOfDays;
+        }
+
+
+        function findValidMonths(selMonYear) {
+
+            var selMonth;
+            var selYear;
+
+            if (selMonYear.length == 7) {
+
+               // alert(selMonYear);
+
+                if (selMonYear != "" && selMonYear.indexOf("-") > -1) {
+                    selMonth = selMonYear.split("-")[1];
+                    //alert('selMonth:' + selMonth);
+                    selYear = selMonYear.split("-")[0];
+                }
+                else if (selMonYear != "" && selMonYear.indexOf("-") > -1) {
+                    selMonth = selMonYear.split("/")[1];
+                    //alert('selMonth:' + selMonth);
+                    selYear = selMonYear.split("/")[0];
+                }
+            }
+            else {
+                selMonth = selMonYear.getMonth() + 1;
+                selYear = selMonYear.getFullYear();
+            }
+
+            if (selMonth > "04") {
+                for (var i = 4; i < 12; i++) {
+                    if (pad(i, 2) < selMonth)
+                        arrValidMonths.push("01-" + pad(i, 2) + "-" + selYear);
+                }
+            }
+            else if (selMonth < "04") {
+                for (var i = 4; i <= 12; i++) {
+                        arrValidMonths.push("01-" + pad(i, 2) + "-" + (selYear-1));
+                }
+                for (var i = 1; i < 12; i++) {
+                    if (pad(i, 2) < selMonth)
+                        arrValidMonths.push("01-" + pad(i, 2) + "-" + selYear);
+                }
+            }
+           // alert(arrValidMonths.length);
+            return arrValidMonths;
+        }
+
+        function pad(str, max) {
+            str = str.toString();
+            return str.length < max ? pad("0" + str, max) : str;
+        }
+
+        function findCummulativeTotals(selMonYear) {
+         //  alert(selMonYear);
+
+            var rawData = $("#tblPayHistory tbody").html();
+            var trs = rawData.split("<tr>");
+            var tds = "";
+            var arrComp = [];
+            var arrMonAmt = [];
+            var arrMonYear = [];
+
+            UniqueComp = [];
+            arrMonAmtTotal = [];
+
+            var arrValidMonths = findValidMonths(selMonYear);
+           // alert(arrValidMonths);
+
+            for (var i = 0; i < trs.length; i++) {
+
+
+                tds = trs[i].split("<td>");
+
+                if (tds[3] != undefined)
+                {
+                    var tmpMonYear = tds[3].split("</td>")[0].trim();
+
+                   //alert(tmpMonYear);
+                   // alert(arrValidMonths);
+                    if (arrValidMonths.indexOf(tmpMonYear) > -1) {
+                        arrMonYear.push(tmpMonYear);
+
+                        if (tds[1] != undefined)
+                            arrComp.push(tds[1].split("</td>")[0].trim());
+                        if (tds[2] != undefined)
+                            arrMonAmt.push(tds[2].split("</td>")[0].trim());
+                    }
+                }
+
+            }
+
+            //alert(arrComp + "  :  " + arrMonAmt + "  :  " + arrMonYear);
+
+            var prevComp = "";
+            var total = 0;
+            for (var i = 0; i < arrComp.length; i++) {
+
+                while (arrMonAmt[i].indexOf(",") > -1)
+                arrMonAmt[i] = arrMonAmt[i].replace(",", "");
+
+                if (arrComp[i] == prevComp) {
+                    total = total + parseFloat(arrMonAmt[i]);
+                    if (i == arrComp.length-1)
+                        arrMonAmtTotal.push(total);
+                }
+                else {
+
+                    UniqueComp.push(arrComp[i]);
+                    if (prevComp != "")
+                        arrMonAmtTotal.push(total);
+                    total = parseFloat(arrMonAmt[i]);
+                }
+                prevComp = arrComp[i];
+            }
+            //UniqueComp.push(arrComp[i]);
+            arrMonAmtTotal.push(total);
+            //total = 0;
+
+           // alert(UniqueComp + "  :  " + arrMonAmtTotal );
+
+            //calcFixedSalaray();
+
+
+
+
+            for (var i = 3; i < arrMonAmtTotal.length; i++) {
+
+               /* alert("now" + $('#PayslipGradeEntryList_' + i + '__MonthlyAmount'));
+                if ($('#PayslipGradeEntryList_' + i + '__MonthlyAmount') != undefined )
+                {*/
+                   // $('#PayslipGradeEntryList_' + i + '__MonthlyAmount').keyup(function (e) {
+                       // alert($(this).val());
+                        //CalcMonthlyamount(e);
+                //alert("arrMonAmt[i]" + arrMonAmt[i]);
+                if (arrMonAmt[i] == undefined)
+                    arrMonAmt[i] = "0.00";
+                while (arrMonAmt[i].indexOf(",") > -1)
+                arrMonAmt[i] = arrMonAmt[i].replace(",", "");
+                var monAmt = $('#PayslipGradeEntryList_' + i + '__MonthlyAmount').val();
+                if (monAmt == undefined)
+                    monAmt = "0.00";
+                //alert("monAmt" + monAmt);
+                while (monAmt.indexOf(",") > -1)
+                monAmt = monAmt.replace(",", "");
+                        var annAmt = 0;
+
+                        if (arrMonAmtTotal[i] != undefined) {
+                            annAmt = parseFloat(arrMonAmtTotal[i])
+                        }
+                        else
+                    annAmt = 0;
+
+
+
+                var totAmt = parseFloat(monAmt) + parseFloat(annAmt);
+                totAmt = formatAmount(totAmt);
+                $('#PayslipGradeEntryList_' + i + '__AnnualAmount').val(totAmt);
+            }
+
+        }
+
+
+    //CALC FOR BASIC, HRA, SPECIAL ALLOWANCE FROM GROSS PAY
+    function calcFixedSalaray() {
+
+
+       // alert(grossPay);
+        var Percentage = parseFloat($("#PayslipGradeEntryList_0__Percentage").val());
+        //alert('Percentage: ' + Percentage)
+        var basic = grossPay * Percentage / 100;
+        //alert("llll" + basic);
+        var cumBasic = 0;
+        if (arrMonAmtTotal.length > 0)
+         cumBasic = basic + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Basic")]);
+
+        //alert("bas:" + basic);
+
+        $("#PayslipGradeEntryList_0__MonthlyAmount").val(basic.toFixed(2));
+        $("#PayslipGradeEntryList_0__AnnualAmount").val(cumBasic.toFixed(2));
+        Percentage = parseFloat($("#PayslipGradeEntryList_1__Percentage").val());
+
+        var HRA = grossPay * Percentage / 100;
+        var cumHRA = 0;
+        if (arrMonAmtTotal.length>0)
+         cumHRA = HRA + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("HRA")]);
+
+        $("#PayslipGradeEntryList_1__MonthlyAmount").val(HRA.toFixed(2));
+        $("#PayslipGradeEntryList_1__AnnualAmount").val(cumHRA.toFixed(2));
+
+        var Percentage = parseFloat($("#PayslipGradeEntryList_2__Percentage").val());
+        var SA = grossPay * Percentage / 100;
+        var cumSA = 0;
+        if (arrMonAmtTotal.length > 0)
+        cumSA = SA + parseFloat(arrMonAmtTotal[UniqueComp.indexOf("Special Allowance")]);
+
+        $("#PayslipGradeEntryList_2__MonthlyAmount").val(SA.toFixed(2));
+        $("#PayslipGradeEntryList_2__AnnualAmount").val(cumSA.toFixed(2));
+
+        calcTotals();
+    }
+
+    function formatAmount(amount) {
+        var txtVal = amount;
+        if (txtVal == "")
+            txtVal = 0;
+        //afterdeploy
+        txtVal = parseFloat(txtVal).toFixed(2);
+        return txtVal;
+    }
+
+
+    });
+
+
+    function calcTotals() {
+        TotalMonthVal = 0;
+        TotalAnnualVal = 0;
+        TotalIncomeMonthVal = 0;
+        TotalIncomeAnnualVal = 0;
+        TotalDeductionMonthVal = 0;
+        TotalDeductionIncomeAnnualVal = 0;
+
+        var itemCnt = parseInt($("#divItemCount").html());
+        var dedCnt = parseInt($("#divDedCount").html());
+        //alert(itemCnt);
+        var tmpMonVal = 0;
+        var tmpAnnVal = 0;
+        for (var a = 0; a < itemCnt; a++) {
+            
+            tmpMonVal = $("#PayslipGradeEntryList_" + a + "__MonthlyAmount").val();
+           // alert(tmpMonVal);
+            if (tmpMonVal == "NaN")
+                tmpMonVal = "0.0";
+           // alert("th:" + tmpMonVal);
+            while (tmpMonVal.indexOf(",") > -1)
+            tmpMonVal = tmpMonVal.replace(",", "");
+            tmpAnnVal = $("#PayslipGradeEntryList_" + a + "__AnnualAmount").val();
+            //alert(tmpAnnVal);
+            if (tmpAnnVal == "NaN")
+                tmpAnnVal = "0.0";
+            while (tmpAnnVal.indexOf(",") > -1)
+            tmpAnnVal = tmpAnnVal.replace(",", "");
+
+
+            if (a < dedCnt) {
+
+                TotalIncomeMonthVal += parseFloat(tmpMonVal);
+                TotalIncomeAnnualVal += parseFloat(tmpAnnVal);
+            }
+            else {
+                TotalDeductionMonthVal += parseFloat(tmpMonVal);
+                TotalDeductionIncomeAnnualVal += parseFloat(tmpAnnVal);
+            }
+
+            TotalIncomeMonthVal = Math.ceil(TotalIncomeMonthVal);
+            TotalDeductionMonthVal = Math.ceil(TotalDeductionMonthVal);
+
+            TotalMonthVal = TotalIncomeMonthVal - TotalDeductionMonthVal;
+            TotalAnnualVal = TotalIncomeAnnualVal - TotalDeductionIncomeAnnualVal;
+        }
+        //alert(TotalIncomeMonthVal + ":" + TotalIncomeAnnualVal);
+        //alert(TotalDeductionMonthVal + ":" + TotalDeductionIncomeAnnualVal);
+        //alert(TotalMonthVal + ":" + TotalAnnualVal);
+
+        /*
+        $("#tdTotalGrossPay").html(TotalIncomeMonthVal.toFixed(2));
+        $("#tdTotalDeduction").html(TotalDeductionMonthVal.toFixed(2));
+        $("#tdTotalNetPay").html(TotalMonthVal.toFixed(2));
+        */
+        //alert('totalincomemonthval:' + TotalIncomeMonthVal);
+        $("#GrossSalary").val(TotalIncomeMonthVal.toFixed(2));
+        $("#TotalDeductions").val(TotalDeductionMonthVal.toFixed(2));
+        $("#NetSalary").val(TotalMonthVal.toFixed(2));
+
+        if (TotalMonthVal>0)
+            $("#tdPayMonthWords").html("(Rupees " + convertNumberToWords(TotalMonthVal) + " Only.)");
+        else
+            $("#tdPayMonthWords").html("");
+    }
+
+    function formatAmount(amount, intFixed) {
+        var txtVal = amount;
+        if (txtVal == "")
+            txtVal = 0;
+        //alert(txtVal + ":" + intFixed);
+        txtVal = parseInt(txtVal).toFixed(intFixed);
+        //alert(txtVal);
+        return txtVal;
+    }
+
+    $("input").keypress(function () {
+        if ($(this).val().length >= 12)
+            return false;
+    });
+
+    function numberToWords(number) {
+
+        var digit = ['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE'];
+        var elevenSeries = ['TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', 'NINETEEN'];
+        var countingByTens = ['TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'];
+        var shortScale = ['', 'THOUSAND', 'MILLION', 'BILLION', 'TRILLION'];
+
+        number = number.toString(); number = number.replace(/[\, ]/g, ''); if (number != parseFloat(number)) return 'not a number'; var x = number.indexOf('.'); if (x == -1) x = number.length; if (x > 15) return 'too big'; var n = number.split(''); var str = ''; var sk = 0; for (var i = 0; i < x; i++) { if ((x - i) % 3 == 2) { if (n[i] == '1') { str += elevenSeries[Number(n[i + 1])] + ' '; i++; sk = 1; } else if (n[i] != 0) { str += countingByTens[n[i] - 2] + ' '; sk = 1; } } else if (n[i] != 0) { str += digit[n[i]] + ' '; if ((x - i) % 3 == 0) str += 'HUNDRED '; sk = 1; } if ((x - i) % 3 == 1) { if (sk) str += shortScale[(x - i - 1) / 3] + ' '; sk = 0; } } if (x != number.length) { var y = number.length; str += 'POINT '; for (var i = x + 1; i < y; i++) str += digit[n[i]] + ' '; } str = str.replace(/\number+/g, ' '); return str.trim();
+
+    }
+
+    //INDIAN RUPEES FORMAT
+
+    function convertNumberToWords(amount) {
+        var words = new Array();
+        words[0] = '';
+        words[1] = 'One';
+        words[2] = 'Two';
+        words[3] = 'Three';
+        words[4] = 'Four';
+        words[5] = 'Five';
+        words[6] = 'Six';
+        words[7] = 'Seven';
+        words[8] = 'Eight';
+        words[9] = 'Nine';
+        words[10] = 'Ten';
+        words[11] = 'Eleven';
+        words[12] = 'Twelve';
+        words[13] = 'Thirteen';
+        words[14] = 'Fourteen';
+        words[15] = 'Fifteen';
+        words[16] = 'Sixteen';
+        words[17] = 'Seventeen';
+        words[18] = 'Eighteen';
+        words[19] = 'Nineteen';
+        words[20] = 'Twenty';
+        words[30] = 'Thirty';
+        words[40] = 'Forty';
+        words[50] = 'Fifty';
+        words[60] = 'Sixty';
+        words[70] = 'Seventy';
+        words[80] = 'Eighty';
+        words[90] = 'Ninety';
+        amount = amount.toString();
+        var atemp = amount.split(".");
+        
+
+        var number = atemp[0].split(",").join("");
+        var n_length = number.length;
+        var words_string = "";
+        if (n_length <= 9) {
+            var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+            var received_n_array = new Array();
+            for (var i = 0; i < n_length; i++) {
+                received_n_array[i] = number.substr(i, 1);
+            }
+            for (var i = 9 - n_length, j = 0; i < 9; i++, j++) {
+                n_array[i] = received_n_array[j];
+            }
+            for (var i = 0, j = 1; i < 9; i++, j++) {
+                if (i == 0 || i == 2 || i == 4 || i == 7) {
+                    if (n_array[i] == 1) {
+                        n_array[j] = 10 + parseInt(n_array[j]);
+                        n_array[i] = 0;
+                    }
+                }
+            }
+            value = "";
+            for (var i = 0; i < 9; i++) {
+                if (i == 0 || i == 2 || i == 4 || i == 7) {
+                    value = n_array[i] * 10;
+                } else {
+                    value = n_array[i];
+                }
+                if (value != 0) {
+                    words_string += words[value] + " ";
+                }
+                if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) {
+                    words_string += "Crores ";
+                }
+                if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) {
+                    words_string += "Lakhs ";
+                }
+                if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) {
+                    words_string += "Thousand ";
+                }
+                if (i == 6 && value != 0 && (n_array[i + 1] != 0 && n_array[i + 2] != 0)) {
+                    words_string += "Hundred and ";
+                } else if (i == 6 && value != 0) {
+                    words_string += "Hundred ";
+                }
+            }
+            words_string = words_string.split("  ").join(" ");
+        }
+        return words_string;
+    }
+
+
+    function printDiv(divName) {
+        var divContents = $(divName).html();
+        var a = window.open('', '', 'height=auto, width=100%');
+        a.document.write('<html>');
+        a.document.write('<body >');
+        a.document.write(divContents);
+        a.document.write('</body></html>');
+        a.document.close();
+        a.print();
+    }
+
+    function validatePayMonth() {
+        var paymonth = $("#MonthYear").val();
+        var curmonth = new Date();
+
+        curmonth = curmonth.getFullYear() + "-" + monthNums[curmonth.getMonth()];
+        //alert(paymonth + "   " + curmonth);
+        if (paymonth > curmonth) {
+            alert("Please select valid pay month.");
+            $("#MonthYear").val("");
+        }
+
+        //Disable Enter Key
+        $("form").bind("keypress", function (e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+        });
+    }
+</script>

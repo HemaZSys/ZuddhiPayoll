@@ -1,0 +1,184 @@
+﻿@model First.Models.Empalldropdown
+
+@{
+    ViewBag.Title = "UpdateDropdown";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            float: right;
+            margin-top: 10%;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: #fff;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+        }
+
+        .viewAll:hover {
+            opacity: 1;
+        }
+
+        .viewAll {
+            float: right;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: #fff;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+            margin-top: 0%;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+        .alignContainer {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f4f4f41a;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 5%;
+            background: #dbaaef30;
+            margin-bottom: 2%;
+            margin-top: 2%;
+        }
+
+        input[type=text], select {
+            width: 100%;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    @using (Html.BeginForm())    {
+        @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="card card-layout">
+            <h3 style="text-align:center">Update Dropdown Settings Details</h3>
+            <hr>
+            <div class="row">
+                <div class="col-lg-4 p-3">                    
+                            <label for="ID"><b>Dropdown Settings ID</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Dropdown Settings ID No Need to Modify"></i>                       
+                            @Html.EditorFor(e => e.Id, new { type = "text" })
+                        </div>
+                    
+                <div class="col-lg-4 p-3">                    
+                            <label for="type"><b>Type</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Select Dropdown Type(Eg.Blood Group,Department,Qualification,Grade)"></i>                       
+                            @Html.EditorFor(e => e.Type, new { type = "text" })                    
+                </div>
+
+                <div class="col-lg-4 p-3">                   
+                            <label for="abbreviation"><b>Abbreviation</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Enter Abbreviation(Eg.BCA,B+ve)"></i>                        
+                            @Html.EditorFor(e => e.Abbreviation, new { type = "text" })                       
+                </div>
+
+                <div class="col-lg-4 p-3">                    
+                            <label for="description"><b>Description</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Enter Description(Eg.BCA-Bachelor of Computer Applications)"></i>                        
+                            @Html.EditorFor(e => e.Description, new { type = "text" })                    
+                </div>
+                </div>
+                    <button type="submit" id="btnAdd" class="registerbtn" style="margin-top: 0%;">UPDATE</button>
+                    @Html.ActionLink("View All", "Dropdownsettingslist", "Employee", new { @class = "viewAll" })
+                </div>                   
+        </div>
+        }
+</body>
+</html>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            checkLogin();
+            $('.datepicker').datepicker({
+                dateFormat: "dd/M/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+
+        });
+
+         $(function () {
+            var msg = '@ViewData["result"]';
+            if (msg == '1')
+            {
+                alert("DropdownSettings Details Updated Successfully");
+                window.location.href = "@Url.Action("Dropdownsettingslist", "Employee")";
+             }
+         });
+    </script>
+
+}
+

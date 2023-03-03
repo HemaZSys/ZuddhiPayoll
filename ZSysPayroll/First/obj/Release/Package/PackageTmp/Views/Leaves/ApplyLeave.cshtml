@@ -1,0 +1,119 @@
+﻿@model First.Models.EmployeeLeave
+
+
+@{
+    ViewBag.Title = "ApplyLeave";
+    List<First.Models.Empalldropdown> leavelist = ViewBag.Leaveslist;
+}
+
+
+<html>
+<head>
+    <style>
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            padding: 5px 0px 0px 0px;
+        }
+        .lblCaption, .formInput {
+            font-size: 18px;
+            width: 30%;
+            padding-inline: 5px;
+            margin: 15px;
+        }
+        .container {
+            padding: 15px 0px;
+        }
+        .container-fluid {
+            margin: 15px 0px;
+        }
+        .card-layout {
+            padding: 0px;
+            
+        }
+    </style>
+
+    <link href="~/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/CSS/StyleSheet.css" rel="stylesheet" />
+    <script src="~/Js/jquery.min.js"></script>
+    <script src="~/Js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+
+    <h2 class="heading">Apply Leave</h2>
+
+
+    @using (Html.BeginForm("ApplyLeave", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="container-fluid">
+
+            <div class="card card-layout">
+
+                <div class="container">
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+                            Employee Name
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            @Html.TextBoxFor(e => e.EmpName, new { type = "text" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+                            Select the Leave(s) Type
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            @Html.DropDownListFor(e => e.LeaveType, new SelectList(leavelist, "Id", "description"))
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+                            Select the Starting Date of Leave(s)
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            @Html.TextBoxFor(e => e.startDate, new { type = "text" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+                            Select the Ending Date of Leave(s)
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            @Html.TextBoxFor(e => e.EndDate, new { type = "text" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+                            Reason for Leave
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            @Html.TextBoxFor(e => e.LeaveReason, new { type = "text" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="c0l-md-6 lblCaption">
+
+                        </div>
+                        <div class="c0l-md-6 formInput">
+                            <input type="submit" value="Apply Leave" />
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+</body>
+</html>

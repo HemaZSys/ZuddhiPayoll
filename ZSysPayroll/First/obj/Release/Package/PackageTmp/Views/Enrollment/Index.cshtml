@@ -1,0 +1,396 @@
+﻿@model First.Models.Enroll
+@{
+    ViewBag.Title = "R";
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ENROLLMENT</title>
+
+    <link href="~/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/CSS/StyleSheet.css" rel="stylesheet" />
+
+    <style>
+
+        input[type='radio'] {
+            margin: 3px 6px 3px 6px;
+        }
+        #errMessage {
+            color: red;
+            text-align:center;
+        }
+        .Strong{
+            color:lawngreen;
+        }
+        .Weak{
+            color:red;
+        }
+        .Good{
+            color:orange;
+        }
+        .btnRegister{
+            text-align:center;
+            width:132PX;
+            margin:10px;
+        }
+    </style>
+
+    <script src="~/Js/jquery.min.js"></script>
+    <script src="~/Js/bootstrap.min.js"></script>
+
+    <script src="~/Js/jquery.validate.min.js"></script>
+    <script src="~/Js/jquery.validate.unobtrusive.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#Password').keyup(function () {
+                $('#strengthMessage').html(checkStrength($('#Password').val()))
+            })
+
+            $('#Email').keyup(function () {
+                var emailchars = $(this).val();
+                var enterdChar = emailchars[emailchars.length - 1];
+               // alert(":" + $("#EmailDomain").html().trim() + ":");
+                if (enterdChar == '@@') {
+                    $(this).val($(this).val() + $("#EmailDomain").html().trim());
+                }
+            })
+            
+
+            $("#Confirmpwd").change(function () {
+                if ($(this).val() != $('#Password').val()) {
+                    lblErrCPwd.innerHTML = "Password and Confirm Password does not match.";
+                }
+                else {
+                    lblErrCPwd.innerHTML = "";
+                }
+            });
+
+            function checkStrength(password) {
+                var strength = 0
+                if (password.length < 6) {
+                    $('#strengthMessage').removeClass()
+                    $('#strengthMessage').addClass('Short')
+                    lblErrPwd.innerHTML = "Too short";
+                }
+                if (password.length > 7) strength += 1
+                // If password contains both lower and uppercase characters, increase strength value.
+                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1
+                // If it has numbers and characters, increase strength value.
+                if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/)) strength += 1
+                // If it has one special character, increase strength value.
+                if (password.match(/([!,%,&,#,$,@@,^,*,?,_,~])/)) strength += 1
+                // If it has two special characters, increase strength value.
+                if (password.match(/(.*[!,%,&,#,$,@@,^,*,?,_,~].*[!,%,&,#,$,^,*,?,_,~])/)) strength += 1
+                // Calculated strength value, we can return messages
+                // If value is less than 2
+                if (strength < 2) {
+                    $('#strengthMessage').addClass('Weak')
+                    $("#lblErrPwd").css("color", "red");
+                    lblErrPwd.innerHTML = "Weak";
+                } else if (strength == 2) {
+                    $('#strengthMessage').addClass('Good')
+                    $("#lblErrPwd").css("color", "orange");
+                    lblErrPwd.innerHTML = "Good";
+                } else {
+                    
+                    $('#strengthMessage').addClass('Strong')
+                    $("#lblErrPwd").css("color", "#0ad30a");
+                    lblErrPwd.innerHTML = "Strong";
+                    lblErrPwd
+                }
+            }
+
+
+            $('#FirstName').keypress(function (e) {
+                allowAplabetsOnly(e);
+            });
+
+            $('#LastName').keypress(function (e) {
+                allowAplabetsOnly(e);
+            });
+
+            $("#Email").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                if (!regex.test(inputvalues)) {
+                    //alert("invalid email id");
+                    lblErrEmail.innerHTML = "Please enter valid email address.";
+                    return regex.test(inputvalues);
+                }
+                else {
+                    lblErrEmail.innerHTML = "";
+                }
+            });
+
+            $('#PhoneNumber').keypress(function (e) {
+                allowNumberOnly(e);
+            });
+
+
+            $('#PhoneNumber').keypress(function (e) {
+                if ($(this).val().length >= 10)
+                    return false;
+            });
+            function allowAplabetsOnly(e) {
+                var regex = new RegExp("^[a-zA-Z,' ']+$");
+                var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                if (regex.test(str)) {
+                    return true;
+                }
+                else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            function allowNumberOnly(e) {
+                var regex = new RegExp("^[0-9]+$");  // FOR ALLOWING DOT // var regex = new RegExp("^[a-zA-Z,' ','.']+$");
+                var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                if (regex.test(str)) {
+                    return true;
+                }
+                else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+        });
+    </script>
+    <style>
+        .Short {
+            width: 100%;
+            background-color: #dc3545;
+            margin-top: 5px;
+            height: 3px;
+            color: #dc3545;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .Weak {
+            width: 100%;
+            background-color: #ffc107;
+            margin-top: 5px;
+            height: 3px;
+            color: #ffc107;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .Good {
+            width: 100%;
+            background-color: #383be5;
+            margin-top: 5px;
+            height: 3px;
+            color: #28a745;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .Strong {
+            width: 100%;
+            background-color: #12a52b;
+            margin-top: 5px;
+            height: 3px;
+            color: #d39e00;
+            font-weight: 500;
+            font-size: 12px;
+        }
+    </style>
+
+    <!---- <script type="text/javascript" src="~/Scripts/passwordscheck.js"></script>
+     <link href="~/Scripts/passwordscheck.css" rel="stylesheet" />-->
+
+</head>
+<body>
+    <!------ Include the above in your HEAD tag ---------->
+    @using (Html.BeginForm("Index", "Enrollment", FormMethod.Post))
+    {
+        <div class="container register" style="margin-top: 7%;">
+            <div class="row">
+                <div class="col-md-3 register-left">
+                    <img src="~/images/zudlogo.png" alt="" />
+                    <h3 style="margin-bottom:15px;">Welcome</h3>
+                    <h5>Zuddhi Systems</h5>
+                    <br />
+                </div>
+                <div class="col-md-9 register-right">
+                    <!--<ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="RegisterNav"  data-toggle="tab" href="/Enrollment/login" role="tab" aria-controls="home" aria-selected="false">Register</a>-->
+                    @*@Html.ActionLink("Register", "Index", "Enrollment")*@
+                    <!--</li>
+                    <li class="nav-item">
+                        <a class="nav-link " id="LoginNav"  data-toggle="tab" href="/UserLogin/Index" role="tab" aria-controls="profile" aria-selected="true">Login</a>-->
+                    @*@Html.ActionLink("Login", "Index", "UserLogin")*@
+                    <!--</li>
+                    </ul>-->
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <h3 class="register-heading">Registration</h3>
+                            <div class="row register-form">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(e => e.FirstName, new { @class = "form-control", placeholder = "First Name *",  tabindex = 1  })
+                                        
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(e => e.Email, new { @class = "form-control", placeholder = "Official Email *",  tabindex = 3 })
+                                        @*@Html.ValidationMessageFor(e => e.Email)*@
+                                        <span id="lblErrEmail" style="color:red"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.PasswordFor(e => e.Password, new { @class = "form-control", placeholder = "Password *", tabindex = 5 })
+                                        <span id="strengthMessage"></span><span id="lblErrPwd" style="color:red"></span>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <div class="maxl" style="visibility:hidden;">
+                                            @Html.RadioButtonFor(e => e.Gender, "Male", new { @class = "radio inline" })<span> Male </span>
+                                            @Html.RadioButtonFor(e => e.Gender, "Female", new { @class = "radio inline" })<span>Female </span>
+                                            <div id="EmailDomain" style="display:none;">
+                                                @Model.EmailDomain
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(e => e.LastName, new { @class = "form-control", placeholder = "Last Name *", tabindex = 2 })
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(e => e.PhoneNumber, new { @class = "form-control", placeholder = "Contact *", tabindex = 4 })
+                                        @*@Html.ValidationMessageFor(e => e.PhoneNumber)*@
+
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.PasswordFor(e => e.Confirmpwd, new { @class = "form-control", placeholder = "Confirm Password *", tabindex = 6 })
+                                        <span id="lblErrCPwd" style="color:red"></span>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <div class="maxl" id="accType" style="visibility:hidden;">
+                                            @Html.RadioButtonFor(e => e.AccessType, "Admin", new { @class = "radio inline" })<span> Admin </span>
+                                            @Html.RadioButtonFor(e => e.AccessType, "User", new { @class = "radio inline", @checked = true })<span>User </span>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="form-group">
+            <select class="form-control">
+                <option class="hidden" selected disabled>Please select your Security Question</option>
+                <option>What is your Birthdate?</option>
+                <option>What is Your old Phone Number</option>
+                <option>What is your Pet Name?</option>
+                <option>What is Spouse/Mother Birthdate?</option>
+                <option>What is Your favorite color</option>
+                <option>What is your Birth Place?</option>
+            </select>
+        </div>*@
+                                    @*<div class="form-group">
+            @Html.TextBoxFor(e => e.SecurityAnwser, new { @class = "form-control", placeholder = "`Answer *" })
+            @Html.ValidationMessageFor(e => e.SecurityAnwser)
+
+        </div>*@
+
+
+
+                                </div>
+
+                                <div class="col-md-9" style="text-align:center;">
+
+                                    <input type="submit" class="btnRegister" onclick="return ValidateMandatory();" value="Register" />
+                                    <a href="~/UserLogin/Index" class="btnRegister">Back</a>
+                                </div>
+                                    <div class="col-md-12">
+                                        @if (Model != null)
+                                        {
+                                            if (Model.errorMessage != "")
+                                            {
+                                                <center><label id="errMessage">@Model.errorMessage</label></center>
+                                            }
+                                            else
+                                            {
+                                                <center><label id="errMessage"></label></center>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                $(function () {
+                    var msg = '@ViewData["result"]';
+                    if (msg == '1') {
+                        //alert("User Details Inserted Successfully");
+                       // window.location.href = "@Url.Action("Index", "UserLogin")";
+                    }
+
+                    $("#RegisterNav").click(function () {
+                        //alert("register");
+                        window.location.href = "@Url.Action("Index", "Enrollment")";
+                    });
+
+                    $("#LoginNav").click(function () {
+                        //alert("Login");
+                        window.location.href = "@Url.Action("Index", "UserLogin")";
+                    });
+
+                    //alert($("#accType input[value='User']").attr("checked","checked");
+
+                });
+                /*****************/
+                function ValidateMandatory() {
+
+                    var isValid = true;
+                    var errMessage = "";
+
+                    //var gender = $("#Gender:checked").val();
+
+
+                    if ($("#FirstName").val().trim() == "" || $("#LastName").val().trim() == "" ||
+                        $("#Password").val().trim() == "" || $("#Confirmpwd").val().trim() == "" ||
+                        $("#Email").val().trim() == "" || $("#PhoneNumber").val().trim() == "" ) {
+                        isValid = false;
+                        errMessage = "Please enter all mandatory (*) fields";
+                    }
+                    if ($("#Email").val().trim().toLowerCase().indexOf($("#EmailDomain").val()) == -1) {
+                        isValid = false;
+                        errMessage = "Invalid Email Domain. Please use " + $("#EmailDomain").val();
+                    }
+                    //Add the below label in the page commonly to show error
+                    $("#errMessage").html(errMessage);
+
+
+
+                    return isValid;
+                }
+            </script>
+            }
+        </div>
+
+    }
+
+</body>
+</html>
+
+
+
+
+@*<input type="submit" class="btnRegister" onclick="return ValidateMandatory();" value="Register" />*@
+
+
+  

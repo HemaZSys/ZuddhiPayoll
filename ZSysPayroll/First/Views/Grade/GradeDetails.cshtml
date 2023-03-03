@@ -1,0 +1,167 @@
+﻿
+
+@model IEnumerable<First.Models.PayslipGrade>
+
+@{
+    ViewBag.Title = "Grade Details";
+}
+
+<div class="heading">Manage Payslip Grade Information</div>
+
+<link href="~/CSS/bootstrap.min.table.css" rel="stylesheet" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+<link rel="stylesheet" href="~/CSS/jquery.dataTables.min.css" />
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+        table td {
+            line-height: 25px;
+            padding-left: 15px;
+        }
+
+        table th {
+            background-color: #ae98ba;
+            color: black;
+        }
+
+    tr:nth-child(odd) {
+        background:#fff !important;
+    }
+
+    .glyphicon {
+        margin-right: 12px;
+    }
+
+    .heading {
+        text-align: center;
+        font-size: 27px !important;
+        font-weight: bold;
+    }
+    th{
+        font-weight:bold;
+    }
+    .glyphicon-pencil {
+        font-weight: bold;
+        color: #ffeb00;
+    }
+
+    .glyphicon-trash {
+        color: red;
+    }
+
+    .fa-calculator {
+        color: #4fe12b;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="card card-layout ">
+        <table id="tblGradeDetails" class="table table-hover">
+            <thead>
+                <tr>
+
+                    <th>
+                        Grade Name
+                    </th>
+                    <th>
+                        Sequence Number
+                    </th>
+                    <th>
+                        Section Title
+                    </th>
+                    <th>
+                        Section Description
+                    </th>
+                    <th>
+                        Percentage
+                    </th>
+                    <th>
+                        Earning Or Deduction
+                    </th>
+                    <th>
+                        Create
+                    </th>
+                    <th>
+                        Edit
+                    </th>
+                    <th>
+                        Delete
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr class="info">
+                    <td style="text-align:center;">
+                        @Html.DisplayFor(modelItem => item.GradeName)
+                    </td>
+                    <td style="text-align:right;padding-right:50px;">
+                        @Html.DisplayFor(modelItem => item.SequenceNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SectionDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td style="text-align:right;padding-right:50px;">
+                        @Html.DisplayFor(modelItem => item.Percentage) %
+                    </td>
+                    <td>
+                        @if (item.EarningOrDeduction == 0)
+                        {
+                            <label style="color:green;">Earnings</label>
+                        }
+                        else
+                        {
+                            <label style="color:red;">Deductions</label>
+                        }
+                    </td>
+                    <td style="text-align:center;width:50px;">
+                        @Html.ActionLink(" ", "CreatePayslipGrade", new { id = 0, mode = 2, grd = item.GradeName, seq = item.SequenceNumber, sectit = item.Description, erd = item.EarningOrDeduction }, new { @class = "glyphicon glyphicon-plus" })
+                    </td>
+                    <td style="text-align: center; width: 50px;">
+                        @Html.ActionLink(" ", "CreatePayslipGrade", new { id = item.Id, mode = 2 }, new { @class = "glyphicon glyphicon-pencil" })
+                    </td>
+                    <td style="text-align: center; width: 50px;">
+                        @Html.ActionLink(" ", "DeletePayslipGrade", new { id = item.Id }, new { @class = "glyphicon glyphicon-trash", onclick = "return confirm('Are sure wants to delete?');" })
+                    </td>
+                </tr>
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+        <script src="~/Js/jquery.min.js"></script>
+        <script src="~/Js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //alert(GetParameterValues('grd'));
+                //alert(GetParameterValues('seq'));
+                //alert(GetParameterValues('sectit'));
+                //alert(GetParameterValues('erd'));
+
+                checkLogin();
+                $("#tblGradeDetails").DataTable();
+
+            });
+
+            function GetParameterValues(param) {
+                var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                for (var i = 0; i < url.length; i++) {
+                    var urlparam = url[i].split('=');
+                    if (urlparam[0] == param) {
+                        return urlparam[1];
+                    }
+                }
+            }
+        </script>

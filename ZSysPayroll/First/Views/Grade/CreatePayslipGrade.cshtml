@@ -1,0 +1,328 @@
+﻿@model First.Models.PayslipGrade
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <script src="~/Js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/CSS/jquery-ui.css" rel="stylesheet" />*@
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+
+    
+    @*<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>*@
+
+
+    <script src="~/bower_components/jquery-ui.js"></script>
+    
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        /*input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            input[type=text]:focus, input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }*/
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            float: right;
+            margin-top: 10%;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: white;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+        }
+
+        .viewAll:hover {
+            opacity: 1;
+        }
+
+        .viewAll {
+            float: right;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: #fff;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+            margin-top: 0%;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+
+        .alignContainer {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f4f4f41a;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 5%;
+            background: #dbaaef30;
+            margin-bottom: 2%;
+            margin-top: 2%;
+        }
+
+        input[type=text], select {
+            width: 100%;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            text-align: center !important;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("CreatePayslipGrade", "Grade", FormMethod.Post))
+    {    
+        <div class="container-fluid">
+            <div class="card card-layout">
+                <div class="heading">Payslip Grade Information</div>
+                <div class="row">
+
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <label for="GradeName" style="margin-top: 15px;"><b>Grade Name</b></label>
+                                <i class="fa fa-info-circle" style="font-size:15px" title="Select Employee Grade"></i>
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.HiddenFor(e => e.Id, new { type = "text" })
+                                @Html.TextBoxFor(e => e.GradeName, new { type = "text" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <label for="SequenceNo" style="margin-top: 15px;"><b>Sequence Number</b></label>
+                                <i class="fa fa-info-circle" style="font-size:15px" title="Enter the line number where this Payslip Desc need to added"></i>
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(e => e.SequenceNumber, new { type = "text" })
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <label for="SectionDesc" style="margin-top: 15px;"><b>Section Title</b></label>
+                                <i class="fa fa-info-circle" style="font-size:15px" title="Select the name of the Section Title for this Payslip Desc"></i>
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(e => e.SectionDescription, new { type = "text" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <label for="Desc" style="margin-top: 15px;"><b>Payslip Description</b></label>
+                                <i class="fa fa-info-circle" style="font-size:15px" title="Enter the new Payslip Desc need to added. For eg. LTA, Basic, IT"></i>
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(e => e.Description, new { type = "text" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <label for="ControlType" style="margin-top: 15px;"><b>Percentage</b></label>
+                                <i class="fa fa-info-circle" style="font-size:15px" title="Enter the number of % need to added/deducted"></i>
+                            </div>
+                            <div class="col-lg-7">
+                                @Html.TextBoxFor(e => e.Percentage, new { type = "text" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 p-3">
+                        <div class="row">
+                            <div class="col-lg-5 mt-4">
+                                <b>
+                                    <table style="margin-top:15px;">
+                                        <tr>
+                                            <td style="padding-right:5px;">
+                                                <input type="radio" name="earningsOrDeduction" value="0" />
+                                            </td>
+                                            <td style="padding-right: 25px;">Earnings</td>
+                                            <td style="padding-right: 5px;">
+                                                <input type="radio" name="earningsOrDeduction" value="1" />
+                                            </td>
+                                            <td style="padding-right: 15px;">Deductions</td>
+                                            <td style="padding-right: 15px;"><i class="fa fa-info-circle" style="font-size:15px" title="Select whether this is earnings or deductions"></i></td>
+                                        </tr>
+                                    </table>
+                                </b>
+
+
+                            </div>
+                            <div class="col-lg-7">
+                                <div >
+                                    @Html.TextBoxFor(e => e.EarningOrDeduction, new { type = "text" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div id="TOHIDE" style="display:none;">
+                        <div class="col-lg-4 p-3">
+                            <div class="row">
+                                <div class="col-lg-5 mt-4">
+                                    <label for="LineNo" style="margin-top: 15px;"><b>Line Number</b></label>
+                                </div>
+                                <div class="col-lg-7">
+
+                                    @Html.TextBoxFor(e => e.LineNumber, new { type = "text" })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 p-3">
+                            <div class="row">
+                                <div class="col-lg-5 mt-4">
+                                    <label for="Section" style="margin-top: 15px;"><b>Section</b></label>
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.TextBoxFor(e => e.Section, new { type = "text" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 p-3">
+                            <div class="row">
+                                <div class="col-lg-5 mt-4">
+                                    <label for="ID" style="margin-top: 15px;"><b>ID</b></label>
+                                </div>
+                                <div class="col-lg-7">
+                                    @Html.HiddenFor(e => e.Id, new { type = "text" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnAdd" class="registerbtn" style="margin-top: 0%;">Add</button>
+                @Html.ActionLink("View All", "GradeDetails", "Grade", new { @class = "viewAll" })
+
+
+            </div>
+        </div>
+    }
+    }
+
+</body>
+</html>
+<script type="text/javascript">
+    var availableSections = ["Fixed Pay", "Reimbursement", "Deductions"];
+    $(document).ready(function () {
+        checkLogin();
+
+        if (document.location.href.indexOf("mode=2") > -1) {
+            $("#btnAdd").text("Update");
+        }
+        else {
+            $("#btnAdd").text("Add");
+        }
+        
+
+        $("#SectionDescription").autocomplete({
+            source: availableSections
+        });
+
+        $("input[name='earningsOrDeduction']").click(function () {
+            $("#EarningOrDeduction").val($(this).val());
+        });
+
+    });
+         $(function () {
+            var msg = '@ViewData["result"]';
+            if (msg == '1')
+            {
+                alert("Grade Details Inserted Successfully");
+               // window.location.href = window.location.href + "/GradeDetails/" + $("#Id").val();
+             }
+             
+         });
+</script>

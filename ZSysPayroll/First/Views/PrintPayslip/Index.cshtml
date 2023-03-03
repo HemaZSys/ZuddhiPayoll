@@ -1,0 +1,109 @@
+﻿@model IEnumerable<First.Models.Payslip>
+
+@{
+    ViewBag.Title = "Index";
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Print", "PrintAllReport")
+</p>
+<table class="table">
+    <tr>
+        <dt>@Html.DisplayNameFor(model => model.EmployeeId)</dt>
+
+        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Basic)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.HRA)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.DA)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coveyance)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Bonus)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deduction_Total)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.PF)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Incometax)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Professiontax)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.SalaryAdv)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Others)
+        </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.Total_sal)
+        </dt>
+        <dt></dt>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelitem => item.EmployeeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Basic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HRA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DA)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Coveyance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bonus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Deduction_Total)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Incometax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Professiontax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalaryAdv)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Others)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.to)
+            </td>
+            <td>
+                @Html.ActionLink("Print Salary Slip", "PrintSalarySlip", new { id = item.EmployeeId }) |
+            </td>
+        </tr>
+    }
+
+</table>

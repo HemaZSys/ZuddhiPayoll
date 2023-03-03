@@ -1,0 +1,230 @@
+﻿
+@model First.Models.PayslipGradeHeader
+
+@{
+    ViewBag.Title = "ViewbyID";
+    Layout = null;
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+}
+
+
+<html>
+<head>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+
+            table td {
+                line-height: 25px;
+                padding-left: 15px;
+            }
+
+            table th {
+                background-color: #ae98ba;
+                color: black;
+            }
+    </style>
+
+</head>
+<body>
+    <table border="1">
+        <tr height="100px" style="background-color:#9a73bb;color:#ffffff;text-align:center;font-size:24px; font-weight:600;">
+            <td colspan='4'>Zuddhi Systems</td>
+        </tr>
+        <tr>
+            <dt>Employee Name</dt>
+            <td>@Html.DisplayForModel("Name", new SelectList(Employeelist, "Id", "Name"))</td>
+            <dt>PAN NO.</dt>
+            <td>A5913OT</ td >
+        </tr>
+        <!-----2 row--->
+        <tr>
+            <dt>Employee ID</dt>
+            <td>@Model.EmployeeId</td>
+            <dt>Bank Name</dt>
+            <td>HDFC</td>
+        </tr>
+        <!------3 row---->
+        <tr>
+            <dt>Bank A/C No.</dt>
+            <td>563800001256</td>
+            <dt>PF A/C No.</dt>
+            <td>5648789</td>
+        </tr>
+        <!------4 row---->
+        <tr>
+            <dt>Data of Joining</dt>
+            <td>03/01/2022</td>
+            <dt>Designation</dt>
+            <td>Trainee</td>
+        </tr>
+        <!------5 row---->
+        <tr>
+            <dt>Gender</dt>
+            <td>Male</td>
+            <dt>LOP</dt>
+            <td>0</td>
+        </tr>
+        <!------6 row---->
+        <tr>
+            <dt>DOB</dt>
+            <td>05/12/1994</td>
+            <dt>UAN No.</dt>
+            <td>78981355</td>
+        </tr>
+    </table>
+
+
+    <br />
+    <table border="1">
+        <tr>
+            <dt>Earnings</dt>
+            <dt>Amount</dt>
+            <dt>Deductions</dt>
+            <dt>Amount</dt>
+        </tr>
+        <tr>
+            <td>Basic</td>
+            <td>@Model.Basic</td>
+            <td>Monthly Tax</td>
+            <td>@Model.Incometax</td>
+        </tr>
+        <tr>
+            <td>HRA</td>
+            <td>@Model.HRA</td>
+            <td>Provident Fund</td>
+            <td>@Model.PF</td>
+        </tr>
+        <tr>
+            <td>Food Coupon</td>
+            <td>400</td>
+            <td>Professional tax</td>
+            <td>@Model.Professiontax</td>
+        </tr>
+        <tr>
+            <td>Special allowance</td>
+            <td>3000</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Food Coupon Dedutions</td>
+            <td>200</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>shift Allowance</td>
+            <td>1000</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>bonus</td>
+            <td>@Model.Bonus</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>medical Allowance</td>
+            <td>600</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <dt>Gross Earnings</dt>
+            <td>@Model.Gross_Total</td>
+            <dt>Gross Deductions</dt>
+            <td>@Model.Deduction_Total</td>
+        </tr>
+        <tr>
+            <td><strong>NET PAY</strong></td>
+            <td>@Model.Total_sal</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <table align="center">
+        <tr>
+            <td><strong>(Rupees FIFTEEN THOUSAND FOUR HUNDRED ONLY)</strong></td>
+        </tr>
+    </table>
+    @*<table border="0">
+            <tr>
+                <dt>Reimbursment</dt>
+                <dt>Paid Value</dt>
+                <dt>Balance Eligibility</dt>
+            </tr>
+            <tr>
+                <td>Mobile Reimbursement</td>
+                <td>500</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Petrol Reimb</td>
+                <td>500</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>Mobile Reimb</td>
+                <td>500</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>Car Maint Reimb</td>
+                <td>500</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>LTA Reimb</td>
+                <td>500</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Mobile Reimb</td>
+                <td>500</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <td>Train Reimb</td>
+                <td>500</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <dt>Reimbursement Payout</dt>
+                <td>Rs.3500</td>
+                <td></td>
+
+            </tr>
+        </table>
+        <table align="center">
+            <tr>
+                <td><strong>(Rupees THREE THOUSAND FIVE HUNDRED ONLY)</strong></td>
+            </tr>
+        </table>*@
+
+    <h4 style="text-align:center">ZUDDHI SYSTEMS</h4>
+    <p style="text-align:center">
+        No. 2 Sri Nagar<br />
+        5th Street, Narayanapuram, Pallikaranai<br />
+        Chennai, Tamil Nadu 600100<br />
+        India
+    </p>
+    <p>
+        @Html.ActionLink("Back to List", "Details", "Employee")
+    </p>
+</body>
+</html>
+
+
+
+

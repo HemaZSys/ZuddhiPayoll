@@ -1,0 +1,530 @@
+﻿@model First.Models.Form80CHeader
+@{
+    ViewBag.Title = "Formdeductiondetails";
+    List<First.Models._TaxDeclFormSetting> Form80Settingclist = ViewBag.SettingsTaxDeclForm as List<First.Models._TaxDeclFormSetting>;
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    string section = "";
+    //string strNull = null;
+}
+
+
+<html>
+<head>
+    <style>
+
+        .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+            padding: 1px;
+            text-indent: 5px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+        }
+
+            .table > tbody > tr.info > td, .table > tbody > tr.info > th, .table > tbody > tr > td.info, .table > tbody > tr > th.info, .table > tfoot > tr.info > td, .table > tfoot > tr.info > th, .table > tfoot > tr > td.info, .table > tfoot > tr > th.info, .table > thead > tr.info > td, .table > thead > tr.info > th, .table > thead > tr > td.info, .table > thead > tr > th.info {
+                background-color: #f1dbf161;
+            }
+        table th {
+            background-color: #d4cfd9;
+            color: black;
+        }
+        .pagetitle {
+            text-align: center;
+            font-size: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            /*border: 1px solid black;*/
+        }
+
+            table td {
+                line-height: 25px;
+                padding-left: 25px;
+            }
+
+            input{
+                text-align:right;
+            }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 5%;
+            background: #dbaaef30;
+            margin-bottom: 2%;
+            margin-top: 2%;
+        }
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+
+
+        a {
+            color: #9a73bb;
+        }
+
+            a:focus, a:hover {
+                color: #9a73bb;
+                text-decoration: none;
+            }
+           
+    </style>
+
+</head>
+<body>
+    @using (Html.BeginForm("Form80C", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <br />
+        <div class="container-fluid row">
+            <div class="col-12">
+                <div class="container-fluid card" style="margin-bottom: 2rem;">
+                    <div class="card-body" style="border-collapse: collapse;border-spacing: 0;width: 100%; background: #fff;padding: 3rem;">
+                        <table border="1">
+                            <tr height="100px" style="background-color:#9a73bb;color:#ffffff;text-align:center;font-size:24px; font-weight:600;">
+                                <td colspan='4' class="pagetitle"> Invest Declaration / Proof Submission @Html.DisplayFor(Model => Model.MonthYear)@Html.HiddenFor(Model => Model.MonthYear)</td>
+                            </tr>
+                            <tr>
+                                <th>Employee Name</th>
+                                <td>@Html.DisplayFor(Model => Model.EmployeeName)@Html.HiddenFor(Model => Model.EmployeeName)@Html.HiddenFor(Model => Model.Empid)@Html.HiddenFor(Model => Model.CreatedDate)</td>
+
+                                <th>PAN NO.</th>
+                                <td>@Html.DisplayFor(Model => Model.PAN)@Html.HiddenFor(Model => Model.PAN)</td>
+                            </tr>
+                            <!-----2 row--->
+                            <tr>
+                                <th>Employee ID</th>
+                                <td>@Html.DisplayFor(Model => Model.Employeeid)@Html.HiddenFor(Model => Model.Employeeid)</td>
+                                <th>Bank Name</th>
+                                <td>@Html.DisplayFor(Model => Model.Bankname)@Html.HiddenFor(Model => Model.Bankname)</td>
+                            </tr>
+                            <!------3 row---->
+                            <tr>
+                                <th>Bank A/C No.</th>
+                                <td>@Html.DisplayFor(Model => Model.Bankacno)@Html.HiddenFor(Model => Model.Bankacno)</td>
+                                <th>PF A/C No.</th>
+                                <td>5648789</td>
+                            </tr>
+                            <!------4 row---->
+                            <tr>
+                                <th>Data of Joining</th>
+                                <td>@Html.DisplayFor(Model => Model.DateofJoin)@Html.HiddenFor(Model => Model.DateofJoin)</td>
+                                <th>Designation</th>
+                                <td>@Html.DisplayFor(Model => Model.DesignationName)@Html.HiddenFor(Model => Model.DesignationName)</td>
+                            </tr>
+                            <!------5 row---->
+                            <tr>
+                                <th>Gender</th>
+                                <td>@Html.DisplayFor(Model => Model.Gender)@Html.HiddenFor(Model => Model.Gender)</td>
+                                <th>LOP</th>
+                                <td>0</td>
+                            </tr>
+                            <!------6 row---->
+                            <tr>
+                                <th>DOB</th>
+                                <td>@Html.DisplayFor(Model => Model.DOB)@Html.HiddenFor(Model => Model.DOB)</td>
+                                <th>UAN No.</th>
+                                <td>-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div><a href="#">[Click here] </a><p>to copy the declared amount in proof submission column.</p></div>
+            <div><a href="#">[Click here]</a><p> to copy the Rent declared amount in Rent proof submission column.</p></div>*@
+        <br />
+        <div class="container-fluid row">
+            <div class="col-12">
+                <div class="container-fluid card" style="margin-bottom: 2rem;">
+                    <div class="card-body" style="border-collapse: collapse;border-spacing: 0;width: 100%; background: #fff;padding: 3rem;">
+                        <table class="table table-bordered">
+
+                            @*@for (int i = 0; i < Model.Form80CList.Count() - 1; i++)*@
+                                @for (int i = 0; i < Model.Form80CList.Count(); i++)
+                                {
+                                    if (section != Model.Form80CList[i].SectionName)
+                                    {
+                                        <tr>
+                                            <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].Section)</th>
+                                            <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].SectionName)</th>
+                                            <th>Decared Amount in Rs.</th>
+                                            <th>Proof Submission in Rs.</th>
+                                            <th>Proof Upload</th>
+                                        </tr>
+
+                                        section = Model.Form80CList[i].SectionName;
+                                    }
+
+                                    string controltype = "";
+
+                                    <tr class="info">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => Model.Form80CList[i].LineNumber)
+                                        </td>
+                                        <td>
+                                            @if (controltype != "checkbox")
+                                            {
+                                                @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                                @Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)
+                                            }
+
+                                            @if (controltype == "radio")
+                                            {
+                                                @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, ">80%") @Html.Label(@">80%")
+                                                @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, "<80%") @Html.Label(@"<80%")
+                                                @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, "Zero | (u/s.80DD)") @Html.Label(@"Zero | (u/s.80DD)")
+
+                                            }
+                                            else if (controltype == "checkbox")
+                                            {
+                                                var parameterValue = Convert.ToBoolean(false);
+                                                @Html.CheckBoxFor(modelItem => parameterValue)
+                                                @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                                @Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)
+                                            }
+                                            else if (controltype == "date")
+                                            {
+                                                @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                                @Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)
+                                                @Html.TextBoxFor(modelItem => Model.Form80CList[i].Description, new { Type = "Date" })
+                                            }
+                                            else
+                                            {
+                                                @*@Html.TextBoxFor(modelItem => Model.Form80CList[i].Description, new { type = controltype })*@
+                                                // @Html.TextBox("customers[" + @i + "].CompanyName", Form80clist[i].Description)
+                                            }
+
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => Model.Form80CList[i].Declared_Amt, new { type = "text" })</td>
+                                        <td>@Html.DisplayFor(modelItem => Model.Form80CList[i].Proof_Amt, new { type = "text" })</td>
+
+                                        @if (Model.Form80CList[i].Proof_file_location != null && Model.Form80CList[i].Proof_file_location != "")
+                                        {
+                                            <td class="clsFile">@Html.ActionLink(Model.Form80CList[i].Proof_file_location, "Download", new { ImageName = Model.Form80CList[i].Proof_file_location.ToString() }) </td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Model.Form80CList[i].Proof_file</td>
+                                        }
+                                    </tr>
+
+                                }
+                            @foreach (var item in Model.Form80CList)
+                            {
+                                @*string controltype = "";
+            if (item.ControlType == 1)
+            {
+                controltype = "text";
+            }
+            else if (item.ControlType == 2)
+            {
+                controltype = "checkbox";
+            }
+            else if (item.ControlType == 3)
+            {
+                controltype = "date";
+            }
+            else if (item.ControlType == 4)
+            {
+                controltype = "radio";
+            }
+            <tr class="info">
+                <td>
+                    @Html.DisplayFor(modelItem => item.LineNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description, new { type = controltype })
+
+                    @if (controltype == "radio")
+                    {
+                        @Html.RadioButtonFor(modelItem => item.Description, ">80%") @Html.Label(@">80%")
+                        @Html.RadioButtonFor(modelItem => item.Description, "<80%") @Html.Label(@"<80%")
+                        @Html.RadioButtonFor(modelItem => item.Description, "Zero | (u/s.80DD)") @Html.Label(@"Zero | (u/s.80DD)")
+
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(modelItem => item.Description, new { type = controltype })
+                       // @Html.TextBox("customers[" + @i + "].CompanyName", item.Description)
+                    }
+                </td>
+                <td>@Html.TextBoxFor(modelItem => item.ControlType, new { type = "text" })</td>
+                <td>@Html.TextBoxFor(modelItem => item.MaximumValue, new { type = "text" })</td>
+                <td>@Html.TextBoxFor(modelItem => item.Section, new { type = "file" })</td>
+
+            </tr>*@
+
+                            }
+
+                            <tr>
+                                <th>F</th>
+                                <th colspan="4"><p>Rent Paid per month for rented accommodation (for claiming exemption U/s. 10(13A). Metro Cities are Delhi, Kolkata, Mumbai and Chennai only)</p></th>
+
+                            </tr>
+                        </table>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th></th>
+                                <th>Metro</th>
+                                <th>Proof Submission</th>
+                                <th>Non-Metro</th>
+                                <th>Proof Submission</th>
+                                <th>Remarks</th>
+                                <th>Landlord PAN</th>
+                                <th>Landlord Name</th>
+                                <th>Landlord Address</th>
+                            </tr>
+                            <tr>
+                                <td>April</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilMetro, new { type = "text", @class = "PreviousTextbox" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AprilLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>May</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MayLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>June</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JuneLandlordAddress, new { type = "text", @class = "other" })</td>
+
+                            </tr>
+                            <tr>
+                                <td>July</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JulyLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>August</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.AugustLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>September</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.SeptemberLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>October</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.OctoberLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>November</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.NovemberLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>December</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.DecemberLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.JanuaryLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>February</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.FebruaryLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr>
+                                <td>March</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchNonMetro, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchNonMetroProofSubmission, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchRemarks, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchLandlordPAN, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchLandlordName, new { type = "text", @class = "other" })</td>
+                                <td>@Html.DisplayFor(modelItem => modelItem.MarchLandlordAddress, new { type = "text", @class = "other" })</td>
+                            </tr>
+                            <tr style="font-weight:bold;background-color:#ddd;height:36px; vertical-align:middle;" class="rentAttach">
+                                <td colspan="1"style="vertical-align:middle">Rent Proof :  </td>
+                                    <td colspan="8" style="vertical-align:middle">
+                                        @if(Model.RentProofFile != "")
+                                        {
+                                        @Html.ActionLink(Model.RentProofFile, "Download", new { ImageName = Model.RentProofFile.ToString() })
+                                        }
+                                    </td>
+                            </tr>
+                                <tr>
+                            <td colspan="9"><p>Note: If House Rent Amount is More than Rs.8333/-pm then Landlord PAN,Landlord Name and Landlord Address are Mantatory</p></td>
+                            </tr>
+                            @*<tr>
+            <td>Place<input type="text" value="" /></td>
+            <td>Date<input type="date" value="" /></td>
+            <td>signature<input type="text" value="" /></td>
+        </tr>*@
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            @*@Html.ActionLink("Back", "Details", "Employee")
+            @Html.ActionLink("Edit", "UpdateForm80Cdeduction", "Tax", new { id = Model.Empid, year = Model.CreatedDate }, null)*@
+        </div>
+        <div class="row">
+            <div class="col-lg-10">
+
+            </div>
+            <div class="col-lg-2">
+                <div class="row">
+
+                    @*<div class="col-lg-6" >
+            <button type="submit" class="registerbtn  float-right">@Html.ActionLink("Back", "EmployeeDetails", "Employee")</button>
+        </div>*@
+
+                    <div class="col-lg-6">
+                        @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+                        {
+                            <button type="submit" class="registerbtn  float-right">@Html.ActionLink("Back", "Details", "Employee")</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="registerbtn  float-right">@Html.ActionLink("Back", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</button>
+                        }
+                    </div>
+                    <div class="col-lg-6" id="ClsAdminEmpAddBack">
+
+                        @*@Html.ActionLink("Back", "Details", "Employee")*@
+                        <button type="submit" class="registerbtn float-left">@Html.ActionLink("Edit", "Form80C", "Tax", new { id = Model.Empid, year = Model.MonthYear }, null)</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    }
+</body>
+
+</html>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+<script src="~/Js/jquery.validate.min.js"></script>
+<script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        checkLogin();        
+        if (decrypt($("#userPrivilege").html()) == "Admin") {
+       // if ($("#userPrivilege").html() == "Admin") {
+            //alert("chking3");
+            $("#liSettings").show();
+        }
+        else {
+
+            //var adminCtrlsCnt = $(".clsAdmin").length;
+            //alert(adminCtrlsCnt);
+            $("#adminFormlink").hide();  
+
+        }
+
+        $(".PreviousTextbox").on('keyup', function () {
+            $(".other").val($(".PreviousTextbox").val());
+        });
+
+        
+        
+        $('.clsFile a').each(function (i, obj) {
+            var arrFileparts = $(this).html().split('\\');
+            arrFileparts = arrFileparts[arrFileparts.length-1];
+            $(this).html(arrFileparts);
+        });
+
+    });
+</script>
+
+

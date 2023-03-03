@@ -1,0 +1,76 @@
+﻿@model First.Models.Enroll
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <!-- Content Wrapper. Contains page content -->
+    <div>
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h4>
+                Dashboard
+            </h4>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <!-- Info boxes -->
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-primary"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><a href="/Products/Index">IT Details</a></span>
+                            <span class="info-box-number">@ViewBag.Form16</span>
+                        </div>
+                        @*<font size="1" class="pad"><a href="/Tax/Form80C" size="2">Form16</a></font>*@
+                        <!-- /.info-box-content -->
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow"><i class="fa fa-truck"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><a href="/PayslipEntry/PayslipGradeEntryview" size="2">Payslip</a></span>
+                            <span class="info-box-number">@ViewBag.Payslip</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        @*<font size="1" class="pad"><a href="/Employee/Details" size="2">New Payslip</a></font>*@
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-red"><i class="fa fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text"><a href="/Employee/Index" size="2">EMPLOYEES</a></span>
+                            <span class="info-box-number">@ViewBag.Employee</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        <font size="1" class="pad"><a href="/Employee/Index" size="2">New Employee</a></font>
+                    </div>
+                    <!-- /.info-box -->
+                </div>
+            </div>
+            <!-- /.row -->
+
+        </section>
+    </div>
+    <!-- /.table-responsive -->
+</div>
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>
+
+
+

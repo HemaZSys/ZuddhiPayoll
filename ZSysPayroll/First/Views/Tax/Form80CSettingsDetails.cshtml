@@ -1,0 +1,129 @@
+﻿@model First.Models._TaxDeclFormSetting
+
+@{
+    ViewBag.Title = "Form80CSettingsDetails";
+}
+
+<h2>Form80CSettings Details</h2>
+<style>
+    .container {
+        padding: 30px;
+        background-color: white;
+    }
+</style>
+<div class="container">
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.HiddenFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.HiddenFor(model => model.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LineNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LineNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SequenceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNumber)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Section)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Section)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SectionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SectionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ControlType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ControlType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaximumValue)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaximumValue)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentRequired)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentRequired)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AttachmentType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttachmentType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EarningOrDeduction)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EarningOrDeduction)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "UpdateForm80CSettings", new { id = Model.Id })
+    @Html.ActionLink("Back to List", "Form80Csettingslist")
+</p>
+
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

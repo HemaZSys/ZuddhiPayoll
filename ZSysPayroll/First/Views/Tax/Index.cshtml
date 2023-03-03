@@ -1,0 +1,752 @@
+﻿@*@model First.Models.Payslip*@
+@model First.Models.TblTaxDeclForm
+
+@{
+    ViewBag.Title = "Tax";
+    //Layout = null;
+}
+<html>
+<head>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            /*border: 1px solid black;*/
+        }
+
+            table td {
+                line-height: 25px;
+                padding-left: 25px;
+            }
+
+            table th {
+                background-color: #7e6d90;
+                color: black;
+            }
+    </style>
+    @*<script type="text/javascript">
+            $(document).ready(function () {
+                $('#Apply').prop('disabled', true);
+                $("#").change(function () {
+                    // Get uploaded file extension
+                    var extension = $(this).val().split('.').pop().toLowerCase();
+                    // Create array with the files extensions that we wish to upload
+                    var validFileExtensions = ['doc', 'docx', 'pdf'];
+                    //Check file extension in the array.if -1 that means the file extension is not in the list.
+                    if ($.inArray(extension, validFileExtensions) == -1) {
+                        alert("Sorry!! Upload only 'doc', 'docx', 'pdf' file")
+                        // Clear fileuload control selected file
+                        $(this).replaceWith($(this).val('').clone(true));
+                        //Disable Submit Button
+                        $('#Apply').prop('disabled', true);
+                    } else {
+                        // Check and restrict the file size to 128 KB.
+                        if ($(this).get(0).files[0].size > (131072)) {
+                            alert("Sorry!! Max allowed file size is 128 kb");
+                            // Clear fileuload control selected file
+                            $(this).replaceWith($(this).val('').clone(true));
+                            //Disable Submit Button
+                            $('#Apply').prop('disabled', true);
+                        } else {
+                            //Enable Submit Button
+                            $('#Apply').prop('disabled', false);
+                        }
+                    }
+                });
+                $("#Apply").click(function () {
+                    if ($("#Lifeinsure_DAmt").val() = null || $("#Lifeinsure_PAmt").val() || $("#Lifeinsure_Pfile").val()) {
+                        alert("Please fill out required fields(*)");
+                        return false;
+                    }
+                    return true;
+                });
+            });
+        </script>*@
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Index", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <br />
+            <table border="1">
+                <tr height="100px" style="background-color:#9a73bb;color:#ffffff;text-align:center;font-size:24px; font-weight:600;">
+                    <td colspan='4'>Invest Declaration / Proof Submission</td>
+                </tr>
+                <tr>
+                    <th>Employee Name</th>
+                    <td><input type="text" /></td>
+                    <th>PAN NO.</th>
+                    <td>A5913OT</td>
+                </tr>
+                <!-----2 row--->
+                <tr>
+                    <th>Employee ID</th>
+                    <td>101</td>
+                    <th>Bank Name</th>
+                    <td>HDFC</td>
+                </tr>
+                <!------3 row---->
+                <tr>
+                    <th>Bank A/C No.</th>
+                    <td>563800001256</td>
+                    <th>PF A/C No.</th>
+                    <td>5648789</td>
+                </tr>
+                <!------4 row---->
+                <tr>
+                    <th>Data of Joining</th>
+                    <td>03/01/2022</td>
+                    <th>Designation</th>
+                    <td>Trainee</td>
+                </tr>
+                <!------5 row---->
+                <tr>
+                    <th>Gender</th>
+                    <td>Male</td>
+                    <th>LOP</th>
+                    <td>0</td>
+                </tr>
+                <!------6 row---->
+                <tr>
+                    <th>DOB</th>
+                    <td>05/12/1994</td>
+                    <th>UAN No.</th>
+                    <td>78981355</td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <br />
+            <div><a href="#">[Click here] </a><p>to copy the declared amount in proof submission column.</p></div>
+            <div><a href="#">[Click here]</a><p> to copy the Rent declared amount in Rent proof submission column.</p></div>
+            <br />
+            <table border="1">
+                <tr>
+                    <th>A</th>
+                    <th>Particulars of Investment U/S. 80C</th>
+                    <th>Decared Amount in Rs.</th>
+                    <th>Proof Submission in Rs.</th>
+                    <th>Proof Upload</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Life Insurance for Self/Spouse/Children</td>
+                    <td>@Html.TextBoxFor(m => m.Lifeinsure_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Lifeinsure_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Lifeinsure_Pfile, new { type = "file", name = "files", id = "file1" })</td>
+
+
+
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Deposit in Public Provident Fund(Self/Spouse/Children)PPF</td>
+                    <td>@Html.TextBoxFor(m => m.PPF_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.PPF_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.PPF_Pfile, new { type = "file", name = "files", id = "file2" })</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Contribution to unit linked Insurance Plan(Self/Spouse/Children)ULIP</td>
+                    <td>@Html.TextBoxFor(m => m.ULIP_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.ULIP_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.ULIP_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Investment in Mutual Fund</td>
+                    <td>@Html.TextBoxFor(m => m.InvestMutual_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.InvestMutual_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.InvestMutual_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Investmeny in notified Equity Linked Saving Schemes</td>
+                    <td>@Html.TextBoxFor(m => m.InvestEquity_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.InvestEquity_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.InvestEquity_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><strong>NSC</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Purchased During Previous Years</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        N S C-Purchased during 01-04-16 to 31-03-17
+                        <table border="0">
+                            <tr>
+                                <td>Purchase Date:</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.TextBoxFor(e => e.NSC16_Date, new { type = "Date" })</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>@Html.TextBoxFor(m => m.NSC16_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC16_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC16_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        N S C-Purchased during 01-04-17 to 31-03-18
+                        <table border="0">
+                            <tr>
+                                <td>Purchase Date:</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.TextBoxFor(e => e.NSC17_Date, new { type = "Date" })</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>@Html.TextBoxFor(m => m.NSC17_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC17_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC17_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        N S C-Purchased during 01-04-18 to 31-03-19
+                        <table border="0">
+                            <tr>
+                                <td>Purchase Date:</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.TextBoxFor(e => e.NSC18_Date, new { type = "Date" })</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>@Html.TextBoxFor(m => m.NSC18_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC18_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC18_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>N S C-Purchased during 01-04-19 to 31-03-20</td>
+                    <td>@Html.TextBoxFor(m => m.NSC19_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC19_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC19_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>N S C-Purchased during(Previous Year) 01-04-20 to 31-03-21</td>
+                    <td>@Html.TextBoxFor(m => m.NSC20_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC20_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC20_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>N S C-Purchased during(Current Year) 01-04-21 to 31-03-22</td>
+                    <td>@Html.TextBoxFor(m => m.NSC21_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC21_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.NSC21_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Repayment of Housing Loan: Principal amount payable(April/March)/Stamp duty and Registration charges</td>
+                    <td>@Html.TextBoxFor(m => m.RepaymentHouseloan_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.RepaymentHouseloan_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.RepaymentHouseloan_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Pension Paln(Self Only)80 CCC</td>
+                    <td>@Html.TextBoxFor(m => m.PensionPlan80CCC_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.PensionPlan80CCC_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.PensionPlan80CCC_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Tution Fees for School Children</td>
+                    <td>@Html.TextBoxFor(m => m.Tutionfeesfor2child_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Tutionfeesfor2child_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Tutionfeesfor2child_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Fixed Deposits in Scheduled Bank for 5 yeras Qualifying for 80C</td>
+                    <td>@Html.TextBoxFor(m => m.FDQualifyfor80C_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.FDQualifyfor80C_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.FDQualifyfor80C_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>As Five Year time Deposi in an account under the Post Office Time Deposit Rules, 1981</td>
+                    <td>@Html.TextBoxFor(m => m.Postoffctimedeposit_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Postoffctimedeposit_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Postoffctimedeposit_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Sukanya Samriddhi Account rules, 2014</td>
+                    <td>@Html.TextBoxFor(m => m.Sukanyasamriddhi_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Sukanyasamriddhi_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Sukanyasamriddhi_Pfile, new { type = "file" })</td>
+
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Infrastructure Bonds</td>
+                    <td>@Html.TextBoxFor(m => m.Infrabond_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Infrabond_PAmt, new { type = "text" })</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>NPS SCHEME</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>Contribution to NPS Scheme 80CCD1(B)</td>
+                    <td>@Html.TextBoxFor(m => m.Tax80CCD1_DAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Tax80CCD1_PAmt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(m => m.Tax80CCD1_Pfile, new { type = "file" })</td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th><strong>PARTICULARS OF INVESTMENT / EXPENDITURE DEDUCTIBLE FROM GROSS TOTAL INCOME</strong></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>
+                        <p>Medical Insurance Premium upto Rs.25,000/-(any other mode other than cash)</p>
+                        <table border="0">
+                            <tr>
+                                <td>
+                                    Mediclaim Premium(self)
+                                </td>
+                                <td>
+                                    <input type="checkbox" value="If Senior Citizen" />If Senior Citizen
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    u/s. 80D
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Mediclaim Premium(Dependent)
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="checkbox1" value="If Senior Citizen" />If Senior Citizen (or)
+                                    <input type="checkbox" id="checkbox2" value="If Senior Citizen" />Very Senior Citizen
+
+                                </td>
+                                <td>
+                                    <p>Age</p>
+                                    <input type="text" />
+                                </td>
+                                <td>
+                                    u/s. 80D
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td><input type="text" /><br /><input type="text" /></td>
+                    <td><input type="text" /><br /><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>
+                        <p>Expenditure on Medical Treatment / Payment under specified schemes benefit of Handicapped dependent. Rs.75,000/- for permanent disablement 1,25,000/-</p>
+                        <input type="radio" value=">80%" />>80%
+                        <input type="radio" value="<80%" /> < 80%
+                        <input type="radio" value="Zero" />Zero | (u/s.80DD) <a href="#">Download Form 10 IA</a>
+                    </td>
+                    <td><input type="text" /><br /><input type="text" /></td>
+                    <td><input type="text" /><br /><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Actual Expenditure occured for medical treatment of self/Dependent relative suffering from terminal diseases.</strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>B</th>
+                    <th>Income/(Loss) From House Property</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox3" value="80EE" />80EE (Additional benefit on interest payable to Bank)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox4" value="800EEA" />80EEA (House Property whose stamp duty value does not exceed Rs.4500000/-Lacs)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox5" value="800EEALetout" />80EEA (LetOut)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox6" value="800EEB" />80EEB (Interest on Loan Taken for Purchase of an Electric)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox7" value="HousingLoan" />Interest on Housing Loan / Self Occupied</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox8" value="Letout1" />Let Out - (Property - 1)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox9" value="Letout2" />Let Out - (Property - 2)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox10" value="Letout3" />Let Out - (Property - 3)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox11" value="Letout3" />Let Out - (Property - 4)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><p>Note:<br />1. Submit Self-Declaration, if more than one name is mentioned in the Bank Certificate for Housing Loan.<a href="#">Download Self Declaration Form</a></p></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>C</th>
+                    <th>Income From Previous Employer</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>(i) Salary Received form Previous Employer (after Considering excemption as u/s 10)</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>(i) PF Deducted by Previous Employer</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>(i) PT Deducted by Previous Employer</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>(i) Income tax Deducted by Previous Employer</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <th>D</th>
+                    <th>Income From Other Heads</th>
+                    <th><input type="text" /></th>
+                    <th><input type="text" /></th>
+                    <th><input type="file" /></th>
+                </tr>
+                <tr>
+                    <th>E</th>
+                    <th>Taxable PF Perquisite</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="checkbox" id="checkbox12" value="Letout3" />Taxable PF Perquisite</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th colspan="5">REIMBURSMENT(S)</th>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>LTA</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Telephone</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Fuel Maintenance</td>
+                    <td><input type="text" /></td>
+                    <td><input type="text" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                </tr>
+                <tr>
+                    <th>F</th>
+                    <th><p>Rent Paid per month for rented accommodation (for claiming exemption U/s. 10(13A). Metro Cities are Delhi, Kolkata, Mumbai and Chennai only)</p></th>
+                    <th></th>
+                    <th></th>
+                    <th><input type="file" /></th>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <table>
+                            <tr>
+                                <th></th>
+                                <th>Metro</th>
+                                <th>Proof Submission</th>
+                                <th>Non-Metro</th>
+                                <th>Proof Submission</th>
+                                <th>Remarks</th>
+                                <th>Landlord PAN</th>
+                                <th>Landlord Name</th>
+                                <th>Landlord Address</th>
+                            </tr>
+                            <tr>
+                                <td>April</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>May</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>June</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>July</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>August</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>September</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>October</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>November</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>December</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>February</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td>March</td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                                <td><input type="text" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><p>Note: If House Rent Amount is More than Rs.8333/-pm then Landlord PAN,Landlord Name and Landlord Address are Mantatory</p></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><input type="button" value="Save & Update" /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Place<input type="text" value="" /></td>
+                    <td>Date<input type="date" value="" /></td>
+                    <td>signature<input type="text" value="" /></td>
+                </tr>
+            </table>
+
+            <div>
+                <input type="submit" value="Apply" class="btnRegister" />
+            </div>
+        }
+    </div>
+
+
+
+
+
+</body>
+</html>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+<script src="~/Js/jquery.validate.min.js"></script>
+<script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>
+
+
+
+

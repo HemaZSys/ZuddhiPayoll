@@ -1,0 +1,1397 @@
+﻿@model First.Models.Employee
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<First.Models.Empalldropdown> designationlist = ViewBag.Designationlist;
+    List<First.Models.Empalldropdown> BloodGrouplist = ViewBag.BloodGrouplist;
+    List<First.Models.Empalldropdown> Departmentlist = ViewBag.Departmentlist;
+    List<First.Models.Empalldropdown> Qualificationlist = ViewBag.Qualificationlist;
+    List<First.Models.Empalldropdown> Gradelist = ViewBag.Gradelist;
+    List<First.Models.Empalldropdown> Empstatuslist = ViewBag.EmpStatusList;
+    List<First.Models.Empalldropdown> LocationList = ViewBag.LocationList;
+    List<First.Models.Empalldropdown> CompanyNameList = ViewBag.CompanyNameList;
+    List<First.Models.Empalldropdown> AllEmployeeList = ViewBag.AllEmployeeList;
+
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <script src="~/Js/bootstrap.bundle.min.js"></script>
+    <script src="~/Js/jquery.min.js"></script>
+
+    <script src="~/Js/jquery.validate.min.js"></script>
+    <script src="~/Js/jquery.validate.unobtrusive.js"></script>
+
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+
+    <script type="text/javascript">
+        var arrMenu = [false, false, false, false, false, false, false];
+
+        function displayarrow(ctrlid) {
+
+            
+            if (!arrMenu[ctrlid]) {
+                arrMenu[ctrlid] = true;                
+                $("#circledown" + ctrlid).hide();
+                $("#circleup" + ctrlid).show();
+            }
+            else {
+                arrMenu[ctrlid] = false;
+                $("#circleup" + ctrlid).hide();
+                $("#circledown" + ctrlid).show();
+            }
+
+        }
+
+        $(document).ready(function () {
+                checkLogin();
+                //windowwindow.onload = window.history.forward(0);
+
+                if (decrypt($("#userPrivilege").html()) == "Admin") {
+                $("#EmployeeId").removeAttr("disabled");
+                    //alert("s");
+                }
+                else {
+                $("#EmployeeId").attr("disabled", "disabled");
+                }
+
+            $("#txtOther").hide();
+
+
+
+             $("#DOB").change(function () {
+
+                    calcAge($("#DOB").val());
+
+                });
+
+            $("#Qualification").change(function () {
+                    //alert(":" + $("#Qualification option:selected").text() + ":");
+                    if ($("#Qualification option:selected").text() == "Others") {
+                    $("#txtOther").show();
+                    }
+                else {
+                    $("#txtOther").hide();
+                    }
+
+                });
+
+                var tmpDt = $("#lblDOB").html();
+                if (tmpDt.indexOf("-")>-1)
+                    tmpDt = tmpDt.split("-");
+                else if (tmpDt.indexOf("/") > -1)
+                    tmpDt = tmpDt.split("/");
+
+                // alert(tmpDt);
+                tmpDt = tmpDt[2] + "-" + tmpDt[1] + "-" + tmpDt[0];
+            $("#DOB").val(tmpDt);
+
+                var tmpDtJoin = $("#lblDOJ").html();
+                if (tmpDtJoin.indexOf("-") > -1)
+                    tmpDtJoin = tmpDtJoin.split("-");
+                else if (tmpDtJoin.indexOf("/") > -1)
+                    tmpDtJoin = tmpDtJoin.split("/");
+                //alert(tmpDtJoin);
+                tmpDtJoin = tmpDtJoin[2] + "-" + tmpDtJoin[1] + "-" + tmpDtJoin[0];
+            $("#DateofJoin").val(tmpDtJoin);
+
+            var tmpDtRelieving = $("#lblDOR").html();
+            if (tmpDtRelieving.indexOf("-") > -1)
+                tmpDtRelieving = tmpDtRelieving.split("-");
+            else if (tmpDtRelieving.indexOf("/") > -1)
+                tmpDtRelieving = tmpDtRelieving.split("/");
+            //alert(tmpDtJoin);
+            tmpDtRelieving = tmpDtRelieving[2] + "-" + tmpDtRelieving[1] + "-" + tmpDtRelieving[0];
+            $("#DateofRelieving").val(tmpDtRelieving);
+
+            var tmpDtConfir = $("#lblDOC").html();
+            if (tmpDtConfir.indexOf("-") > -1)
+                tmpDtConfir = tmpDtConfir.split("-");
+            else if (tmpDtConfir.indexOf("/") > -1)
+                tmpDtConfir = tmpDtConfir.split("/");
+            //alert(tmpDtJoin);
+            tmpDtConfir = tmpDtConfir[2] + "-" + tmpDtConfir[1] + "-" + tmpDtConfir[0];
+            $("#DateofConfirmation").val(tmpDtConfir);
+
+
+                if (document.location.href.indexOf("mode=2") > -1) {
+                $("#btnAdd").text("Update");
+                $("#Name").attr("pointerEvents", "none");
+                $("#LName").attr("pointer-events", "none");
+                    //document.getElementById("#Name").style.pointerEvents = "none";
+                }
+                else {
+
+                $("#btnAdd").text("Add");
+                }
+
+
+                if (decrypt($("#userPrivilege").html()) == "Admin") {
+                //alert("Admin");
+            //if ($("#userPrivilege").html() == "Admin") {
+                    $("#liSettings").show();
+                    $('.clsAdmin').each(function (i, obj) {
+                        $(this).show();
+                    });
+
+                    let isAdmin = document.getElementById('IsAdmin');
+
+                    // alert(":" + $("#AccessType").val() + ":")
+                    if ($("#AccessType").val() == "Admin") {
+                        isAdmin.checked = true;
+                    }
+                }
+                else {
+                  //  alert("not");
+                $("#adminEmpInformation").hide();
+                $("#ClsAdminEmpAddBack").hide();
+
+
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).hide();
+                    });
+            }
+
+
+
+
+            $("#EmployeeId").change(function () {
+                    if ($(this).val().length != 6 || $(this).val().substr(0, 2) != "ZS") {
+                        lblErrEmpID.innerHTML = "<br/>Please enter valid Employee ID";
+                    }
+                else {
+                        lblErrEmpID.innerHTML = "";
+                    }
+                });
+
+            $("#EmployeeId").keypress(function () {
+                    if ($(this).val().length >= 6)
+                    return false;
+                });
+
+
+                var options = $("#Department").html();
+                options = "<option value='0'>- Select -</option>" + options;
+            $("#Department").html(options);
+
+                var options = $("#Designation").html();
+                options = "<option value='0'>- Select -</option>" + options;
+            $("#Designation").html(options);
+
+                var options = $("#Qualification").html();
+                options = "<option value='0'>- Select -</option>" + options;
+            $("#Qualification").html(options);
+
+                var options = $("#BloodGroup").html();
+                options = "<option value='0'>- Select -</option>" + options;
+            $("#BloodGroup").html(options);
+
+
+            $('#Name').keypress(function (e) {
+                    allowAplabetsOnly(e);
+                });
+
+            $('#LName').keypress(function (e) {
+                    allowAplabetsOnly(e);
+                });
+
+            $('#Reportingmanager').keypress(function (e) {
+                    allowAplabetsOnly(e);
+                });
+
+                function allowAplabetsOnly(e) {
+                    var regex = new RegExp("^[a-zA-Z,' ']+$");
+                    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                    if (regex.test(str)) {
+                        return true;
+                    }
+                    else {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+
+            $(".email").change(function () {
+                    var inputvalues = $(this).val();
+                    var regex = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                    if (!regex.test(inputvalues)) {
+                        //alert("invalid email id");
+                        lblErrEmail.innerHTML = "Please enter valid email address.";
+                        return regex.test(inputvalues);
+                    }
+                    else {
+                        lblErrEmail.innerHTML = "";
+                    }
+                });
+
+            $("#offcEmail").change(function () {
+                    var inputvalues = $(this).val();
+                    var regex = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                    if (!regex.test(inputvalues)) {
+                        //alert("invalid email id");
+                        lblErroffcEmail.innerHTML = "Please enter valid email address.";
+                        return regex.test(inputvalues);
+                    }
+                    else {
+                        lblErrEmail.innerHTML = "";
+                    }
+                });
+
+            $(".pan").change(function () {
+                    var inputvalues = $(this).val();
+                    var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+                    if (!regex.test(inputvalues)) {
+                        // $(".pan").val("");
+                        //alert("invalid PAN no");
+                        lblErrPAN.innerHTML = "<br/>Please enter valid PAN Number(Ex.ABCTY1234D)";
+                        return regex.test(inputvalues);
+                    }
+                    else {
+                        lblErrPAN.innerHTML = "";
+                    }
+                });
+
+            $("#PAN").keypress(function () {
+                    if ($(this).val().length >= 10)
+                    return false;
+                });
+            /*
+            $("#PFAccountNo").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /[A-Z]{2}/[A-Z]{3}/\d{7}/\d{7}$/;
+                if (!regex.test(inputvalues)) {
+                    lblErrPFAccountNo.innerHTML = "<br/>Please enter valid PF AccountNumber";
+                    return regex.test(inputvalues);
+                }
+                else {
+                    lblErrPFAccountNo.innerHTML = "";
+                }
+            });*/
+
+            $("#PFAccountNo").keypress(function () {
+                    if ($(this).val().length >= 22) //*MH/BAN/0000064/000/0000123*
+                    return false;
+                });
+
+
+            $("#Bankifsc").keypress(function () {
+                    if ($(this).val().length >= 11)
+                    return false;
+                });
+
+            $("#Bankacno").keypress(function () {
+                    if ($(this).val().length >= 17)
+                    return false;
+                });
+
+
+            $("#Aadhar").change(function () {
+                    var inputvalues = $(this).val();
+                    var regex = /[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
+                    if (!regex.test(inputvalues)) {
+                        // $("#Aadhar").val("");
+                        //alert("invalid PAN no");
+                        lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
+                        return regex.test(inputvalues);
+                    }
+                    else {
+                        lblErrAadhar.innerHTML = "";
+                    }
+                });
+
+            $("#Aadhar").keypress(function () {
+                    if ($(this).val().length == 4 || $(this).val().length == 9) {
+                    $(this).val($(this).val() + " ")
+                    }
+                else if ($(this).val().length >= 14)
+                    return false;
+
+                });
+
+
+            $("#Passport").change(function () {
+                    var inputvalues = $(this).val();
+                    //var regex = /[A-PR-WYa-pr-wy][1-9]\\d\\s?\\d{4}[1-9]$/;
+                    var regex = /[A-z][1-9]\\d\\s?\\d{4}[1-9]$/;
+                    if (!regex.test(inputvalues)) {
+                        // $("#Passport").val("");
+                        //lblErrPassport.innerHTML = "<br/>Please enter valid Passport Number(Ex.ABA9875413)";
+                        return regex.test(inputvalues);
+                    }
+                    else {
+                        lblErrAadhar.innerHTML = "";
+                    }
+                });
+
+            $("#Passport").keypress(function () {
+                    if ($(this).val().length >= 10)
+                    return false;
+                });
+
+
+            $('#Aadhar').keypress(function (e) {
+                    allowNumberOnly(e);
+                });
+
+            $('#Contact').keypress(function (e) {
+                    allowNumberOnly(e);
+                });
+
+            $('#Alternativeno').keypress(function (e) {
+                    allowNumberOnly(e);
+                });
+
+            $('#Contact').keypress(function (e) {
+                    if ($(this).val().length >= 10)
+                    return false;
+                });
+
+            $('#Alternativeno').keypress(function (e) {
+                    if ($(this).val().length >= 10)
+                    return false;
+                });
+
+
+                function allowNumberOnly(e) {
+                    var regex = new RegExp("^[0-9]+$");  // FOR ALLOWING DOT // var regex = new RegExp("^[a-zA-Z,' ','.']+$");
+                    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                    if (regex.test(str)) {
+                        return true;
+                    }
+                    else {
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+
+            $("#DOB").change(function () {
+                    var inputvalues = $(this).val();
+                    var today = new Date();
+
+                    inputvalues = inputvalues.split("-");
+
+                    var SelectedDate = new Date(
+                        inputvalues[0],
+                        inputvalues[1] - 1,
+                        inputvalues[2]
+                    );
+
+                    var validMax = new Date();
+                    validMax.setDate(validMax.getDate() + (-6565)); //6570 is 18 years
+
+                    validMax = formatDate(validMax);
+
+
+                    var validMin = new Date();
+                    validMin.setFullYear(validMin.getFullYear() + (-65)); //65  years
+
+                    validMin = formatDate(validMin);
+
+                    SelectedDate = formatDate(SelectedDate);
+
+
+                    //alert(SelectedDate + " : " + validMin + " : " + validMax)
+
+                    if (SelectedDate > validMax) {
+                        lblErrDOB.innerHTML = "<br/>Please enter valid DOB";
+                    }
+                    else if (SelectedDate < validMin) {
+                        lblErrDOB.innerHTML = "<br/>Please enter valid DOB";
+                    }
+                    else {
+                        lblErrDOB.innerHTML = "";
+                    }
+
+                });
+
+            
+
+                function calcAge(age) {
+                    //alert(age);
+                    var dob = new Date(age);
+                    var today = new Date();
+                    var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+                $('#Age').val(age);
+                }
+
+                function formatDate(dt) {
+                    var year = dt.getFullYear();
+                    year = year.toString();
+
+                    var month = dt.getMonth() + 1;
+                    if (month < 10) {
+                        month = "0" + month;
+                    }
+                    else {
+                        month = month.toString();
+                    }
+
+                    var date = dt.getDate();
+                    if (date < 10) {
+                        date = "0" + date;
+                    }
+                    else {
+                        date = date.toString();
+                    }
+
+                    dt = year + month + date;
+                    return dt;
+                }
+
+                var msg = '@ViewData["result"]';
+                if (msg == '1')
+                {
+                    alert("Employee Details Inserted Successfully");
+                    /* window.location.href = window.location.href + "/EmployeeDetails/" + $("#Id").val();*/
+
+            }
+
+
+
+                calcAge($("#DOB").val());
+
+        });
+
+
+
+
+        function FillAccess() {
+            if (decrypt($("#userPrivilege").html()) == "Admin") {
+                let cbisAdmin = document.getElementById('IsAdmin');
+                //alert("onc: " + $("#AccessType").val());
+
+                if (cbisAdmin.checked) {
+                    //  alert("ch");
+                    $("#AccessType").val("Admin");
+
+                }
+                else {
+                    // alert("nch");
+                    $("#AccessType").val("User");
+                }
+            }
+        }
+
+        //Auto fill value using checkbox
+
+        function FillAddressInput() {
+            let checkBox = document.getElementById('checkBox');
+            let Address = document.getElementById("Address");
+
+            let PermanentAddress = document.getElementById("PermanentAddress");
+
+            if (checkBox.checked == true) {
+
+                let AddressValue = PermanentAddress.value;
+
+                Address.value = AddressValue;
+
+            }
+            else {
+                Address.value = "";
+            }
+        }
+
+                //Chech Mandatory Fields
+
+
+                function ValidateMandatory() {
+                    //alert("vall");
+                    var isValid = true;
+                    var errMessage = "";
+                    var gender = $("#Gender:checked").val();
+                    var maritalstatus = $("#Maritalstatus:checked").val();
+                    var availability = $('#Availability:checked').val();
+
+                    if (decrypt($("#userPrivilege").html()) != "Admin") {
+                        $("#AccessType").val("User");
+                    }
+
+                    if ($("#Name").val().trim() == "" || $("#LName").val().trim() == "" ||
+                        $("#DOB").val().trim() == "" ||
+                        $("#Qualification").val().trim() == "" ||
+                        $("#Contact").val().trim() == "" || $("#Alternativeno").val().trim() == "" ||
+                        $("#Email").val().trim() == "" || $("#Address").val().trim() == "" ||
+                        $("#PermanentAddress").val().trim() == "" ||
+                        $("#Aadhar").val().trim() == "" ||
+                        $("#Age").val().trim()<=18 ||
+                        maritalstatus == undefined ||
+                        gender == undefined
+               ) {
+                    isValid = false;
+                    errMessage = "Please enter all mandatory (*) fields";
+                }
+
+            //Add the below label in the page commonly to show error
+            $("#errMessage").html(errMessage);
+                return isValid;
+            }
+
+    </script>
+
+    <style>
+
+        #Age {
+            pointer-events: none;
+        }
+
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+
+
+        /* Full-width input fields */
+        /*input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            input[type=text]:focus, input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }*/
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 5%;
+            background: #dbaaef30;
+            margin-bottom: 2%;
+            margin-top: 2%;
+        }
+
+        .registerbtn a, .registerbtn a:visited {
+            color: #fff !important;
+        }
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+
+
+
+
+        a:focus, a:hover {
+            color: brown;
+            text-decoration: none;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+
+        /*.alignContainer {
+                width: 100%;*/
+        /*padding: 15px;*/
+        /*margin: 5px 0 15px 0;
+                display: inline-block;
+                border: none;
+                background: #f4f4f41a;
+            }*/
+
+        .container label {
+            padding-left: 15px;
+        }
+
+        .alignContainer label {
+            padding-left: 0px !important;
+        }
+
+        /*#menuToggle {
+            margin-left:-93%;
+        }
+        #menuLogout {
+            margin-left: -92%;
+        }*/
+
+        input[type=text], select {
+            width: 100%;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=date], select {
+            width: 100%;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        Line 629
+
+        #CompanyName {
+            font-size: 10px;
+        }
+
+        input[type=number], select {
+            width: 100%;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .textbox {
+            width: 100%;
+            height: 37px;
+            margin: 8px 0px;
+            display: inline-block;
+            border: 1px solid rgb(204, 204, 204);
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+
+        .required:after {
+            content: " *";
+            color: red;
+        }
+
+        .textArea {
+            width: 100%;
+            height: 90px;
+        }
+
+        #CompanyName {
+            font-size: 9px;
+        }
+
+
+        .fa-chevron-circle-down, .fa-chevron-circle-up {
+            font-size: 24px;
+            padding-left: 5px;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("Index", "Employee", FormMethod.Post))
+    {
+
+        <div class="container-fluid">
+            <div class="card card-layout">
+
+
+
+                <div class="row">
+                    <h2 style="text-align:center">Employee Information</h2>
+                    <hr>
+                    <div class="col-lg-4 p-3 mb-4">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <label for="EmployeeId" style="margin-top: 15px;"><b>Employee ID</b></label>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="alignContainer">
+                                    <b>@Html.TextBoxFor(e => e.EmployeeId, new { type = "text" })</b>
+                                    @Html.HiddenFor(e => e.Id)
+                                    @Html.HiddenFor(e => e.EmployeeId)
+                                    <span id="lblErrEmpID" style="color:red"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 p-3 mb-4">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <label for="Name" style="margin-top: 15px;" class="required"><b>First Name</b></label>
+                            </div>
+                            <div class="col-lg-7">
+
+                                <div class="alignContainer">
+                                    @Html.TextBoxFor(e => e.Name, new { type = "text" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 p-3 mb-4">
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <label for="LName" style="margin-top: 15px;" class="required"><b>Last Name</b></label>
+                            </div>
+                            <div class="col-lg-7">
+
+                                <div class="alignContainer">
+                                    @Html.TextBoxFor(e => e.LName, new { type = "text" })
+                                    @Html.HiddenFor(e => e.AccessType)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 p-3 mb-12 clsAdmin">
+                        <div class="row">
+                            <div class="col-lg-12" >
+                                <input type="checkbox" style="margin-bottom:20px;" id="IsAdmin" onclick="FillAccess()" /><b> Is Admin</b>
+
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="container-fluid" id="accordion">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><a onmousedown="displayarrow(1);" data-bs-toggle="collapse" href="#collapseOne">Personal Information
+                                    <i id="circledown1" class="fa fa-chevron-circle-down"></i> <i style="display:none" id="circleup1" class="fa fa-chevron-circle-up" ></i>
+                                    </a></h3>
+                            </div>
+                            <div id="collapseOne" class="collapse " data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="DOB" style="margin-top: 15px;" class="required"><b>Date of Birth</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        <label id="lblDOB" style="display:none;">@Html.DisplayFor(e => e.DOB, new { type = "Date" })</label>
+                                                        @Html.EditorFor(e => e.DOB, new { type = "Date" })
+                                                        <span id="lblErrDOB" style="color:red"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Age" style="margin-top: 15px;"><b>Age</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @Html.TextBoxFor(e => e.Age, new { type = "text" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <div for="Gender" style="margin-top: 15px;" class="required"><label><b>Gender</b></label></div>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer" style="margin-top: 15px;">
+                                                        @Html.RadioButtonFor(e => e.Gender, "Male", "Male" == Model.Gender.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Male </span>
+                                                        @Html.RadioButtonFor(e => e.Gender, "Female", "Female" == Model.Gender.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Female </span>
+                                                        @*@Html.RadioButtonFor(e => e.Gender, "Male", new { @class = "radioinline" })<span>&nbsp; Male </span>&nbsp;&nbsp;&nbsp;
+                                                            @Html.RadioButtonFor(e => e.Gender, "Female", new { @class = "radioinline" })<span>&nbsp; Female </span>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Bloodgrp" style="margin-top: 15px;"><b>BloodGroup</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @*@Html.TextBoxFor(e => e.BloodGroup, new { type = "text" })*@
+                                                        @Html.DropDownListFor(e => e.BloodGroup, new SelectList(BloodGrouplist, "Id", "description"))
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="qualification" style="margin-top: 15px;" class="required"><b>Qualification</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @*@Html.TextBoxFor(e => e.Qualification, new { type = "text" })*@
+                                                        @Html.DropDownListFor(e => e.Qualification, new SelectList(Qualificationlist, "Id", "description"))
+                                                        <br />
+                                                        <label id="lblOther" hidden>Other:</label>
+                                                        @Html.TextBoxFor(e => e.Qualification, new { type = "text", id = "txtOther" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <div for="Maritalsts" style="margin-top: 15px;" class="required"><label><b>Marital Status</b></label></div>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer" style="margin-top: 15px;">
+                                                        @Html.RadioButtonFor(e => e.Maritalstatus, "Married", "Married" == Model.Maritalstatus ? new { Checked = "checked" } : null)<span>&nbsp; Married </span>
+                                                        @Html.RadioButtonFor(e => e.Maritalstatus, "Unmarried", "Unmarried" == Model.Maritalstatus ? new { Checked = "checked" } : null)<span>&nbsp; Single </span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><a onmousedown="displayarrow(2);"  class="collapsed" data-bs-toggle="collapse" href="#collapseTwo">Contact Information<i id="circledown2" class="fa fa-chevron-circle-down"></i><i style="display:none" id="circleup2" class="fa fa-chevron-circle-up"></i></a></h3>
+                            </div>
+                            <div id="collapseTwo" class="collapse" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Contactno" style="margin-top: 15px;" class="required"><b>Primary Contact</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @Html.TextBoxFor(e => e.Contact, new { type = "text" })
+                                                        @*@Html.ValidationMessageFor(e => e.Contact)*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Altercontactno" class="required"><b>Alternative Contact</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @Html.TextBoxFor(e => e.Alternativeno, new { type = "text" })
+                                                        @*@Html.ValidationMessageFor(e => e.Alternativeno)*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Email" style="margin-top: 15px;" class="required"><b>Email Id</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @Html.TextBoxFor(e => e.Email, new { type = "text", @class = "email" })
+                                                        <span id="lblErrEmail" style="color:red"></span>
+                                                        @*@Html.ValidationMessageFor(e => e.Email)*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Address" style="margin-top: 15px;" class="required"><b>Permanent Address</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div>
+                                                        @Html.TextAreaFor(e => e.PermanentAddress, new { type = "text", @class = "textArea" })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Permanentaddr" class="required"><b>Present  Address</b></label><br />
+                                                    <input type="checkbox" id="checkBox" onclick="FillAddressInput()"> Same as permanent address
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class=" ">
+
+                                                        @Html.TextAreaFor(e => e.Address, new { type = "text", @class = "textArea" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" id="adminEmpInformation">
+                            <hr>
+                            <div class="card-header">
+                                <h3>
+                                    <a onmousedown="displayarrow(3);"  class="collapsed" data-bs-toggle="collapse" href="#collapseThree">
+                                        Current Employee information
+                                        <i id="circledown3" class="fa fa-chevron-circle-down"></i> <i style="display:none" id="circleup3" class="fa fa-chevron-circle-up"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseThree" class="collapse" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row mb-4">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Designation" style="margin-top: 15px;"><b>Designation</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @*@Html.TextBoxFor(e => e.Designation, new { type = "text" })*@
+                                                    @Html.DropDownListFor(e => e.Designation, new SelectList(designationlist, "Id", "description"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Department" style="margin-top: 15px;"><b>Department</b></label>
+                                                </div>
+                                                <div class="col-lg-7 ">
+
+                                                    @*@Html.TextBoxFor(e => e.Department, new { type = "text" })*@
+                                                    @Html.DropDownListFor(e => e.Department, new SelectList(Departmentlist, "Id", "description"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Grade" style="margin-top: 15px;"><b>Grade</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @*@Html.TextBoxFor(e => e.Grade, new { type = "text" })*@
+                                                    @Html.DropDownListFor(e => e.Grade, new SelectList(Gradelist, "Id", "description"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Grade" style="margin-top: 15px;"><b>Gross Pay</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @Html.TextBoxFor(e => e.Grosspay, new { type = "number" })
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="DOJ" style="margin-top: 15px;"><b>Date of Joining</b></label>
+                                                </div>
+                                                <div class="col-lg-7 alignContainer">
+                                                    <label id="lblDOJ" style="display:none;">@Html.DisplayFor(e => e.DateofJoin, new { type = "Date" })</label>
+                                                    @Html.EditorFor(e => e.DateofJoin, new { type = "Date" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Empstatus" style="margin-top: 15px;"><b>Employee Status</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.DropDownListFor(e => e.Empstatus, new SelectList(Empstatuslist, "Id", "description"))
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="DOC" style="margin-top: 15px;"><b>Company Name</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.DropDownListFor(e => e.CompanyName, new SelectList(CompanyNameList, "Id", "description"))
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="DOC" style="margin-top: 15px;"><b>Date of confirmation</b></label>
+                                                </div>
+                                                <div class="col-lg-7 alignContainer">
+                                                    <label id="lblDOC" style="display:none;">@Html.DisplayFor(e => e.DateofConfirmation, new { type = "Date" })</label>
+                                                    @Html.EditorFor(e => e.DateofConfirmation, new { type = "Date" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="Empstatus" style="margin-top: 15px;"><b>Employee Location</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.DropDownListFor(e => e.Location, new SelectList(LocationList, "Id", "description"))
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="row">
+
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label style="margin-top: 15px;" for="Reportmgr"><b>Reporting Manager</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @Html.DropDownListFor(e => e.Reportingmanager, new SelectList(AllEmployeeList, "Id", "description"))
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="offcemail" style="margin-top: 15px;"><b>Official Email</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @Html.TextBoxFor(e => e.offcEmail, new { type = "text" })
+                                                    <span id="lblErroffcEmail" style="color:red"></span>
+                                                    @*@Html.ValidationMessageFor(e => e.offcEmail)*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 p-3 mb-4">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <div for="Availability" style="margin-top: 15px;" class="required"><label><b>Availability</b></label></div>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer" style="margin-top: 15px;">
+                                                        @Html.RadioButtonFor(e => e.Availability, "Active", "Active" == Model.Availability.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Active </span>
+                                                        @Html.RadioButtonFor(e => e.Availability, "Inactive", "Inactive" == Model.Availability.Trim() ? new { Checked = "checked" } : null)<span>&nbsp; Inactive </span>
+                                                        @*@Html.RadioButtonFor(e => e.Availability, "Active", new { @class = "radioinline" })<span>&nbsp; Active </span>
+                                                            @Html.RadioButtonFor(e => e.Availability, "Inactive", new { @class = "radioinline" })<span>&nbsp; Inactive </span>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+
+                                                    <label for="DOR" style="margin-top: 15px;"><b>Date of Relieving</b></label>
+                                                </div>
+                                                <div class="col-lg-7 alignContainer">
+                                                    <label id="lblDOR" style="display:none;">@Html.DisplayFor(e => e.DateofRelieving, new { type = "Date" })</label>
+                                                    @Html.EditorFor(e => e.DateofRelieving, new { type = "Date" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 p-3">
+
+                                    </div>
+
+                                    <div class="col-lg-4 p-3">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>
+                                    <a onmousedown="displayarrow(4);"  class="collapsed" data-bs-toggle="collapse" href="#collapseFour">
+                                        Previous Employee Information
+                                        <i id="circledown4" class="fa fa-chevron-circle-down"></i> <i style="display:none" id="circleup4" class="fa fa-chevron-circle-up"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseFour" class="collapse" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="PreCompanyName" style="margin-top: 15px;"><b>Company Name</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @Html.TextBoxFor(e => e.Precompanyname, new { type = "text" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="PreDesignation" style="margin-top: 15px;"><b>Designation</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    @Html.TextBoxFor(e => e.Predesignation, new { type = "text" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="PreExperience" style="margin-top: 15px;"><b>Total Experiences</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+
+                                                    <div class="alignContainer">
+                                                        @Html.TextBoxFor(e => e.Preexperience, new { type = "text" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>
+                                    <a onmousedown="displayarrow(5);"  class="collapsed" data-bs-toggle="collapse" href="#collapseFive">
+                                        Bank Details
+                                        <i id="circledown5" class="fa fa-chevron-circle-down"></i> <i style="display:none" id="circleup5" class="fa fa-chevron-circle-up"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseFive" class="collapse" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="BankName" style="margin-top: 15px;"><b>Bank Name</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Bankname, new { type = "text" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Bankacno" style="margin-top: 15px;"><b>Account Number</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Bankacno, new { type = "text" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Bankbranchname" style="margin-top: 15px;"><b>Branch Name</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Bankbranch, new { type = "text" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Bankifsc" style="margin-top: 15px;"><b>IFSC Code</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Bankifsc, new { type = "text" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>
+                                    <a  onmousedown="displayarrow(6);" class="collapsed" data-bs-toggle="collapse" href="#collapseSix">
+                                        Govt. ID Details
+                                        <i id="circledown6" class="fa fa-chevron-circle-down"></i> <i style="display:none;" id="circleup6" class="fa fa-chevron-circle-up"></i>
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="collapseSix" class="collapse" data-bs-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label style="margin-top: 15px;" for="PAN"><b>PAN Number</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.PAN, new { type = "text", @class = "pan" })
+                                                    <span id="lblErrPAN" style="color:red"></span>
+                                                    @*@Html.ValidationMessageFor(e => e.PAN)*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Aadhar" style="margin-top: 15px;" class="required"><b>Aadhar Number</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Aadhar, new { type = "text" })
+                                                    @*Html.ValidationMessageFor(e => e.Aadhar)*@
+                                                    <span id="lblErrAadhar" style="color:red"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="Passport" style="margin-top: 15px;"><b>Passport Number</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.Passport, new { type = "text" })
+                                                    @*Html.ValidationMessageFor(e => e.Passport)*@
+                                                    <span id="lblErrPassport" style="color:red"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="PFAccountNo" style="margin-top: 15px;"><b>PF Account Number</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.PFAccountNo, new { type = "text" })
+                                                    <span id="lblErrPFAccountNo" style="color:red"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-10">
+
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="row">
+                                    <div class="col-lg-6" id="ClsAdminEmpAddBack">
+
+                                        @*@Html.ActionLink("Back", "Details", "Employee")*@
+                                        <button type="submit" class="registerbtn float-left">@Html.ActionLink("Back", "Details", "Employee")</button>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <button type="submit" id="btnAdd" class="registerbtn  float-right" onclick="return ValidateMandatory();">ADD</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <center><label id="errMessage"></label></center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</body>
+</html>

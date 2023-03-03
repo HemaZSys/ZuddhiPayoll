@@ -1,0 +1,80 @@
+﻿@model IEnumerable<First.Models.Form80C>
+
+@*@model List<First.Models.Form80C>*@
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Form Details</h2>
+
+<p>
+    @Html.ActionLink("Form80C", "Tax")
+</p>
+
+<link href="~/CSS/bootstrap.min.table.css" rel="stylesheet" />
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+        table td {
+            line-height: 25px;
+            padding-left: 15px;
+        }
+
+        table th {
+            background-color: #ae98ba;
+            color: black;
+        }
+</style>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Form80CsettingId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Declared_Amt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Proof_Amt)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr class="info">
+            <td>
+                @Html.DisplayFor(modelItem => item.Form80CsettingId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Declared_Amt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Proof_Amt)
+            </td>
+            <td>
+                @Html.ActionLink("Edit Detail", "UpdateForm", new { id = item.Id }) |
+                @Html.ActionLink("Show Details", "FormDetails", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "DeleteForm", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

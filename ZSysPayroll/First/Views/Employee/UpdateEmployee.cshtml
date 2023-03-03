@@ -1,0 +1,754 @@
+﻿
+@model First.Models.Employee
+
+@{
+    ViewBag.Title = "UpdateEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<First.Models.Empalldropdown> designationlist = ViewBag.Designationlist;
+    List<First.Models.Empalldropdown> BloodGrouplist = ViewBag.BloodGrouplist;
+    List<First.Models.Empalldropdown> Departmentlist = ViewBag.Departmentlist;
+    List<First.Models.Empalldropdown> Qualificationlist = ViewBag.Qualificationlist;
+    List<First.Models.Empalldropdown> Gradelist = ViewBag.Gradelist;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/Scripts/jquery-ui-1.13.0.js"></script>")
+
+    <link href="~/CSS/jquery-ui.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            checkLogin();
+            //$("#Designation").eq(0).before($("<option></option>").val("").text("- Select -"));
+
+
+            if (decrypt($("#userPrivilege").html()) == "Admin") {
+                $("#EmployeeId").removeAttr("disabled");
+                alert("s");
+            }
+            else {
+                $("#EmployeeId").attr("disabled", "disabled");
+            }
+
+           
+
+            var options = $("#Department").html();
+            options = "<option value='0'>- Select -</option>" + options;
+            $("#Department").html(options);
+
+            var options = $("#Designation").html();
+            options = "<option value='0'>- Select -</option>" + options;
+            $("#Designation").html(options);
+
+            var options = $("#Qualification").html();
+            options = "<option value='0'>- Select -</option>" + options;
+            $("#Qualification").html(options);
+
+            var options = $("#BloodGroup").html();
+            options = "<option value='0'>- Select -</option>" + options;
+            $("#BloodGroup").html(options);
+
+
+
+            $('#Name').keypress(function (e) {
+                allowAplabetsOnly(e);
+            });
+
+            $('#LName').keypress(function (e) {
+                allowAplabetsOnly(e);
+            });
+
+            $('#Reportingmanager').keypress(function (e) {
+                allowAplabetsOnly(e);
+            });
+
+            function allowAplabetsOnly(e) {
+                var regex = new RegExp("^[a-zA-Z,' ']+$");
+                var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                if (regex.test(str)) {
+                    return true;
+                }
+                else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            $(".Email").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+                if (!regex.test(inputvalues)) {
+                    //alert("invalid email id");
+                    lblErrEmail.innerHTML = "Please enter valid email address.";
+                    return regex.test(inputvalues);
+                }
+                else {
+                    lblErrEmail.innerHTML = "";
+                }
+            });
+
+            $(".pan").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+                if (!regex.test(inputvalues)) {
+                    // $(".pan").val("");
+                    //alert("invalid PAN no");
+                    lblErrPAN.innerHTML = "<br/>Please enter valid PAN Number";
+                    return regex.test(inputvalues);
+                }
+                else {
+                    lblErrPAN.innerHTML = "";
+                }
+            });
+
+            $("#PAN").keypress(function () {
+                if ($(this).val().length > 9)
+                    return false;
+            });
+
+            $("#PFAccountNo").keypress(function () {
+                if ($(this).val().length > 21)
+                    return false;
+            });
+
+
+            $("#Bankifsc").keypress(function () {
+                if ($(this).val().length >= 11)
+                    return false;
+            });
+
+
+
+
+            $("#Aadhar").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
+                if (!regex.test(inputvalues)) {
+                    // $("#Aadhar").val("");
+                    //alert("invalid PAN no");
+                    lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
+                    return regex.test(inputvalues);
+                }
+                else {
+                    lblErrAadhar.innerHTML = "";
+                }
+            });
+
+            $("#Aadhar").keypress(function () {
+                if ($(this).val().length == 4 || $(this).val().length == 9) {
+                    $(this).val($(this).val() + " ")
+                }
+                else if ($(this).val().length >= 14)
+                    return false;
+
+            });
+
+
+            $('#Aadhar').keypress(function (e) {
+                allowNumberOnly(e);
+            });
+
+            $('#Contact').keypress(function (e) {
+                allowNumberOnly(e);
+            });
+
+            $('#Alternativeno').keypress(function (e) {
+                allowNumberOnly(e);
+            });
+
+            $('#Contact').keypress(function (e) {
+                if ($(this).val().length >= 10)
+                    return false;
+            });
+
+            $('#Alternativeno').keypress(function (e) {
+                if ($(this).val().length >= 10)
+                    return false;
+            });
+
+
+
+            function allowNumberOnly(e) {
+                var regex = new RegExp("^[0-9]+$");  // FOR ALLOWING DOT // var regex = new RegExp("^[a-zA-Z,' ','.']+$");
+                var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+                if (regex.test(str)) {
+                    return true;
+                }
+                else {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            $("#DOB").change(function () {
+                var inputvalues = $(this).val();
+                var today = new Date();
+
+                inputvalues = inputvalues.split("-");
+
+                var SelectedDate = new Date(
+                    inputvalues[0],
+                    inputvalues[1] - 1,
+                    inputvalues[2]
+                );
+
+                var validMax = new Date();
+                validMax.setDate(validMax.getDate() + (-6565)); //6570 is 18 years
+
+                validMax = formatDate(validMax);
+
+
+                var validMin = new Date();
+                validMin.setFullYear(validMin.getFullYear() + (-65)); //65  years
+
+                validMin = formatDate(validMin);
+
+                SelectedDate = formatDate(SelectedDate);
+
+
+                //alert(SelectedDate + " : " + validMin + " : " + validMax)
+
+                if (SelectedDate > validMax) {
+                    lblErrDOB.innerHTML = "<br/>Please enter valid DOB";
+                }
+                else if (SelectedDate < validMin) {
+                    lblErrDOB.innerHTML = "<br/>Please enter valid DOB";
+                }
+                else {
+                    lblErrDOB.innerHTML = "";
+                }
+
+            });
+
+            function formatDate(dt) {
+                var year = dt.getFullYear();
+                year = year.toString();
+
+                var month = dt.getMonth() + 1;
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                else {
+                    month = month.toString();
+                }
+
+                var date = dt.getDate();
+                if (date < 10) {
+                    date = "0" + date;
+                }
+                else {
+                    date = date.toString();
+                }
+
+                dt = year + month + date;
+                return dt;
+            }
+
+            $("#Passport").change(function () {
+                var inputvalues = $(this).val();
+                var regex = /[A-PR-WYa-pr-wy][1-9]\\d\\s?\\d{4}[1-9]$/;
+                if (!regex.test(inputvalues)) {
+                    // $("#Passport").val("");
+                    lblErrPassport.innerHTML = "<br/>Please enter valid Passport Number";
+                    return regex.test(inputvalues);
+                }
+            });
+
+            $("#Passport").keypress(function () {
+                if ($(this).val().length >= 10)
+                    return false;
+            });
+
+
+        });
+
+
+
+        $(function () {
+        var msg = '@ViewData["result"]';
+        if (msg == '1')
+        {
+        alert("Employee Details Updated Successfully");
+        window.location.href = "@Url.Action("Index", "Employee")";
+        }
+        });
+
+
+        $(document).ready(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: "dd/M/yy",
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0"
+            });
+            calcAge($("#DOB").val());
+        });
+
+        $("#DOB").change(function () {
+            calcAge($("#DOB").val());
+        });
+
+        function calcAge(age) {
+            alert(age);
+            var dob = new Date(age);
+            var today = new Date();
+            var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
+            $('#Age').val(age);
+        }
+
+        function ValidateMandatory() {
+            //alert("vall");
+            var isValid = true;
+            var errMessage = "";
+
+            var gender = $("#Gender:checked").val();
+            var maritalstatus = $("#Maritalstatus:checked").val();
+
+            if ($("#Name").val().trim() == "" || $("#LName").val().trim() == "" ||
+                $("#DOB").val().trim() == "" ||
+                //$("#Bloodgroup").val().trim() == "" ||
+                $("#Qualification").val().trim() == "" ||
+                $("#Contact").val().trim() == "" || $("#Alternativeno").val().trim() == "" ||
+                $("#Email").val().trim() == "" || $("#Address").val().trim() == "" || gender == undefined ||
+                $("#PermanentAddress").val().trim() == "" ||
+                //$("#Precompanyname").val().trim() == "" ||
+                //$("#Predesignation").val().trim() == "" || $("#Preexperience").val().trim() == "" ||
+                //$("#Bankname").val().trim() == "" || $("#Bankacno").val().trim() == "" ||
+                //$("#Bankbranch").val().trim() == "" || $("#Bankifsc").val().trim() == "" ||
+                //$("#PAN").val().trim() == "" ||
+                $("#Aadhar").val().trim() == "" ||
+                //$("#Passport").val().trim() == "" ||
+                //$("#PFAccountNo").val().trim() == "" ||
+                maritalstatus == undefined) {
+                isValid = false;
+                errMessage = "Please enter all mandatory (*) fields";
+            }
+
+            //Add the below label in the page commonly to show error
+            $("#errMessage").html(errMessage);
+
+            return isValid;
+        }
+
+    </script>
+
+
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .alignContainer {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: white;
+        }
+
+            .alignContainer span {
+                padding: 3px;
+            }
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            input[type=text]:focus, input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #41174d;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+            .registerbtn:hover {
+                opacity: 1;
+            }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+        input[type='radio'] {
+            margin-right: 5px;
+        }
+
+        input {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p style="text-align:center">Employee Information</p>
+        <div class="container">
+            <hr>
+            <div class="row">
+
+                <div class="col-sm-4 p-3">
+
+                    <div class="alignContainer">
+                        <label for="EmployeeId"><b>Employee ID : </b></label>
+                        <h3>
+                            @Html.TextBoxFor(e => e.EmployeeId, new { type = "text" })
+                                                @Html.HiddenFor(e => e.Id)
+                                            </h3>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Name"><b>First Name</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Name, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="LName"><b>Last Name</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.LName, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <div for="Availability"><b>Availability</b></div>
+                    <div class="alignContainer">
+                        @Html.RadioButtonFor(e => e.Availability, "Active", new { @class = "radioinline" })<span> Active </span>
+                        @Html.RadioButtonFor(e => e.Availability, "Inactive", new { @class = "radioinline" })<span>Inactive </span>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p><strong>Personal Information</strong></p>
+
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="DOB"><b>Date of Birth</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.DOB, new { type = "Date" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Age"><b>Age</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Age, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <div for="Gender"><b>Gender</b></div>
+                    <div class="alignContainer">
+                        
+                        @Html.RadioButtonFor(e => e.Gender, "Male", new { @class = "radioinline" })<span> Male </span>
+                        @Html.RadioButtonFor(e => e.Gender, "Female", new { @class = "radioinline" })<span>Female </span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <div for="Maritalsts"><b>Marital Status</b></div>
+                    <div class="alignContainer">
+                        
+                        @Html.RadioButtonFor(e => e.Maritalstatus, "Married", new { @class = "radioinline" })<span> Married </span>
+                        @Html.RadioButtonFor(e => e.Maritalstatus, "Unmarried", new { @class = "radioinline" })<span>Unmarried </span>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Bloodgrp"><b>Bloodgroup</b></label>
+                    <div class="alignContainer">
+                        @*@Html.EditorFor(e => e.Bloodgroup, new { type = "text" })*@
+                        @Html.DropDownListFor(e => e.BloodGroup, new SelectList(BloodGrouplist, "Id", "description"))
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="qualification"><b>Qualification</b></label>
+                    <div class="alignContainer">
+                        @*@Html.EditorFor(e => e.Qualification, new { type = "text" })*@
+                        @Html.DropDownListFor(e => e.Qualification, new SelectList(Qualificationlist, "Id", "description"))
+                    </div>
+                </div>
+            </div>
+
+
+            <hr>
+
+            <p><strong>Contact Information</strong></p>
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="Contactno"><b>Primary Contact</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Contact, new { type = "text" })
+                        @Html.ValidationMessageFor(e => e.Contact)
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Altercontactno"><b>Alternative Contact</b></label>
+                    <label for="Altercontactno"><b>Alternative Contact</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Alternativeno, new { type = "text" })
+                        @Html.ValidationMessageFor(e => e.Alternativeno)
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Email"><b>Email Id</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Email, new { type = "text" })
+                        <span id="lblErrEmail" style="color:red"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="Address"><b>Present Address</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Address, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Permanentaddr"><b>Permanent address</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.PermanentAddress, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p><strong>Current Employee information</strong></p>
+
+
+
+            <hr>
+            <div class="row onlyAdmin">
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Designation"><b>Designation</b></label>
+                        @*@Html.EditorFor(e => e.Designation, new { type = "text" })*@
+                        @Html.DropDownListFor(e => e.Designation, new SelectList(designationlist, "Id", "description"))
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Department"><b>Department</b></label>
+                        @*@Html.EditorFor(e => e.Department, new { type = "text" })*@
+                        @Html.DropDownListFor(e => e.Department, new SelectList(Departmentlist, "Id", "description"))
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Grade"><b>Grade</b></label>
+                        @*@Html.EditorFor(e => e.Grade, new { type = "text" })*@
+                        @Html.DropDownListFor(e => e.Grade, new SelectList(Gradelist, "Id", "description"))
+                    </div>
+                </div>
+
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Grade"><b>Gross Pay</b></label>
+                        @Html.EditorFor(e => e.Grosspay, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row onlyAdmin">
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="DOJ"><b>Date of Joining</b></label>
+                        <div>
+                            @Html.EditorFor(e => e.DateofJoin, new { type = "Date" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Empstatus"><b>Employee Status</b></label>
+                        @Html.TextAreaFor(e => e.Empstatus, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="Reportmgr"><b>Reporting Manager</b></label>
+                        @Html.EditorFor(e => e.Reportingmanager, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <div class="alignContainer">
+                        <label for="offcemail"><b>Official Email</b></label>
+                        @Html.EditorFor(e => e.offcEmail, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+
+
+            <p><strong>Previous Employee Information</strong></p>
+            <hr>
+
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="PreCompanyName"><b>Company Name</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Precompanyname, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="PreDesignation"><b>Designation</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Predesignation, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="PreExperience"><b>Experience</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Preexperience, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+
+            <p><strong>Bank Details</strong></p>
+
+            <hr>
+            <div class="row">
+                <div class="col-sm-3 p-3">
+                    <label for="BankName"><b>Bank Name</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Bankname, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <label for="Bankacno"><b>Account Number</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Bankacno, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <label for="Bankbranchname"><b>Branch Name</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Bankbranch, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-3 p-3">
+                    <label for="Bankifsc"><b>IFSC Code</b></label>
+                    <div class="alignContainer">
+                        @Html.EditorFor(e => e.Bankifsc, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr>
+            <p><strong>Other Information</strong></p>
+            <hr>
+            <div class="col-sm-6 p-3">
+                <label for="PAN"><b>PAN Number</b></label>
+                <div class="alignContainer">
+                    @Html.EditorFor(e => e.PAN, new { type = "text" })
+                    @*@Html.ValidationMessageFor(e => e.PAN)*@
+                    <span id="lblErrPAN" style="color:red"></span>
+
+                </div>
+            </div>
+            <div class="col-sm-6 p-3">
+                <label for="Aadhar"><b>Aadhar</b></label>
+                <div class="alignContainer">
+                    @Html.EditorFor(e => e.Aadhar, new { type = "text" })
+                    @*@Html.ValidationMessageFor(e => e.Aadhar)*@
+                    <span id="lblErrAadhar" style="color:red"></span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-3">
+                <label for="Passport"><b>Passport</b></label>
+                <div class="alignContainer">
+                    @Html.EditorFor(e => e.Passport, new { type = "text" })
+                    @* @Html.ValidationMessageFor(e => e.Passport)*@
+                    <span id="lblErrPassport" style="color:red"></span>
+                </div>
+            </div>
+            <div class="col-sm-6 p-3">
+                <label for="PFAccountNo"><b>PF Account No</b></label>
+                <div class="alignContainer">
+                    @Html.EditorFor(e => e.PFAccountNo, new { type = "text" })
+                    <span id="lblErrPFAccountNo" style="color:red"></span>
+                </div>
+            </div>
+
+            <hr>
+            <button type="submit" class="registerbtn" onclick="return ValidateMandatory();">Update</button>
+        </div>
+        <div class="col-md-12">
+            <center><label id="errMessage"></label></center>
+        </div>
+        
+
+        <div>
+            @Html.ActionLink("Back to List", "Details", "Employee")
+        </div>
+
+    }
+
+
+</body>
+</html>
+

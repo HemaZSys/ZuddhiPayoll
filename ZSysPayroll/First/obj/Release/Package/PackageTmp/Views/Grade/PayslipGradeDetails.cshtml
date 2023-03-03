@@ -1,0 +1,83 @@
+﻿@model First.Models.PayslipGrade
+
+@{
+    ViewBag.Title = "PayslipGradeDetails";
+}
+
+<style>
+    .container {
+        padding: 30px;
+        background-color: white;
+    }
+</style>
+<div class="container">
+
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt>
+            <label for="GradeName"><b>Grade Name</b></label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GradeName)
+        </dd>
+        <dt>
+            <label for="SequenceNo"><b>Line Number</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LineNumber)
+        </dd>
+        <dt>
+            <label for="SequenceNo"><b>Sequence Number</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNumber)
+        </dd>
+        
+        <dt>
+            <label for="SectionDesc"><b>Section Description</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SectionDescription)
+        </dd>
+        <dt>
+            <label for="Desc"><b>Description</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            <label for="Percentage"><b>Percentage</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Percentage)
+        </dd>
+        <dt>
+            <label for="EarnOrDeduct"><b>Earning Or Deduction</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EarningOrDeduction)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "UpdatePayslipGrade", new { id = Model.Id })
+
+    @Html.ActionLink("Back to List", "GradeDetails")
+</p>
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

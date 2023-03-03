@@ -1,0 +1,188 @@
+﻿@model First.Models.Enroll
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+    //string message = Convert.ToString(ViewData["Message"]);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login - Zuddhi Payroll</title>
+    <link href="~/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/CSS/StyleSheet.css" rel="stylesheet" />
+
+    <style>
+
+        input[type='radio'] {
+            margin: 3px 6px 3px 0px;
+        }
+
+        #errMessage {
+            color: red;
+            text-align: center;
+        }
+        .forgotpwd{
+            font-weight:bold;
+            color:blue;
+            cursor:pointer;
+            
+        }
+        .forgotpwd:hover{
+            text-decoration:underline;
+        }
+        a {
+            font-weight: bold;
+            color: blue;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+    <script src="~/Js/jquery.min.js"></script>
+    <script src="~/Js/bootstrap.min.js"></script>
+    <script src="~/Js/jquery.validate.min.js"></script>
+    <script src="~/Js/jquery.validate.unobtrusive.js"></script>
+</head>
+
+<body>
+    <!------ Include the above in your HEAD tag ---------->
+    @using (Html.BeginForm("Index", "UserLogin", FormMethod.Post))
+    {
+        //@Html.AntiForgeryToken()
+        <div class="container register">
+            <div class="row">
+                <div class="col-md-3 register-left">
+                    <img src="~/images/zudlogo.png" alt="Zuddhi systems" />
+                    <h3 style="margin-bottom:15px;">Welcome</h3>
+                    <h5>Zuddhi Systems</h5>
+                    <br />
+                </div>
+                <div class="col-md-9 register-right">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <h3 class="register-heading">Login</h3>
+                            <div class="row register-form">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.TextBoxFor(e => e.Email, new { @class = "form-control", placeholder = "Official Email *" })
+                                        @*@Html.ValidationMessageFor(e => e.Email)*@
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        @Html.PasswordFor(e => e.Password, new { id = "password", @class = "form-control", placeholder = "Password *" })
+                                        <span id="result"></span>
+                                        @*@Html.ValidationMessageFor(e => e.Password)*@
+                                    <div id="EmailDomain" style="display:none;">
+                                      @Model.EmailDomain
+                                    </div>
+                                    </div>
+                                </div>
+
+                                @* @Html.Display(message)*@
+                                <div class="col-md-12" style="text-align:center;">
+                                    <input type="submit" class="btnLogin" onclick="return ValidateMandatory();" value="Login" style="width: 20%;margin-top:15px;margin-bottom:15px;" />
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="text-align:center;"><b><a href="~/Enrollment/Index">New User click here...</a></b></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="text-align:center;"><b><span  class="forgotpwd"  onclick="goToForgotPwd();">Forgot Password</span></b></div>
+                                </div>
+                            <div class="col-md-12">
+                                <center><label id="errMessage"></label></center>
+                                <center><label style="color:red;">@ViewData["Message"]</label></center>                                
+                            </div>
+                                </div>
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+
+    }
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    window.onload = window.history.forward(0);
+
+
+            function ValidateMandatory() {
+
+                var isValid = true;
+                var errMessage = "";               
+
+                if ($("#Email").val().trim() == "" ||
+                    $("#password").val().trim() == "") {
+                    isValid = false;
+                    errMessage = "Please enter all mandatory (*) fields";
+                }
+
+                //Add the below label in the page commonly to show error
+                $("#errMessage").html(errMessage);
+
+                return isValid;
+            }
+                    $(function () {
+
+                        $('#Email').keyup(function () {
+
+                            var emailchars = $(this).val();
+                            var enterdChar = emailchars[emailchars.length - 1];
+                            //alert(":" + $("#EmailDomain").html().trim() + ":");
+                            if (enterdChar == '@@') {
+                                $(this).val($(this).val() + $("#EmailDomain").html().trim());
+                            }
+                        });
+
+                     var msg = '@ViewData["result"]';
+                     if (msg == '1')
+                     {
+                         alert("User Details Inserted Successfully");
+                         window.location.href = "@Url.Action("Index", "UserLogin")";
+                   }
+
+                    $("#RegisterNav").click(function () {
+                        //alert("register");
+                        window.location.href = "@Url.Action("Index", "Enrollment")";
+                    });
+
+                    $("#LoginNav").click(function () {
+                        //alert("Login");
+                        window.location.href = "@Url.Action("Index", "UserLogin")";
+                    });
+
+                   
+
+
+               });
+
+
+    function goToForgotPwd() {
+        var emailAddress = "";
+        if ($("#Email").val().trim() != "")
+            emailAddress = "?" + $("#Email").val().trim();
+        var url = window.location.href.toLowerCase();
+        if (url.indexOf("https://") > -1) {
+            url = url.split("https://")[1].split("userlogin")[0];
+            window.location.href = "https://" + url + "/userlogin/ForgotPassword" + emailAddress;
+        }
+        else {
+            url = url.split("http://")[1].split("userlogin")[0];
+            window.location.href = "http://" + url + "/userlogin/ForgotPassword" + emailAddress;
+        }
+        
+        
+
+    }
+</script>

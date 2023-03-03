@@ -1,0 +1,69 @@
+﻿
+@model First.Models.PayslipGradeHeader
+
+@{
+    ViewBag.Title = "PayslipEntry";
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    string section = "";
+}
+
+<fieldset>
+    <legend>Payslip Details</legend>
+
+    <div class="display-label">
+        <label for="Name"><b>Employee Name</b></label>
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EmployeeName)
+        @Html.HiddenFor(model => model.EmployeeId)
+    </div>
+
+    <div class="display-label">
+        <label for="Name"><b>Grade</b></label>
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EmployeeGrade)
+    </div>
+
+    <div class="display-label">
+        <label for="Name"><b>Grade</b></label>
+    </div>
+
+    <div class="display-field">
+        @Html.DisplayFor(model => model.EmployeeGrade)
+    </div>
+    <!--<table border="1">
+        <tr>
+        </tr>
+        @for (int i = 0; i < Model.PayslipGradeEntryList.Count(); i++)
+        {
+            <tr>
+            </tr>
+            if (section != Model.PayslipGradeEntryList[i].SectionDescription)
+            {
+                <tr>
+                    <th>@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</th>
+                    <th>Monthly Amount</th>
+                    <th>Annual Amount</th>
+                </tr>
+
+                section = Model.PayslipGradeEntryList[i].SectionDescription;
+            }
+
+            <tr class="info">-->
+    @*<td>
+           <strong>@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</strong>
+        </td>*@
+    <!--<td>
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].PayslipGradeid)
+
+                    @Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].Description)
+                </td>
+                <td>@Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox" })</td>
+                <td>@Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, new { type = "text", @class = "textbox" })</td>
+            </tr>
+        }
+
+    </table>-->
+
+</fieldset>

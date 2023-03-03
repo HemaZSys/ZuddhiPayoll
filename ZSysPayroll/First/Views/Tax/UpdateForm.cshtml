@@ -1,0 +1,373 @@
+﻿
+@model List<First.Models.Form80C>
+@{
+    ViewBag.Title = "Tax";
+    List<First.Models._TaxDeclFormSetting> Form80Settingclist = ViewBag.SettingsTaxDeclForm as List<First.Models._TaxDeclFormSetting>;
+}
+
+
+<html>
+<head>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            /*border: 1px solid black;*/
+        }
+
+            table td {
+                line-height: 25px;
+                padding-left: 25px;
+            }
+
+            table th {
+                background-color: #7e6d90;
+                color: black;
+            }
+    </style>
+
+</head>
+<body>
+    @using (Html.BeginForm("Form80C", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <br />
+        <table border="1">
+            <tr height="100px" style="background-color:#9a73bb;color:#ffffff;text-align:center;font-size:24px; font-weight:600;">
+                <td colspan='4'>Invest Declaration / Proof Submission</td>
+            </tr>
+            <tr>
+                <th>Employee Name</th>
+                <td><input type="text" /></td>
+                <th>PAN NO.</th>
+                <td>A5913OT</td>
+            </tr>
+            <!-----2 row--->
+            <tr>
+                <th>Employee ID</th>
+                <td>101</td>
+                <th>Bank Name</th>
+                <td>HDFC</td>
+            </tr>
+            <!------3 row---->
+            <tr>
+                <th>Bank A/C No.</th>
+                <td>563800001256</td>
+                <th>PF A/C No.</th>
+                <td>5648789</td>
+            </tr>
+            <!------4 row---->
+            <tr>
+                <th>Data of Joining</th>
+                <td>03/01/2022</td>
+                <th>Designation</th>
+                <td>Trainee</td>
+            </tr>
+            <!------5 row---->
+            <tr>
+                <th>Gender</th>
+                <td>Male</td>
+                <th>LOP</th>
+                <td>0</td>
+            </tr>
+            <!------6 row---->
+            <tr>
+                <th>DOB</th>
+                <td>05/12/1994</td>
+                <th>UAN No.</th>
+                <td>78981355</td>
+            </tr>
+        </table>
+        <br />
+        <br />
+        <br />
+        <div><a href="#">[Click here] </a><p>to copy the declared amount in proof submission column.</p></div>
+        <div><a href="#">[Click here]</a><p> to copy the Rent declared amount in Rent proof submission column.</p></div>
+        <br />
+
+        <table border="1">
+            <tr>
+                <th>A</th>
+                <th>Particulars of Investment U/S. 80C</th>
+                <th>Decared Amount in Rs.</th>
+                <th>Proof Submission in Rs.</th>
+                <th>Proof Upload</th>
+            </tr>
+            <tr>
+            </tr>
+            @for (int i = 0; i < Form80Settingclist.Count(); i++)
+            {
+                string controltype = "";
+                if (Form80Settingclist[i].ControlType == 1)
+                {
+                    controltype = "text";
+                }
+                else if (Form80Settingclist[i].ControlType == 2)
+                {
+                    controltype = "checkbox";
+                }
+                else if (Form80Settingclist[i].ControlType == 3)
+                {
+                    controltype = "date";
+                }
+                else if (Form80Settingclist[i].ControlType == 4)
+                {
+                    controltype = "radio";
+                }
+
+                <tr class="info">
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem[i].LineNumber)
+                    </td>
+                    <td>
+                        @Html.HiddenFor(modelItem => modelItem[i].Form80CsettingId);
+                        @Html.DisplayFor(modelItem => modelItem[i].DescriptionLabel, new { type = controltype })
+
+                        @if (controltype == "radio")
+                        {
+                            @Html.RadioButtonFor(modelItem => modelItem[i].Description, ">80%") @Html.Label(@">80%")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].Description, "<80%") @Html.Label(@"<80%")
+                            @Html.RadioButtonFor(modelItem => modelItem[i].Description, "Zero | (u/s.80DD)") @Html.Label(@"Zero | (u/s.80DD)")
+
+                        }
+                        else if (controltype == "checkbox")
+                        {
+                            var parameterValue = Convert.ToBoolean(false);
+                            @Html.CheckBoxFor(modelItem => parameterValue)
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(modelItem => modelItem[i].Description, new { type = controltype })
+                            // @Html.TextBox("customers[" + @i + "].CompanyName", Form80clist[i].Description)
+                        }
+
+                    </td>
+                    <td>@Html.TextBoxFor(modelItem => modelItem[i].Declared_Amt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(modelItem => modelItem[i].Proof_Amt, new { type = "text" })</td>
+                    <td>@Html.TextBoxFor(modelItem => modelItem[i].Proof_file, new { type = "file" })</td>
+
+                </tr>
+
+            }
+            @foreach (var item in Form80Settingclist)
+            {
+                @*string controltype = "";
+                    if (item.ControlType == 1)
+                    {
+                        controltype = "text";
+                    }
+                    else if (item.ControlType == 2)
+                    {
+                        controltype = "checkbox";
+                    }
+                    else if (item.ControlType == 3)
+                    {
+                        controltype = "date";
+                    }
+                    else if (item.ControlType == 4)
+                    {
+                        controltype = "radio";
+                    }
+                    <tr class="info">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LineNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description, new { type = controltype })
+
+                            @if (controltype == "radio")
+                            {
+                                @Html.RadioButtonFor(modelItem => item.Description, ">80%") @Html.Label(@">80%")
+                                @Html.RadioButtonFor(modelItem => item.Description, "<80%") @Html.Label(@"<80%")
+                                @Html.RadioButtonFor(modelItem => item.Description, "Zero | (u/s.80DD)") @Html.Label(@"Zero | (u/s.80DD)")
+
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => item.Description, new { type = controltype })
+                               // @Html.TextBox("customers[" + @i + "].CompanyName", item.Description)
+                            }
+                        </td>
+                        <td>@Html.TextBoxFor(modelItem => item.ControlType, new { type = "text" })</td>
+                        <td>@Html.TextBoxFor(modelItem => item.MaximumValue, new { type = "text" })</td>
+                        <td>@Html.TextBoxFor(modelItem => item.Section, new { type = "file" })</td>
+
+                    </tr>*@
+
+            }
+            <hr>
+            <tr>
+                <th>F</th>
+                <th colspan="4"><p>Rent Paid per month for rented accommodation (for claiming exemption U/s. 10(13A). Metro Cities are Delhi, Kolkata, Mumbai and Chennai only)</p></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Metro</th>
+                            <th>Proof Submission</th>
+                            <th>Non-Metro</th>
+                            <th>Proof Submission</th>
+                            <th>Remarks</th>
+                            <th>Landlord PAN</th>
+                            <th>Landlord Name</th>
+                            <th>Landlord Address</th>
+                        </tr>
+                        <tr>
+                            <td>April</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>May</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>June</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>July</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>August</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>September</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>October</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>November</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>December</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>January</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>February</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td>March</td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                            <td><input type="text" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><p>Note: If House Rent Amount is More than Rs.8333/-pm then Landlord PAN,Landlord Name and Landlord Address are Mantatory</p></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Place<input type="text" value="" /></td>
+                <td>Date<input type="date" value="" /></td>
+                <td>signature<input type="text" value="" /></td>
+            </tr>
+        </table>
+
+        <button type="submit" class="registerbtn">Apply</button>
+    }
+</body>
+
+</html>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+<script src="~/Js/jquery.validate.min.js"></script>
+<script src="~/Js/jquery.validate.unobtrusive.min.js"></script>

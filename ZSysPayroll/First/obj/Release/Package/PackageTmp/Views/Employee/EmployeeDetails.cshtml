@@ -1,0 +1,555 @@
+﻿@model First.Models.Employee
+@{
+    ViewBag.Title = "EmployeeDetails";
+    List<First.Models.PayslipGradeHeader> PayslipGradeHeaderlist = ViewBag.payslips as List<First.Models.PayslipGradeHeader>;
+    List<First.Models.Form80CHeader> Form80CHeaderlist = ViewBag.deductions as List<First.Models.Form80CHeader>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+
+    <script type="text/javascript">
+
+        var arrMonthShortName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        $(document).ready(function () {
+            checkLogin();
+
+
+           
+
+            if (document.location.href.indexOf("mode=2") > -1) {
+
+                $("#EmployeeDetail").hide();
+                $("#TaxDetail").hide();
+                $("#empList").show();
+            }
+            else {
+                $("#empList").hide();
+            }
+
+
+            if (decrypt($("#userPrivilege").html()) == "Admin") {
+                //alert("chking");
+                //if ($("#userPrivilege").html() == "Admin") {
+                $("#liSettings").show();
+                $('.clsUser').each(function (i, obj) {
+                    $(this).hide();
+                });
+            }
+            else {
+
+                var adminCtrlsCnt = $(".clsAdmin").length;
+                //alert(adminCtrlsCnt);
+                $("#adminButtons").hide();
+
+
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).hide();
+                });
+            }
+
+
+
+            var MonthCtrls = $(".tdMonth");
+            var PaySlipMonth;
+            for (var i = 0; i < MonthCtrls.length; i++) {
+                PaySlipMonth = MonthCtrls[i].innerHTML;
+
+                // alert(PaySlipMonth);
+                if (PaySlipMonth.indexOf("-") > -1) {
+                    PaySlipMonth = PaySlipMonth.split("-");
+                    PaySlipMonth = arrMonthShortName[parseInt(PaySlipMonth[1]) - 1] + " " + PaySlipMonth[2];
+                    //alert("s" + PaySlipMonth);
+                }
+                else if (PaySlipMonth.indexOf("/") > -1) {
+                    PaySlipMonth = PaySlipMonth.split("/");
+                    PaySlipMonth = arrMonthShortName[parseInt(PaySlipMonth[1]) - 1] + " " + PaySlipMonth[2];
+                    //alert("n" + PaySlipMonth);
+                }
+
+                //alert(PaySlipMonth);
+                MonthCtrls[i].innerHTML = PaySlipMonth;
+            }
+
+            //var formattedAadhar = $("#tdAadhar").html() + " " + $("#tdAadhar").html() + " " + $("#tdAadhar").html();
+
+            $("#empList").change(function () {
+                if ($(this).val() != "Show All") {
+                    $("tr").hide();
+                    $(".clsPaySlipHeader").show();
+                    $("." + $(this).val()).show();
+                }
+                else
+                    $("tr").show();
+            });
+
+            var empNames = $(".empName");
+            var empIDs = $(".empID");
+
+            var arrEmployees = [];
+            $("#empList").append(new Option("Show All", "Show All"));
+            for (var i = 0; i < empNames.length; i++) {
+                var tmp = empNames[i].innerHTML.trim();
+                var tmpID = empIDs[i].innerHTML.trim();
+
+                if (arrEmployees.indexOf(tmp) == -1) {
+                    arrEmployees.push(tmp);
+                    $("#empList").append(new Option(tmp,tmpID));
+                }
+            }
+            //alert(arrEmployees);
+
+        });
+
+    </script>
+
+
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .card-layout1 {
+            background: #fff;
+            box-shadow: 0 0 6px #340452;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 2%;
+            background: #dbaaef30;
+            margin: 0;
+        }
+        .registerbtn a, .registerbtn a:visited {
+            color: #fff !important;
+        }
+
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 3px 5px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 300px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 15px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            padding: 5px 0px 0px 0px;
+        }
+
+
+        #empList {
+            margin-left: 20px;
+            padding: 2px;
+        }
+        .glyphicon-pencil {
+            font-weight: bold;
+            color: #ffeb00;
+        }
+        .glyphicon-trash{
+            color:red;
+        }
+        .fa-calculator {
+            color: #4fe12b;
+        }
+        .bottomborder, .bottomborder td {
+            border-bottom: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="card card-layout">
+            <div id="EmployeeDetail"  class="row card-layout1">
+                <div class="heading">Employee Details</div>
+
+                <div class="col-lg-12">
+                    <table class="table table-striped table-bordered table-hover table-responsive">
+                        <tbody>
+                            <tr>
+                                <td scope="row"><b>Employee Id</b></td>
+                                <td>@Html.DisplayFor(model => model.EmployeeId)</td>
+                                <td><b>Company Name</b></td>
+                                <td>@Html.DisplayFor(model => model.CompanyName)</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"><b>First Name</b></td>
+                                <td>@Html.DisplayFor(model => model.Name)</td>
+                                <td scope="row"><b>Last Name</b></td>
+                                <td>@Html.DisplayFor(model => model.LName)</td>
+                            </tr>
+                            <tr>
+                                <td><b>Designation</b></td>
+                                <td>@Html.DisplayFor(model => model.Designation)</td>
+                                <td><b>Employee Status</b></td>
+                                <td>@Html.DisplayFor(model => model.Empstatus)</td>
+                            </tr>
+                            <tr>
+
+                                <td><b>Department</b></td>
+                                <td>@Html.DisplayFor(model => model.Department)</td>
+                                <td><b>Reporting Manager</b></td>
+                                <td>@Html.DisplayFor(model => model.Reportingmanager)</td>
+                            </tr>
+                            <tr>
+                                <td><b>Grade</b></td>
+                                <td>@Html.DisplayFor(model => model.Grade)</td>
+                                <td><b>Gross Pay</b></td>
+                                <td>@Html.DisplayFor(model => model.Grosspay)</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"><b>Date of Joining</b></td>
+                                <td>@Html.DisplayFor(model => model.DateofJoin)</td>
+                                <td><b>Total Experiences</b></td>
+                                <td>@Html.DisplayFor(model => model.Preexperience)</td>
+                            </tr>
+                            <tr class="bottomborder">
+                                <td><b>Previous Company Name</b></td>
+                                <td>@Html.DisplayFor(model => model.Precompanyname)</td>
+                                <td><b>Previous Company Designation</b></td>
+                                <td>@Html.DisplayFor(model => model.Predesignation)</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"><b>Date of Birth</b></td>
+                                <td>@Html.DisplayFor(model => model.DOB)</td>
+                                <td scope="row"><b>Age</b></td>
+                                <td>@Html.DisplayFor(model => model.Age)</td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row"><b>Gender</b></td>
+                                <td>@Html.DisplayFor(model => model.Gender)</td>
+                                <td scope="row"><b>Marital Status</b></td>
+                                <td>@Html.DisplayFor(model => model.Maritalstatus)</td>
+                            </tr>
+
+                            <tr class="bottomborder">
+                                <td scope="row"><b>BloodGroup</b></td>
+                                <td>@Html.DisplayFor(model => model.BloodGroup)</td>
+                                <td scope="row"><b>Highest Qualification</b></td>
+                                <td>@Html.DisplayFor(model => model.Qualification)</td>
+                            </tr>
+
+                            <tr>
+                                <td scope="row"><b>Primary Contact</b></td>
+                                <td>@Html.DisplayFor(model => model.Contact)</td>
+                                <td scope="row"><b>Alternative Contact</b></td>
+                                <td>@Html.DisplayFor(model => model.Alternativeno)</td>
+                            </tr>
+                            <tr>
+                                <td scope="row"><b>Personal Email</b></td>
+                                <td>@Html.DisplayFor(model => model.Email)</td>
+                                <td scope="row"><b>Official Email</b></td>
+                                <td>@Html.DisplayFor(model => model.offcEmail)</td>
+                            </tr>
+                            <tr class="bottomborder">
+                                <td scope="row"><b>Permanent Address</b></td>
+                                <td>@Html.DisplayFor(model => model.PermanentAddress)</td>
+                                <td scope="row"><b>Current Address</b></td>
+                                <td>@Html.DisplayFor(model => model.Address)</td>
+                            </tr>
+                            <tr>
+                                <td><b>Bank Name</b></td>
+                                <td>@Html.DisplayFor(model => model.Bankname)</td>
+                                <td><b>Account Number</b></td>
+                                <td>@Html.DisplayFor(model => model.Bankacno)</td>
+                            </tr>
+                            <tr class="bottomborder">
+                                <td><b>Branch Name</b></td>
+                                <td>@Html.DisplayFor(model => model.Bankbranch)</td>
+                                <td><b>IFSC Code</b></td>
+                                <td>@Html.DisplayFor(model => model.Bankifsc)</td>
+                            </tr>
+                            <tr >
+                                <td><b>Aadhar Number</b></td>
+                                <td>@Html.DisplayFor(model => model.Aadhar)</td>
+                                <td><b>PAN Number</b></td>
+                                <td>@Html.DisplayFor(model => model.PAN)</td>
+                            </tr>
+                            <tr>
+                                <td><b>PF Account No</b></td>
+                                <td>@Html.DisplayFor(model => model.PFAccountNo)</td>
+                                <td><b>Passport Number</b></td>
+                                <td>@Html.DisplayFor(model => model.Passport)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            @*Hover Display Payslip Details*@
+
+
+        <div class="row card-layout1">
+            <div class="heading">Payslip Details</div>
+            <select id="empList" type="text" ></select>
+            <div style="padding:2%;">
+                <table class="table table-striped table-bordered table-hover table-responsive">
+                    <thead>
+                        <tr class="clsPaySlipHeader">
+                            <th style="text-align:center;">
+                                <label><b>Employee ID</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>Employee Name</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>Payslip Month</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>Gross Pay</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>Deductions</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>Net Pay</b></label>
+                            </th>
+                            <th style="text-align:center;">
+                                <label><b>IT Paid</b></label>
+                            </th>
+                            <th style="text-align:center;width:50px" >
+                                <label><b>View</b></label>
+                            </th>
+                            <th style="text-align: center; width: 50px" >
+                                <label><b>Edit</b></label>
+                            </th>
+                            <th style="text-align: center; width: 50px" >
+                                <label><b>Delete</b></label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (PayslipGradeHeaderlist.Count > 0)
+                        {
+                            foreach (var item in PayslipGradeHeaderlist)
+                            {
+                        <tr class="@Html.DisplayFor(modelItem => item.EmployeeId) @DateTime.Parse(Html.DisplayFor(modelItem => item.MonthYear).ToString()).ToShortDateString()">
+                            <td>
+                                <div class="empID">@Html.DisplayFor(modelItem => item.EmployeeId)</div>
+                                @Html.HiddenFor(modelItem => item.EmpId)
+                            </td>
+
+                            <td class="empName">
+                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                            </td>
+                            <td class="tdMonth" style="text-align:center;">
+                                @*@Html.DisplayFor(modelItem => item.MonthYear.ToString().Split(' ')[0])*@
+                                @DateTime.Parse(Html.DisplayFor(modelItem => item.MonthYear).ToString()).ToShortDateString()
+                            </td>
+                            <td style="text-align:right;">
+                                @Html.DisplayFor(modelItem => item.GrossSalary)
+                            </td>
+                            <td style="text-align:right;">
+                                @Html.DisplayFor(modelItem => item.TotalDeductions)
+                            </td>
+                            <td style="text-align:right;">
+                                @Html.DisplayFor(modelItem => item.NetSalary)
+                            </td>
+                            <td style="text-align:right;">
+                                @Html.DisplayFor(modelItem => item.taxcollected)
+                                @Html.HiddenFor(modelItem => item.Ranking)
+                            </td>
+                            <td style="text-align:center;">
+                                @Html.ActionLink(" ", "UpdatePayslipDetails", new { id = item.EmpId, month = item.MonthYear, view = 2 }, new { @class = "glyphicon glyphicon-eye-open" })
+                            </td>
+                            <td class="clsAdmin" style="text-align:center;">
+                                @if (item.Ranking == 1)
+                                {
+                                    @Html.ActionLink(" ", "UpdatePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-pencil" })
+                                    
+                                }
+                            </td>
+                            <td class="clsAdmin" style="text-align:center;">
+                                @if (item.Ranking == 1)
+                                {
+                                    
+                                    @Html.ActionLink(" ", "DeletePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-trash" })
+                                }
+                            </td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+            @*Hover Display form Details*@
+
+            <div id="TaxDetail" class="row card-layout1">
+                
+                    <div class="heading">Tax Details</div>
+                        
+                        <div style="padding:2%;">
+                            <table class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:center;">
+                                            <label><b>Employee ID</b></label>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <label><b>Employee Name</b></label>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <label><b>Financial Year</b></label>
+                                        </th>
+
+                                        <th style="text-align:center;">
+                                            <label><b>Regime</b></label>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <label><b>Tax (Old)</b></label>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <label><b>Tax (New)</b></label>
+                                        </th>
+                                        <th style="text-align:center;">
+                                            <label><b>IT Collected</b></label>
+                                        </th>
+
+                                        <th style="text-align:center;width:50px;">
+                                            <label><b>View</b></label>
+                                        </th>
+
+                                        <th style="text-align: center; width: 50px;">
+                                            <label><b>Edit</b></label>
+                                        </th>
+
+                                        <th style="text-align: center; width: 50px;">
+                                            <label><b>Tax</b></label>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var form80header in Form80CHeaderlist)
+                                    {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => form80header.Employeeid)
+                                            @Html.HiddenFor(modelItem => form80header.Empid)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => form80header.EmployeeName)
+                                        </td>
+                                        <td style="text-align:center;">
+                                            @Html.DisplayFor(modelItem => form80header.FinancialYear)
+                                            @Html.HiddenFor(modelItem => form80header.Ranking)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => form80header.OldregimeOrNewregime)
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => form80header.OldTaxProjection)</td>
+                                        <td>@Html.DisplayFor(modelItem => form80header.NewTaxProjection)</td>
+                                        <td>@Html.DisplayFor(modelItem => form80header.TaxCollected)</td>
+                                        <td style="text-align:center;width:50px;">
+                                            @Html.ActionLink(" ", "Formdeductiondetails", "Tax", new { id = form80header.Empid, year = form80header.MonthYear }, new { @class = "glyphicon glyphicon-eye-open" })
+                                        </td>
+                                        <td style="text-align:center;width:50px;">
+                                            @if (form80header.Ranking == 1)
+                                            {
+                                                @Html.ActionLink(" ", "Form80C", "Tax", new { id = form80header.Empid, year = form80header.MonthYear }, new { @class = "glyphicon glyphicon-pencil" })
+                                                @*@Html.ActionLink(" ", "DeleteFormdeductions", "Tax", new { id = form80header.Empid, year = form80header.MonthYear }, new { @class = "glyphicon glyphicon-trash clsAdmin" });*@
+                                            }
+                                        </td>
+                                        <td style="text-align:center;width:50px;">
+                                            @Html.ActionLink(" ", "ITCalculation", "Tax", new { id = form80header.Empid }, new { @class = "fa fa-calculator" })
+                                        </td>
+                                    </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-9">
+
+                </div>
+                <div class="col-lg-3" id="adminButtons1">
+                    <div class="row">
+                        <div class="col-lg-6">
+
+                            <button type="submit" class="registerbtn float-left">@Html.ActionLink("Edit", "Index", new { id = Model.Id , mode = 2 })</button>
+</div>
+                        <div class="col-lg-6">
+                            @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+                            {
+                                <button type="submit" class="registerbtn  float-right">@Html.ActionLink("Back", "Details", "Employee")</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="registerbtn  float-right">@Html.ActionLink("Back", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+</html>

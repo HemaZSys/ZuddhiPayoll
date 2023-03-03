@@ -1,0 +1,181 @@
+﻿@model First.Models.PayslipGrade
+
+@{
+    ViewBag.Title = "UpdatePayslipGrade";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .alignContainer {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: white;
+        }
+
+            .alignContainer span {
+                padding: 3px;
+            }
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            input[type=text]:focus, input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #41174d;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+            .registerbtn:hover {
+                opacity: 1;
+            }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <p style="text-align:center">Payslip Grade Information</p>
+        <div class="container">
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="ID"><b>ID</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.Id, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Gradename"><b>Grade Name</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.GradeName, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="LineNo"><b>Line Number</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.LineNumber, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="SequenceNo"><b>Sequence Number</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.SequenceNumber, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="Section"><b>Section</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.Section, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="SectionDesc"><b>Section Description</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.SectionDescription, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="row">
+                <div class="col-sm-4 p-3">
+                    <label for="Desc"><b>Description</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.Description, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="ControlType"><b>Control Type</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.ControlType, new { type = "text" })
+                    </div>
+                </div>
+                <div class="col-sm-4 p-3">
+                    <label for="EarnOrDeduct"><b>Earning Or Deduction</b></label>
+                    <div class="alignContainer">
+                        @Html.TextBoxFor(e => e.EarningOrDeduction, new { type = "text" })
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <button type="submit" class="registerbtn">Update</button>
+        </div>
+
+        <div>
+            @Html.ActionLink("Back to List", "GradeDetails", "Grade")
+        </div>
+
+    }
+</body>
+</html>
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

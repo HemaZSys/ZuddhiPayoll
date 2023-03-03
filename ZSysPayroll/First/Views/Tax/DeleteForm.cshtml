@@ -1,0 +1,56 @@
+﻿
+@model First.Models.Form80C
+
+@{
+    ViewBag.Title = "DeleteForm";
+}
+
+<h2>Delete Employee</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TaxId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaxId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Form80CsettingId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Form80CsettingId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeId)
+        </dd>        
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Details")
+        </div>
+    }
+</div>

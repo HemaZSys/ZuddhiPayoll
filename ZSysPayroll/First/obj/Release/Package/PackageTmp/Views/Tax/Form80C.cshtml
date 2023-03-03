@@ -1,0 +1,736 @@
+﻿@model First.Models.Form80CHeader
+@{
+    ViewBag.Title = "Tax";
+    List<First.Models._TaxDeclFormSetting> Form80Settingclist = ViewBag.SettingsTaxDeclForm as List<First.Models._TaxDeclFormSetting>;
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    string section = "";
+}
+
+<html>
+<head>
+<style>
+    table {
+        width: 90%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+        table td {
+            line-height: 25px;
+            padding-left: 15px;
+        }
+
+        table th {
+            background-color: #733e95;
+            color: #fff;
+        }
+
+    .card-layout {
+        box-shadow: 0 0 15px #322f2f37;
+        padding: 1%;
+        background: #dbaaef30;
+        margin-bottom: 2%;
+        margin-top: 2%;
+    }
+  
+    .table-wid {
+        width: 450px;
+    }
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 8px;
+        line-height: 1.5;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+        width: 30px;
+        padding-right: 0px;        
+    }
+    .totalDeclared, .totalProof {
+        color: #000;
+        margin:0px;
+
+        width:100%;
+        height:100%;
+    }
+    .table-bordered input[type="number"], .table-bordered input[type="text"] {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .table-bordered input[type="checkbox"]{
+        margin:6px;
+    }
+
+    .table-bordered td {
+        padding: 0px !important;
+        
+    }
+    .table-bordered td:first-child {
+        text-align:center;
+    }
+    #tblHeader td{
+        vertical-align:middle;
+        padding-left:10px!important;
+    }
+
+    input[type="number"] {
+        text-align: right;
+        
+    }
+    #HRAtableId td:nth-child(6) input {
+        text-align: center;        
+    }
+
+    .subtotals td, .subtotals th {
+        background-color: #d9edf7 !important;
+        color: black;
+        border-bottom: 3px solid #733e95 !important;
+        margin-bottom:15px;
+    }
+
+    .table-bordered th:first-child,.table-bordered td:first-child, .subtotals th:first-child{        
+        border-left: 3px solid #733e95 !important;
+    }
+
+    .table-bordered th:last-child, .table-bordered td:last-child, .subtotals th:last-child {
+            border-right: 3px solid #733e95 !important;
+        }
+
+   
+</style>
+
+</head>
+
+<body>
+
+    @using (Html.BeginForm("Form80C", "Tax", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <br />
+        <div class="container-fluid row">
+            <div class="col-12">
+                <div class="container-fluid card" style="margin-bottom: 2rem;">
+                    <div class="card-body" style="border-collapse: collapse;border-spacing: 0;width: 99%; background: #fff;padding:30px 45px 10px 45px;">
+                        <table id="tblHeader" class="table table-bordered" style="">
+                            <tr>
+                                <td colspan="4" style="background-color: #733e95;color:#fff;"><h3 style="text-align:center;">Investment Declaration / Proof Submission for the Financial Year   <span id="fyear">2012-2013</span></h3></td>
+                            </tr>
+                            <tr>
+                                <th>Employee Name</th>
+                                <td class="table-wid">
+                                    <p class="clsUser" style="display:none">@Html.DisplayFor(Model => Model.EmployeeName)</p>
+                                    <select class="clsAdmin" style="display:none" id="empNames">
+                                        @foreach (var employee in Employeelist)
+                                        {
+                                            <option value="@employee.Id">@employee.Name</option>
+                                        }
+                                    </select>
+                                    @Html.HiddenFor(Model => Model.EmployeeName)
+                                    @Html.HiddenFor(Model => Model.Empid)
+                                    @Html.HiddenFor(Model => Model.CreatedDate)
+                                    @Html.HiddenFor(Model => Model.MonthYear)
+                                </td>
+                                @* <td>@Html.TextBoxFor(Model => Model.Employeeid, new SelectList(Employeelist, "Id", "Name"))</td>*@
+                                <th>PAN NO.</th>
+                                <td>@Html.DisplayFor(Model => Model.PAN)@Html.HiddenFor(Model => Model.PAN)</td>
+                            </tr>
+                            <!-----2 row--->
+                            <tr>
+                                <th>Employee ID</th>
+                                <td>@Html.DisplayFor(Model => Model.Employeeid)@Html.HiddenFor(Model => Model.Employeeid)</td>
+                                <th>Bank Name</th>
+                                <td>@Html.DisplayFor(Model => Model.Bankname)@Html.HiddenFor(Model => Model.Bankname)</td>
+                            </tr>
+                            <!------3 row---->
+                            <tr>
+                                <th>Bank A/C No.</th>
+                                <td>@Html.DisplayFor(Model => Model.Bankacno)@Html.HiddenFor(Model => Model.Bankacno)</td>
+                                <th>PF A/C No.</th>
+                                <td>@Html.DisplayFor(Model => Model.PFAccountNo)@Html.HiddenFor(Model => Model.PFAccountNo)</td>
+                            </tr>
+                            <!------4 row---->
+                            <tr>
+                                <th>DOJ</th>
+                                <td>@Html.DisplayFor(Model => Model.DateofJoin)@Html.HiddenFor(Model => Model.DateofJoin)</td>
+                                <th>Designation</th>
+                                <td>@Html.DisplayFor(Model => Model.DesignationName)@Html.HiddenFor(Model => Model.DesignationName)</td>
+                            </tr>
+                            <!------5 row---->
+                            <tr>
+                                <th>Gender</th>
+                                <td>@Html.DisplayFor(Model => Model.Gender)@Html.HiddenFor(Model => Model.Gender)</td>
+                                <th>LOP</th>
+                                <td>0</td>
+                            </tr>
+                            <!------6 row---->
+                            <tr>
+                                <th style="border-bottom:3px solid #733e95;">DOB</th>
+                                <td style="border-bottom:3px solid #733e95;">@Html.DisplayFor(Model => Model.DOB)@Html.HiddenFor(Model => Model.DOB)</td>
+                                <th style="border-bottom:3px solid #733e95;">UAN No.</th>
+                                <td style="border-bottom:3px solid #733e95;">-</td>
+                            </tr>
+                        </table>
+                   
+                        <table class="table table-striped table-bordered table-hover table-responsive">
+
+                            @for (int i = 0; i < Form80Settingclist.Count(); i++)
+                            {
+                                if (section != Form80Settingclist[i].Section)
+                                {
+
+                                    if (i != 0)
+                                    {
+                                        <tr style="border-bottom:2px solid #733e95;" class="subtotals">
+                                            <th></th>   
+                                            <th style="text-align:right;vertical-align: middle;">Total for this Section @Form80Settingclist[i - 1].Section :&nbsp;&nbsp;</th>
+                                            <th><input type="number" class="totalDeclared" /></th>
+                                            <th><input type="number" class="totalProof" /></th>
+                                            <th></th>
+                                        </tr>
+                                    }
+                                    <div class="divForSections" style="display:none;">@Form80Settingclist[i].Section</div>
+
+                                    <tr>
+                                        <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].Section)</th>
+                                        <th>@Html.DisplayFor(modelItem => Model.Form80CList[i].SectionName)</th>
+                                        <th>Declared Amount in Rs.</th>
+                                        <th>Proof Submission in Rs.</th>
+                                        <th>Proof Upload</th>
+                                    </tr>
+
+
+
+                                    section = Form80Settingclist[i].Section;
+                                }
+
+                                string controltype = "";
+                                if (Form80Settingclist[i].ControlType == 1)
+                                {
+                                    controltype = "text";
+                                }
+                                else if (Form80Settingclist[i].ControlType == 2)
+                                {
+                                    controltype = "checkbox";
+                                }
+                                else if (Form80Settingclist[i].ControlType == 3)
+                                {
+                                    controltype = "date";
+                                }
+                                else if (Form80Settingclist[i].ControlType == 4)
+                                {
+                                    controltype = "radio";
+                                }
+
+
+                        <tr class="info">
+                            <td style="max-width: 30px!important;width: 30px!important;">
+                                @Html.DisplayFor(modelItem => Model.Form80CList[i].LineNumber)
+                            </td>
+                            <td style="width: 420px;overflow-x:auto">
+                                @if (controltype != "checkbox")
+                                {
+                                    @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                    @Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)
+                                }
+
+                                @if (controltype == "radio")
+                                {
+                                    @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, ">80%") @Html.Label(@">80%")
+                                    @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, "<80%") @Html.Label(@"<80%")
+                                    @Html.RadioButtonFor(modelItem => Model.Form80CList[i].Description, "Zero | (u/s.80DD)") @Html.Label(@"Zero | (u/s.80DD)")
+
+                                }
+                                else if (controltype == "checkbox")
+                                {
+                                    var parameterValue = Convert.ToBoolean(false);
+                                    @Html.CheckBoxFor(modelItem => parameterValue)
+                                    @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                    @Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)
+                                }
+                                else if (controltype == "date")
+                                {
+                                    @Html.HiddenFor(modelItem => Model.Form80CList[i].Form80CsettingId);
+                                    @*@Html.DisplayFor(modelItem => Model.Form80CList[i].DescriptionLabel)*@
+                                    @Html.TextBoxFor(modelItem => Model.Form80CList[i].Description, new { Type = "Date" })
+                                }
+                                else
+                                {
+                                    @*@Html.TextBoxFor(modelItem => Model.Form80CList[i].Description, new { type = controltype })*@
+                                    // @Html.TextBox("customers[" + @i + "].CompanyName", Form80clist[i].Description)
+                                }
+
+                            </td>
+                            <td style="width: 120px!important;">@Html.TextBoxFor(modelItem => Model.Form80CList[i].Declared_Amt, new { type = "number", @class = "amountDeclared" + section })</td>
+                            <td style="width: 120px!important;" title="@Form80Settingclist[i].MaximumValue">
+                                
+                                @Html.TextBoxFor(modelItem => Model.Form80CList[i].Proof_Amt, new { type = "number", @class = "amountProof" + section })
+                            </td>
+
+                            @if (Model.Form80CList[i].Proof_file_location != null && Model.Form80CList[i].Proof_file_location != "")
+                            {
+                                @*<td class="clsFile">@Html.ActionLink(Model.Form80CList[i].Proof_file_location, "Download", new { ImageName = Model.Form80CList[i].Proof_file_location.ToString() }) </td>*@
+                                <td  style="width: 180px;" class="clsFile">@Html.TextBoxFor(modelItem => Model.Form80CList[i].Proof_file, new { type = "file", accept = "application/pdf" })@Html.ActionLink(Model.Form80CList[i].Proof_file_location, "Download", new { ImageName = Model.Form80CList[i].Proof_file_location.ToString() }) </td>
+                            }
+                            else
+                            {
+                                <td style="width: 180px;">@Html.TextBoxFor(modelItem => Model.Form80CList[i].Proof_file, new { type = "file", accept = "application/pdf" })</td>
+                            }
+
+
+                        </tr>
+
+                                if (i == Form80Settingclist.Count() - 1)
+                                {
+                                    <tr style="border-bottom:2px solid #733e95;" class="subtotals">
+                                        <th></th>
+                                        <th style="text-align:right;vertical-align: middle;">Total for this Section @Form80Settingclist[i - 1].Section :&nbsp;&nbsp;</th>
+                                        <th><input type="number" class="totalDeclared" /></th>
+                                        <th><input type="number" class="totalProof" /></th>
+                                        <th></th>
+                                    </tr>
+
+                                }
+
+                            }
+
+                            
+
+                        </table>
+                        <div>
+                            <table class="table table-bordered" id="HRAtableId">
+                                <tr>
+                                    <th>G</th>
+                                    <th colspan="9"><p>Rent Paid per month for rented accommodation (for claiming exemption U/s. 10(13A). Metro Cities are Delhi, Kolkata, Mumbai and Chennai only)</p></th>
+
+                                </tr>
+                                <tr>
+                                    <th style="width:60px;"></th>
+                                    <th style="width:90px;">Metro</th>
+                                    <th style="width:90px;">Proof Submission</th>
+                                    <th style="width:90px;">Non-Metro</th>
+                                    <th style="width:90px;">Proof Submission</th>
+                                    <th style="width:90px;">Landlord PAN</th>
+                                    <th style="width:120px;">Landlord Name</th>
+                                    <th style="width:235px;">Landlord Address</th>
+                                    <th style="width:150px;">Remarks</th>
+                                </tr>
+                                <tr>
+                                    <td id="mon1">April</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilMetro, new { type = "number", @class = "Metro0", id = "Metro_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilProofSubmission, new { type = "number", @class = "MetroProof0", id = "MetroProof_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilNonMetro, new { type = "number", @class = "NonMetro0", id = "NonMetro_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof0", id = "NonMetroProof_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilLandlordPAN, new { type = "text", @class = "pan LLPAN0", id = "LLPAN_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilLandlordName, new { type = "text", @class = "LLName0", id = "LLName_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilLandlordAddress, new { type = "text", @class = "LLAddress0", id = "LLAddress_0", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AprilRemarks, new { type = "text", @class = "Remarks0", id = "Remarks_0" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon2">May</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayMetro, new { type = "number", @class = "Metro1", id = "Metro_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayProofSubmission, new { type = "number", @class = "MetroProof1", id = "MetroProof_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayNonMetro, new { type = "number", @class = "NonMetro1", id = "NonMetro_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof1", id = "NonMetroProof_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayLandlordPAN, new { type = "text", @class = "pan LLPAN1", id = "LLPAN_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayLandlordName, new { type = "text", @class = "LLName1", id = "LLName_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayLandlordAddress, new { type = "text", @class = "LLAddress1", id = "LLAddress_1", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MayRemarks, new { type = "text", @class = "Remarks1", id = "Remarks_1" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon3">June</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneMetro, new { type = "number", @class = "Metro2", id = "Metro_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneProofSubmission, new { type = "number", @class = "MetroProof2", id = "MetroProof_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneNonMetro, new { type = "number", @class = "NonMetro2", id = "NonMetro_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof2", id = "NonMetroProof_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneLandlordPAN, new { type = "text", @class = "pan LLPAN2", id = "LLPAN_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneLandlordName, new { type = "text", @class = "LLName2", id = "LLName_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneLandlordAddress, new { type = "text", @class = "LLAddress2", id = "LLAddress_2", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JuneRemarks, new { type = "text", @class = "Remarks2", id = "Remarks_2" })</td>
+
+                                </tr>
+                                <tr>
+                                    <td id="mon4">July</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyMetro, new { type = "number", @class = "Metro3", id = "Metro_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyProofSubmission, new { type = "number", @class = "MetroProof3", id = "MetroProof_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyNonMetro, new { type = "number", @class = "NonMetro3", id = "NonMetro_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof3", id = "NonMetroProof_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyLandlordPAN, new { type = "text", @class = "pan LLPAN3", id = "LLPAN_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyLandlordName, new { type = "text", @class = "LLName3", id = "LLName_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyLandlordAddress, new { type = "text", @class = "LLAddress3", id = "LLAddress_3", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JulyRemarks, new { type = "text", @class = "Remarks3", id = "Remarks_3" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon5">August</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustMetro, new { type = "number", @class = "Metro4", id = "Metro_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustProofSubmission, new { type = "number", @class = "MetroProof4", id = "MetroProof_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustNonMetro, new { type = "number", @class = "NonMetro4", id = "NonMetro_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof4", id = "NonMetroProof_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustLandlordPAN, new { type = "text", @class = "pan LLPAN4", id = "LLPAN_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustLandlordName, new { type = "text", @class = "LLName4", id = "LLName_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustLandlordAddress, new { type = "text", @class = "LLAddress4", id = "LLAddress_4", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.AugustRemarks, new { type = "text", @class = "Remarks4", id = "Remarks_4" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon6">September</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberMetro, new { type = "number", @class = "Metro5", id = "Metro_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberProofSubmission, new { type = "number", @class = "MetroProof5", id = "MetroProof_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberNonMetro, new { type = "number", @class = "NonMetro5", id = "NonMetro_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof5", id = "NonMetroProof_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberLandlordPAN, new { type = "text", @class = "pan LLPAN5", id = "LLPAN_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberLandlordName, new { type = "text", @class = "LLName5", id = "LLName_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberLandlordAddress, new { type = "text", @class = "LLAddress5", id = "LLAddress_5", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.SeptemberRemarks, new { type = "text", @class = "Remarks5", id = "Remarks_5" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon7">October</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberMetro, new { type = "number", @class = "Metro6", id = "Metro_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberProofSubmission, new { type = "number", @class = "MetroProof6", id = "MetroProof_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberNonMetro, new { type = "number", @class = "NonMetro6", id = "NonMetro_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof6", id = "NonMetroProof_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberLandlordPAN, new { type = "text", @class = "pan LLPAN6", id = "LLPAN_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberLandlordName, new { type = "text", @class = "LLName6", id = "LLName_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberLandlordAddress, new { type = "text", @class = "LLAddress6", id = "LLAddress_6", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.OctoberRemarks, new { type = "text", @class = "Remarks6", id = "Remarks_6" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon8">November</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberMetro, new { type = "number", @class = "Metro7", id = "Metro_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberProofSubmission, new { type = "number", @class = "MetroProof7", id = "MetroProof_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberNonMetro, new { type = "number", @class = "NonMetro7", id = "NonMetro_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof7", id = "NonMetroProof_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberLandlordPAN, new { type = "text", @class = "pan LLPAN7", id = "LLPAN_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberLandlordName, new { type = "text", @class = "LLName7", id = "LLName_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberLandlordAddress, new { type = "text", @class = "LLAddress7", id = "LLAddress_7", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.NovemberRemarks, new { type = "text", @class = "Remarks7", id = "Remarks_7" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon9">December</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberMetro, new { type = "number", @class = "Metro8", id = "Metro_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberProofSubmission, new { type = "number", @class = "MetroProof8", id = "MetroProof_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberNonMetro, new { type = "number", @class = "NonMetro8", id = "NonMetro_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof8", id = "NonMetroProof_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberLandlordPAN, new { type = "text", @class = "pan LLPAN8", id = "LLPAN_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberLandlordName, new { type = "text", @class = "LLName8", id = "LLName_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberLandlordAddress, new { type = "text", @class = "LLAddress8", id = "LLAddress_8", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.DecemberRemarks, new { type = "text", @class = "Remarks8", id = "Remarks_8" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon10">January</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryMetro, new { type = "number", @class = "Metro9", id = "Metro_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryProofSubmission, new { type = "number", @class = "MetroProof9", id = "MetroProof_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryNonMetro, new { type = "number", @class = "NonMetro9", id = "NonMetro_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof9", id = "NonMetroProof_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryLandlordPAN, new { type = "text", @class = "pan LLPAN9", id = "LLPAN_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryLandlordName, new { type = "text", @class = "LLName9", id = "LLName_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryLandlordAddress, new { type = "text", @class = "LLAddress9", id = "LLAddress_9", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.JanuaryRemarks, new { type = "text", @class = "Remarks9", id = "Remarks_9" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon11">February</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryMetro, new { type = "number", @class = "Metro10", id = "Metro_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryProofSubmission, new { type = "number", @class = "MetroProof10", id = "MetroProof_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryNonMetro, new { type = "number", @class = "NonMetro10", id = "NonMetro_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof10", id = "NonMetroProof_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryLandlordPAN, new { type = "text", @class = "pan LLPAN10", id = "LLPAN_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryLandlordName, new { type = "text", @class = "LLName10", id = "LLName_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryLandlordAddress, new { type = "text", @class = "LLAddress10", id = "LLAddress_10", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.FebruaryRemarks, new { type = "text", @class = "Remarks10", id = "Remarks_10" })</td>
+                                </tr>
+                                <tr>
+                                    <td id="mon12">March</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchMetro, new { type = "number", @class = "Metro11", id = "Metro_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchProofSubmission, new { type = "number", @class = "MetroProof11", id = "MetroProof_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchNonMetro, new { type = "number", @class = "NonMetro11", id = "NonMetro_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchNonMetroProofSubmission, new { type = "number", @class = "NonMetroProof11", id = "NonMetroProof_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchLandlordPAN, new { type = "text", @class = "pan LLPAN11", id = "LLPAN_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchLandlordName, new { type = "text", @class = "LLName11", id = "LLName_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchLandlordAddress, new { type = "text", @class = "LLAddress11", id = "LLAddress_11", onkeyup = "Copy(this);" })</td>
+                                    <td>@Html.TextBoxFor(modelItem => modelItem.MarchRemarks, new { type = "text", @class = "Remarks11", id = "Remarks_11" })</td>
+                                </tr>
+                                <tr style="font-weight:bold;background-color:#ddd;" class="subtotals">
+                                    <td id="mon12"><b>Total</td>
+                                    <td id="totalDeclaredHRA"></td>
+                                    <td id="totalProofHRA"></td>
+                                    <td id="totalDeclaredNonmetroHRA"></td>
+                                    <td id="totalProofNonmetroHRA"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                   <td></td>
+                                </tr>
+                                <tr style="font-weight:bold;background-color:#ddd;height:36px; vertical-align:middle;" class="rentAttach">
+                                    <th colspan="2" >Rent Proof : </th>
+                                    @if (Model.RentProofFile != null && Model.RentProofFile != "")
+                                    {
+                                        
+                                        <td colspan="2" style="vertical-align:middle; ">
+                                            <div style="width: 180px; padding-left: 15px;" class="clsFile" title="Plese attach as a single file">@Html.TextBoxFor(modelItem => Model.RentProofFileBase, new { type = "file", accept = "application/pdf" }) </div>
+                                        </td>
+                                        <td colspan="5" style="vertical-align:middle">
+                                            @Html.ActionLink(Model.RentProofFile, "Download", new { ImageName = Model.RentProofFile.ToString() })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" style="vertical-align:middle; ">
+                                            <div style="width: 180px; padding-left: 15px;" title="Plese attach as a single file">@Html.TextBoxFor(modelItem => Model.RentProofFileBase, new { type = "file", accept = "application/pdf" })</div>
+                                        </td>
+                                        <td colspan="5">
+                                        </td>
+                                    }
+
+
+                                </tr>
+                                <tr>
+                                    <td colspan="9" style="vertical-align:middle;line-height:30px;border-bottom: 3px solid #733e95 !important;"><b>Note:</b><i> If House Rent Amount is More than Rs.8333/-pm then Landlord PAN,Landlord Name and Landlord Address are Mantatory</i></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="9" style="padding:10px;text-align:center;border:1px solid #fff !important;">
+                                        <button type="submit" class="btn btn-primary" style="width: 70px;margin:15px 0px -15px 0px;background:#733e95;">Submit</button>
+                                    </td>
+                                </tr>
+
+                                @*<tr>
+            <td>Place<input type="text" value="" /></td>
+            <td>Date<input type="date" value="" /></td>
+            <td>signature<input type="text" value="" /></td>
+        </tr>*@
+                            </table>
+                            </div>
+                        
+
+                    </div>
+                    <br />
+                    <div class="col-12 row">
+                        <div class="col-lg-6">
+
+                           
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    }
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+    <script src="~/Js/jquery.validate.min.js"></script>
+    <script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        
+        $(document).ready(function () {
+            checkLogin();
+            //alert("new");
+
+            var myear = $("#MonthYear").val();
+           // alert(myear);
+            if (myear.indexOf("/") > -1) {
+                myear = myear.split("/")[2].split(" ")[0];
+                myear = myear + "-" + (parseInt(myear) + 1);
+            }
+            else {
+                myear = myear.split("-")[2].split(" ")[0];
+                myear = myear + "-" + (parseInt(myear) + 1);
+            }
+            $("#fyear").html(myear);
+            if (decrypt($("#userPrivilege").html()) == "Admin") {
+
+                $('.clsUser').each(function (i, obj) {
+                    $(this).hide();
+                });
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).show();
+                });
+                for (var i = 0; i < 12; i++) {
+                    $(".NonMetroProof" + i).attr("disabled", false);
+                    $(".MetroProof" + i).attr("disabled",false);
+                }
+            }
+            else {
+                $('.clsUser').each(function (i, obj) {
+                    $(this).show();
+                });
+
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).hide();
+                });
+                $('input[class^= "amountProof"]').attr('disabled', true);
+
+                for (var i = 0; i < 12; i++) {
+                    $(".NonMetroProof" + i).attr("disabled", true);
+                    $(".MetroProof" + i).attr("disabled", true);
+                }
+                //$('.amountProof')
+            }
+
+            var tmpURL = document.location.href.split("?")[0].split("/");
+
+            tmpURL = tmpURL[tmpURL.length - 1];
+            //alert(tmpURL);  
+            $("#empNames").val(tmpURL);
+
+
+            $("#empNames").change(function () {
+               // alert("::" + $("#empNames").val());
+                var tmpURL = document.location.href;
+                var tmpParam = tmpURL.split("?")[1];
+                //alert(tmpURL + " :: " + tmpParam);
+                tmpURL = tmpURL.split("Form80C")[0];
+                tmpURL = tmpURL + "Form80C/" + $("#empNames").val() + "?" + tmpParam;
+                //alert(tmpURL);
+                document.location.href = tmpURL;
+            });
+
+            $("input").focus(function () {
+                $(this).select();
+            });
+
+            $("input").click(function () {
+                $(this).select();
+            });
+
+            setRentMons();
+
+
+            
+
+            $("input[type='number']").keypress(function () {
+                if ($(this).val().length >= 9)
+                    return false;
+            });
+
+            $(".pan").keypress(function () {
+                if ($(this).val().length > 9)
+                    return false;
+            });
+
+            $("input[type='number']").keyup(function () {                
+                calc();
+            });
+
+            calc();
+            
+            $('#dtHorizontalVerticalExample').DataTable({
+                "scrollX": true,
+                "scrollY": 200,
+            });
+
+
+
+           
+
+            $('.dataTables_length').addClass('bs-select');
+
+            
+
+        });
+
+        function Copy(ctl) {
+            var ctrlName = ctl.id;                        
+            var idNum = parseInt(ctrlName.split("_")[1]);
+            var idName = ctrlName.split("_")[0];    
+
+            for (var i = (idNum+1); i < 12; i++) {
+                $("#" + idName + "_" + i).val($("#" + ctrlName).val());
+            }
+        }
+
+
+
+
+        function setRentMons() {
+            //alert("yes");
+            var year = "22";
+            var arrShortMons = ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
+            for (var i = 0; i < 12; i++) {
+                if (i < 9) {
+                    $("#mon" + (i + 1)).html(arrShortMons[i] + "-" + year);
+                }
+                else {
+                    $("#mon" + (i + 1)).html(arrShortMons[i] + "-" + (parseInt(year) + 1));
+                }
+            }
+        }
+
+        function calc() {
+            
+            for (var i = 0; i < $(".divForSections").length; i++) {
+                var sec = $(".divForSections")[i].innerHTML;
+                
+
+                var declaredCnt = $(".amountDeclared" + sec).length;
+                var declaredTotal = 0;
+                
+                    //alert(declaredCnt);
+
+                var proofCnt = $(".amountProof" + sec).length;
+                var proofTotal = 0;
+
+                for (var j = 0; j < declaredCnt; j++) {
+                    var tmp = $($(".amountDeclared" + sec)[j]).val();
+                 
+                    if (tmp != "" && tmp != null) {
+                        while (tmp.indexOf(",") > -1)
+                            tmp = tmp.replace(",", "");
+                    }
+                    else {
+                        tmp = 0.00;
+                    }
+                    declaredTotal += parseFloat(tmp);
+                    tmp = $($(".amountProof" + sec)[j]).val();
+                    if (tmp != "" && tmp != null) {
+                        while (tmp.indexOf(",") > -1)
+                            tmp = tmp.replace(",", "");
+                    }
+                    else {
+                        tmp = 0.00;
+                    }
+                    proofTotal += parseFloat(tmp);
+                }
+                
+                $($(".totalDeclared")[i]).val(declaredTotal.toFixed(2));
+                $($(".totalProof")[i]).val(proofTotal.toFixed(2));
+            }
+            //alert(declaredTotal);
+
+            var TotalMetroHRA = 0;
+            var TotalProofHRA = 0;
+
+            for (var i = 0; i < 12; i++) {
+                TotalMetroHRA += parseFloat($(".Metro" + i).val());
+                TotalProofHRA += parseFloat($(".MetroProof" + i).val());
+            }
+            $("#totalDeclaredHRA").html(TotalMetroHRA);
+            $("#totalProofHRA").html(TotalProofHRA);
+
+            var TotalNonMetroHRA = 0;
+            var TotalNonProofHRA = 0;
+
+            for (var i = 0; i < 12; i++) {
+                TotalNonMetroHRA += parseFloat($(".NonMetro" + i).val());
+                TotalNonProofHRA += parseFloat($(".NonMetroProof" + i).val());
+            }
+            $("#totalDeclaredNonmetroHRA").html(TotalNonMetroHRA);
+            $("#totalProofNonmetroHRA").html(TotalNonProofHRA);
+            
+        }
+
+            //$(".amountDeclared").keypress(function () {
+            //    if ($(this).val().length >= 7)
+            //        return false;
+            //});
+        $('.clsFile a').each(function (i, obj) {
+            var arrFileparts = $(this).html().split('\\');
+            arrFileparts = arrFileparts[arrFileparts.length - 1];
+            $(this).html(arrFileparts);
+        });
+
+    </script>
+
+</body>
+
+</html>

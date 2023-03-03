@@ -1,0 +1,252 @@
+﻿
+@model First.Models.PayslipGradeHeader
+@{
+    ViewBag.Title = "PayslipEntry";
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    string section = "";
+}
+
+<html>
+<head>
+    <style>
+        #Month {
+            pointer-events: none;
+        }
+
+        .container {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .textbox {
+            width: auto;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        table table-hover {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 50%;
+            border: 1px solid #7e6d90;
+        }
+
+        table td {
+            line-height: 25px;
+            padding-left: 10px;
+        }
+
+        table th {
+            background-color: #7e6d90;
+            color: black;
+            line-height: 30px;
+            color: #fff;
+        }
+
+        th {
+            vertical-align: bottom;
+            text-align: center;
+        }
+
+        td span {
+            -ms-writing-mode: tb-rl;
+            /*-webkit-writing-mode: vertical-rl;*/
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+        }
+
+        input[type='text'], input[type='number'] {
+            text-align: right;
+            padding-right: 5px;
+        }
+
+
+
+
+
+
+
+        #tblHeader td {
+            font-size: 11pt;
+            background-color: #f1f1f1;
+            padding: 0px 3px;
+            line-height: 16px;
+        }
+
+            #tblHeader td:last-child {
+                padding-bottom: 7px;
+            }
+
+        #tblTotals td {
+            border: 1px solid black;
+        }
+    </style>
+
+</head>
+<body>
+    @using (Html.BeginForm("UpdatePayslipDetails", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <!--<div>
+            <label for="ID"><b>Employee Name</b></label>-->
+        @*@Html.DropDownListFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Name"))*@
+        @*@Html.EditorFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Name"))*@
+        @*</div>*@
+        <div class="container" style="width:600px;">
+            <div style="font-size:15pt;font-weight:bold;text-align:center;">
+                <table id="tblHeader" style="width: 540px;text-align:center;">
+                    <tr>
+                        <td rowspan="4">
+                            <img src="~/images/zlogo.png" style="width:60px;height:auto;" />
+                        </td>
+                        <td>
+                            <div style="font-size:14pt;font-weight:bold;text-align:center;padding-top:12px;">
+                                <b>Zuddhi Systems Pvt. Ltd.</b>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>No 2, Sri Nagar, 5th Street, Narayanapuram,</td>
+                    </tr>
+                    <tr>
+                        <td>Pallikaranai, Chennai - 600 100, India</td>
+                    </tr>
+                </table>
+                <label>
+                </label>
+            </div>
+            <div style="font-size:13.5pt;font-weight:bold;text-align:center;">
+                Payslip for the month <label id="lblPayslipMonth">@Html.DisplayFor(Model => Model.MonthYear, new { type = "Date" })</label>
+            </div>
+            <hr />
+            <table id="tblPayslip">
+                <tr>
+                    <td width="210px" ;>
+                        <label for="Grade"><b>Emp ID : </b></label>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(Model => Model.EmployeeId, new SelectList(Employeelist, "Id", "Grade"))
+                    </td>
+                    <td>
+                        <label for="ID"><b>Emp Name : </b></label>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.EmployeeName)
+                        @Html.HiddenFor(model => model.EmployeeName)
+                        @Html.HiddenFor(model => model.EmployeeId)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Grade"><b>Emp Grade :</b></label>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.EmployeeGrade)
+                        @Html.HiddenFor(model => model.EmployeeGrade)
+                    </td>
+                    <td>
+                        @*<label for="Month"><b>Effect From : </b></label>*@
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr style="display:none;">
+                    <td style="width:150px;">
+                        <b>Gross Pay :</b>
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(Model => Model.EmployeeGrosspay, new { type = "number" })
+                        @*<input type="number" id="txtGrossPay" maxlength="7" />*@
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <div id="divItemCount" style="display:none"> @Model.PayslipGradeEntryList.Count()</div>
+
+            <table table-hover border="1">
+
+                @for (int i = 0; i < Model.PayslipGradeEntryList.Count(); i++)
+                {
+
+
+                    if (section != Model.PayslipGradeEntryList[i].SectionDescription)
+                    {
+                        <tr>
+                            <th style="width:46%;">@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</th>
+                            <th style="width:27%;">Monthly Amount</th>
+                            <th style="width:27%;">Annual Amount</th>
+
+                        </tr>
+                        if (Model.PayslipGradeEntryList[i].SectionDescription == "Deductions")
+                        {
+                            <div id="divDedCount" style="display:none">@i</div>
+                        }
+
+                        section = Model.PayslipGradeEntryList[i].SectionDescription;
+                    }
+
+                    <tr class="info">
+                        <td style="width:46%;padding-left:10px;">
+                            @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].PayslipGradeid)
+                            @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Id)
+
+                            @Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].Description)
+                        </td>
+                        <td style="width:27%;text-align:right;padding-right:10px;">
+                            @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox" })
+                            @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+                        </td>
+
+                        <td style="width: 27%;text-align: right;padding-right:10px;">
+                            @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, new { type = "text", @class = "textbox" })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+            <div>
+                <input type="submit" value="Save" class="btnRegister" />
+                <table id="tblTotals" style="width: 540px;">
+                    <tr>
+                        <td style="width: 81%;padding-right:10px;">Gross Salary : </td>
+                        <td class="clsTotals" style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;" id="tdTotalGrossPay"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 81%;padding-right:10px;">Total Deductions :</td>
+                        <td class="clsTotals" style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;" id="tdTotalDeduction"></td>
+
+                    </tr>
+                    <tr>
+                        <td style="width: 81%;padding-right:10px;">Net Salary :</td>
+                        <td class="clsTotals" style="width: 81%;padding-right:10px;text-align: right; font-weight: bold;" id="tdTotalNetPay"></td>
+
+                    </tr>
+                    <tr>
+                        <td id="tdPayMonthWords" colspan="2">
+                            000.00
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <center>
+            <input type="button" id="btnPrint" value="Print" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;" />&nbsp;&nbsp;
+            <input type="button" id="btnPDF" value="Save as PDF" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;display:none;" />
+        </center>
+    }
+</body>
+</html>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.13.0.min.js"></script>
+<script src="~/Js/jquery.validate.min.js"></script>
+<script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

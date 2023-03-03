@@ -1,0 +1,142 @@
+﻿@model IEnumerable<First.Models.Empalldropdown>
+
+@{
+    ViewBag.Title = "Dropdownsettingslist";
+}
+
+<link href="~/CSS/bootstrap.min.table.css" rel="stylesheet" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+<link rel="stylesheet" href="~/CSS/jquery.dataTables.min.css">
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+    }
+
+        table td {
+            line-height: 25px;
+            padding-left: 15px;
+        }
+
+        table th {
+            background-color: #ae98ba;
+            color: black;
+        }
+    .card-layout {
+        box-shadow: 0 0 15px #322f2f37;
+        padding: 2%;
+        background: #dbaaef30;
+        margin: 0;
+    }
+
+    input[type=text], select {
+
+        padding: 7px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .registerbtn a, .registerbtn a:visited {
+        color: #fff !important;
+    }
+        .registerbtn {
+        
+        border: none;
+        border-radius: 1.5rem;
+        padding: 1%;
+        background: #735097;
+        color: #fff !important;
+        font-weight: 600;
+        width: 10%;
+        cursor: pointer;
+    }
+        .registerbtn:hover {
+            opacity: 1;
+        }
+    .heading {
+        text-align: center;
+        font-size: 27px!important;
+        font-weight:bold;
+    }
+    .glyphicon-pencil {
+        font-weight: bold;
+        color: #ffeb00;
+    }
+
+    .glyphicon-trash {
+        color: red;
+    }
+
+    .fa-calculator {
+        color: #4fe12b;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card card-layout">
+        <div class="heading" >Manage Master List</div>
+        <button class="btn btn-primary float-right registerbtn" style="background: #733e95;">@Html.ActionLink("Create New", "CreateDropdown")</button>       
+        
+        <table id="tblManageMaster" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Abbreviation)
+                    </th>
+                    <th >Edit</th>
+                    <th >Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="info">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                            @Html.HiddenFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Abbreviation)
+                        </td>
+                        <td style="text-align:center;width:50px;">
+                            @Html.ActionLink(" ", "Updatedropdown", new { id = item.Id }, new { @class = "glyphicon glyphicon-pencil" })
+                        </td>
+                        <td style="text-align:center;width:50px;">
+                            @*@Html.ActionLink(" ", "DeleteDropdown", new { id = item.Id }, new { @class = "glyphicon glyphicon-trash"})*@
+                            @Html.ActionLink(" ", "DeleteDropdown", new { id = item.Id }, new { @class = "glyphicon glyphicon-trash", onclick = "return confirm('Are sure wants to delete?');" })
+                        </td>
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+        <script src="~/Js/jquery.min.js"></script>
+        <script src="~/Js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                checkLogin();
+                $("#tblManageMaster").DataTable();
+            });
+        </script>
+
+
+
+

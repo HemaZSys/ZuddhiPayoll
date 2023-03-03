@@ -1,0 +1,194 @@
+﻿@model First.Models.Empalldropdown
+
+@{
+    ViewBag.Title = "CreateDropdown";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="~/Js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 30px;
+            background-color: white;
+        }   
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            float: right;
+            margin-top: 10%;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: #fff;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+        }
+
+        .viewAll:hover {
+            opacity: 1;
+        }
+
+        .viewAll {
+            float: right;
+            border: none;
+            border-radius: 1.5rem;
+            padding: 1%;
+            background: #735097;
+            color: #fff;
+            font-weight: 600;
+            width: 10%;
+            cursor: pointer;
+            margin-top: 0%;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+
+        .registerbtn:hover {
+            opacity: 1;
+        }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+
+        .alignContainer {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f4f4f41a;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 5%;
+            background: #dbaaef30;
+            margin-bottom: 2%;
+            margin-top: 15%;
+        }
+
+        .caption {
+            width:120px;
+        }
+
+        input[type=text], select {
+            width: 360px;
+            padding: 7px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .fa-info-circle{
+            font-size:19px;
+        }
+        #Description{
+            width: 630px !important;
+        }
+        .container-fluid{
+            width:75%;
+            
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm("CreateDropdown", "Employee", FormMethod.Post))
+    {
+
+    <div class="container-fluid">
+        <div class="card card-layout">
+            <h2 style="text-align:center">Enter Dropdown Details</h2>
+            <hr > @Html.HiddenFor(e => e.Id)
+            <div class="row">
+
+                <div class="col-lg-6 p-3">
+
+                    <label class="caption" for="type"><b>Dropdown Type</b></label>
+                    <i class="fa fa-info-circle" title="Select Dropdown Type(Eg.Blood Group,Department,Qualification,Grade)"></i>
+                    &nbsp;@Html.TextBoxFor(e => e.Type, new { type = "text" })
+                </div>
+                <div class="col-lg-6 p-3">
+                    <label class="caption" for="Abbreviation"><b>Abbreviation</b></label>
+                    <i class="fa fa-info-circle" title="Enter Abbreviation (Eg. BCA, B +ve)"></i>
+                    &nbsp;@Html.TextBoxFor(e => e.Abbreviation, new { type = "text" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 p-6">
+                    <label class="caption" for="description"><b>Description</b></label>
+                    <i class="fa fa-info-circle" title="Enter Description (Eg.BCA-Bachelor of Computer Applications)"></i>
+                    &nbsp;@Html.TextBoxFor(e => e.Description, new { type = "text" })
+                </div>
+
+            </div>
+            <hr>
+            @*<button type="submit" class="registerbtn">ADD</button>
+
+        @Html.ActionLink("Back to List", "Dropdownsettingslist", "Employee")*@
+
+            <button type="submit" id="btnAdd" class="registerbtn" style="margin-top: 0%;">ADD</button>
+            @Html.ActionLink("View All", "Dropdownsettingslist", "Employee", new { @class = "viewAll" })
+        </div>
+        </div>
+        }     
+
+</body>
+</html>
+
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    $(function () {
+            var msg = '@ViewData["result"]';
+            if (msg == '1')
+            {
+                alert("Dropdown Details Inserted Successfully");
+                //window.location.href = window.location.href + "/CreateDropdown/" + $("#Id").val();
+
+             }
+
+
+         });
+    });
+</script>
+
+

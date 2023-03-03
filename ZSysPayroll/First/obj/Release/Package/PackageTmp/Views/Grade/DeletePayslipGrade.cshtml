@@ -1,0 +1,84 @@
+﻿
+@model First.Models.PayslipGrade
+
+@{
+    ViewBag.Title = "DeletePayslipGrade";
+}
+
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+
+        <dt>
+            <label for="GradeName"><b>Grade Name</b></label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GradeName)
+        </dd>
+        <dt>
+            <label for="SequenceNo"><b>Line Number</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LineNumber)
+        </dd>
+        <dt>
+            <label for="SequenceNo"><b>Sequence Number</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SequenceNumber)
+        </dd>
+        <dt>
+            <label for="SectionDesc"><b>Section Description</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SectionDescription)
+        </dd>
+        <dt>
+            <label for="Desc"><b>Description</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            <label for="Percentage"><b>Percentage</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Percentage)
+        </dd>
+        <dt>
+            <label for="EarnOrDeduct"><b>Earning Or Deduction</b></label>
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EarningOrDeduction)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "GradeDetails")
+        </div>
+    }
+</div>
+
+
+<script src="~/Js/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        checkLogin();
+    });
+</script>

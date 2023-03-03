@@ -1,0 +1,20 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Error";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div style="background-color: #e0e0e0; width: 60%; height: 170px; text-align: center; border: 20px solid #9d369f; margin: auto; margin-top: 10%; border-radius: 20px; ">
+    <div style=" padding:20px;">
+        <h3 style="color: red;">Session Timed Out</h3>
+        <h4>
+            Sorry please login and try again.
+        </h4>
+        <h6>@Html.ActionLink("Go Back To Home Page", "Index", "UserLogin")</h6>
+        <br />
+        <br />
+    </div>
+</div>
+        
+

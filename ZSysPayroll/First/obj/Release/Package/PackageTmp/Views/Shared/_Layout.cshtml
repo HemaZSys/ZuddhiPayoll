@@ -1,0 +1,500 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Payroll</title>
+    @*@Styles.Render("~/Content/css")*@
+
+
+
+    <link href="~/Content/custom/treeView.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="~/dist/css/skins/_all-skins.min.css">
+    <link href="~/font/font1.css" rel="stylesheet" />
+    <link href="~/Content/custom/icon.css" rel="stylesheet" />
+
+    <style>
+        #errMessage {
+            color: red;
+            text-align: center;
+        }
+
+        .logout:hover {
+            font-weight: bold;
+            color: yellow;
+        }
+
+        .treeview-menu li:hover, .treeview-menu a:hover, .treeview-menu a span:hover {
+            color: yellow;
+            font-weight: bold;
+        }
+
+/**********************/
+
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                right:0;
+            }
+
+                .dropdown-content a:hover {
+                    background-color: #ddd;
+                }
+
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+
+        .menu-top-active:hover {
+            background-color: #340452 !important;
+            color: yellow !important;
+        }
+        .dropdown-content tbody{
+            padding:5px;
+        }
+        .clsStatus{
+            border:1px solid black;
+            border-radius:5px;
+            padding:3px !important;
+            margin:5px;
+        }
+    </style>
+
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+
+    <script src="~/Js/jquery.min1.js"></script>
+
+    <script type="text/javascript">
+
+        var WorkingHours;
+
+        $(document).ready(function () {
+            var dt = new Date();
+            // alert(dt.getHours() + ":" + dt.getMinutes());
+
+            setHours();
+
+            if (dt.getMonth() < 3) {
+                var taxMenu = $(".first");
+                $(taxMenu[0]).hide();
+                $(taxMenu[1]).hide();
+
+                taxMenu = $(".second");
+                $(taxMenu[0]).show();
+                $(taxMenu[1]).show();
+            }
+            else {
+                $(".first").show();
+                $(".second").hide();
+            }
+
+
+            $("#cbLeave").change(function () {
+                if ($("#cbLeave").prop('checked') == true) {
+                    $("#txtlogin").val("00:00");
+                    $("#txtlogout").val("00:00");
+                    $("#txtComments").val("Leave");
+                }
+                else {
+                    setHours();
+                    $("#txtComments").val("");
+                }
+                });
+
+        });
+
+        function setHours() {
+            var dt = new Date();
+            var hrs = dt.getHours();
+            if (hrs < 10)
+                hrs = "0" + hrs;
+
+            var ohrs = hrs + 9;
+            if (ohrs < 10)
+                ohrs = "0" + ohrs;
+
+            var mns = dt.getMinutes();
+            if (mns < 10)
+                mns = "0" + mns;
+
+            $("#txtlogin").val(hrs + ":" + mns);
+            $("#txtlogout").val(ohrs + ":" + mns);
+        }
+
+        function findWorkingHours(inTime, outTime) {
+
+            var outMins = (parseInt(outTime.split(":")[0]) * 60) + parseInt(outTime.split(":")[1]);
+            var inMins = (parseInt(inTime.split(":")[0]) * 60) + parseInt(inTime.split(":")[1]);
+
+          //  alert(outMins + ":"+ inMins);
+            WorkingHours = outMins - inMins;
+            WorkingHours = parseInt(WorkingHours / 60) + " " + parseInt(WorkingHours % 60);
+            return WorkingHours;
+        }
+
+
+        function disableBackButtonAllBrowsers() {
+
+            window.history.forward()
+
+        };
+        window.onload = disableBackButtonAllBrowsers();
+
+        window.onpageshow = function (evts) {
+
+            if (evts.persisted) {
+
+                disableBackButtonAllBrowsers();
+
+            }
+
+        };
+
+        ////Disable Right Click
+        $("html").on("contextmenu", function (e) {
+            //return false;
+        });
+
+          $(document).ajaxError(function (xhr, props) {
+            if (props.status === 401) {
+                    window.location.href = '@Url.Action("Index", "UserLogin")';
+                }
+            });
+        function logout1() {
+            //alert("s");
+            //sessionStorage.removeItem('$("#currentLoggedInUser").html("")');
+            $("#currentLoggedInUser").html("");
+            //alert($("#currentLoggedInUser").html());
+            //sessionStorage.removeItem('$("#userPrivilege").html("")');
+           $("#userPrivilege").html("");
+            window.location.href = "@Url.Action("Index", "UserLogin")";
+            sessionStorage.clear();
+        }
+
+
+
+        var outputWord = "";
+        var EncPwd = "PSBUAARTBUHUREAEVSAHN";
+
+        function encrypt(inputWord) {
+            outputWord = "";
+            for (var i = 0; i < inputWord.length; i++) {
+                outputWord += (inputWord.charCodeAt(i) + EncPwd.charCodeAt(i) ) + ".";
+            }
+
+            //alert(outputWord);
+            return outputWord;
+        }
+
+        function decrypt(inputWord) {
+            inputWord = inputWord.split(".");
+            outputWord = "";
+            for (var i = 0; i < inputWord.length-1; i++) {
+                outputWord += String.fromCharCode((parseInt(inputWord[i]) - EncPwd.charCodeAt(i)) )
+
+            }
+            return outputWord;
+        }
+
+        function checkLogin() {
+
+            $("#userPrivilege").html(encrypt($("#userPrivilege").html()));
+
+            var Accessibility = decrypt($("#userPrivilege").html());
+
+            if ($("#currentLoggedInUser").html() == undefined) {
+                window.location.href = "@Url.Action("Index", "UserLogin")";
+            }
+            else {
+                if (Accessibility == "Admin") {
+                    $("#liSettings").show();
+                }
+                else {
+
+                    var adminCtrlsCnt = $(".clsAdmin").length;
+                    //alert(adminCtrlsCnt);
+                    for (var z = 0; z < adminCtrlsCnt; z++) {
+                        // alert($($(".clsAdmin")[z].innerHTML).html());
+                        $($(".clsAdmin")[z].innerHTML).hide();
+                        $($(".clsAdmin")[z].innerHTML).html("");
+
+                    }
+
+                    $("#liSettings").hide();
+                    $("#AdminEmpList").hide();
+
+                }
+            }
+        }
+        function Logout()
+        {
+            alert("logout start");
+            var EmployeeId1 =  @Session["id"];
+            $.get("/Employee/SaveLogout", {
+                logintime: $("#txtlogin").val(), logouttime: $("#txtlogout").val(), comment: $("#txtComments").val(), EmployeeId: EmployeeId1, workingstatus: $("#cbLeave").val()
+            }
+                , function (data) {alert(data); });
+            alert("logout end");
+        }
+
+
+    </script>
+
+
+
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo" style="text-decoration:none;">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                @*<span class="logo-mini"><b>Zsys</b></span>*@
+                <img class="logo-mini" src="~/images/zlogo.png" alt="Zuddhi systems" style="height: 50px;" />
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>ZSYS</b> Payroll</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="" id="menuToggle" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                @*@Html.ActionLink("Logout", "Index", "UserLogin", new { @class = "btn btn-danger pull-right" })*@
+
+                @*<a href="#" onclick="logout()" class="btn btn-danger pull-right logout" style="padding:15px">Logout</a>*@
+
+               
+
+
+                <div class="dropdown" style="float:right;">
+                    <button class="dropbtn">My Status</button>
+                    <ul class="dropdown-content" style="right: 0px; padding: 10px; background-color: #c7e9ad;">
+                        <div class="container-fluid">
+                            <div class="row" style="width: 225px;">
+                                <div class="col-lg-4" style="margin-bottom: 5px; margin-top: 5px;">
+                                    <p>Login</p>
+                                </div>
+                                <div class="col-lg-8" style="margin-bottom:5px;margin-top:5px;">
+                                    <input id="txtlogin" class="form-control" value="10:00" type="time" width="100%"  style="text-align:center;"/>
+                                </div>
+                                <div class="col-lg-4 " style="margin-bottom: 5px;">
+                                    <p>Logout</p>
+                                </div>
+                                <div class="col-lg-8" style="margin-bottom: 6px;">
+                                    <input id="txtlogout" class="form-control" value="19:00"  type="time" width="100%" style="text-align:center;"/>
+                                </div>
+                                <div class="col-lg-12" style="margin-bottom:12px;">
+                                    <input id="txtComments" class="form-control" type="text" title=" Enter Status/Comments" placeholder="Enter Status/Comments" width="100%" />
+                                </div>
+                                <div class="" style="text-align: left; margin-bottom: 3px;">
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <span style="padding-top:10px;vertical-align:bottom;">Leave&nbsp;&nbsp;&nbsp;</span>
+                                            <input id="cbLeave" type="checkbox" style="width: 23px; height: 23px;vertical-align:middle;" />
+
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-6" style="text-align:center">
+
+                                       
+                                        <button type="button" onclick="Logout();" href="#" class="btn btn-primary" width="120px;">Submit</button>
+                                    </div>
+                                    </div>
+
+
+                                </div>
+                        </div>
+                           
+                        </ul>
+                </div>
+                @*<label onclick="logout();" class = "btn btn-danger pull-right" >Logout</label>*@
+
+            </nav>
+
+            @*<script>
+                                                    $(document).ready(function () {
+                                                        $('#menuToggle').trigger('click');
+                                                    });
+                </script>*@
+
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    @if (Session["Id"] != null && Session["Id"] != "")
+                    {
+                        First.Models.Enroll user = (First.Models.Enroll)HttpContext.Current.Session["CurrentUser"];
+                        @*<li { list-style: none;}><a href="https://www.zuddhisystems.com/" >Contact us</a></li>
+                        <li>@Html.ActionLink("Logout", "Index", "UserLogin")</li>*@
+                    }
+                    @if (Session["Email"] != null)
+                    {
+                        <li style="margin-top: -5rem; z-index: 1111; margin-right: 10rem;"><a id="currentLoggedInUser" style="color:#fff;" class="menu-top-active">Welcome @Session["Email"].ToString()</a></li>
+                        <li><div id="userPrivilege" style="display:none;">@Session["AccessType"].ToString()</div></li>
+                    }
+                </ul>
+            </div>
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+
+                    <li style="display:none"><a href="/Dashboard/Index"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-users"></i>
+                            <span>Employee Profile</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+                            {
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Add Employee", "Index", "Employee", new { id = 0 }, null)</i></li>
+                               <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0 }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)</i></li>
+
+                                @*<li style="text-indent: 5px" id="AdminEmpList"><a href="~/EmployeePayslip/GeneratePayslip"><i class="fa fa-money"></i> <span>Generate Payslip</span></a></li>*@
+
+                            }
+                            else
+                            {
+                                <li><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                                <li><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
+
+                            }
+                            <li id="AdminEmpList"><a href="~/Employee/Details"><i class="fa fa-search"></i> <span>All Employee</span></a></li>
+
+                        </ul>
+                    </li>
+
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-shopping-cart"></i>
+                            <span>IT Details</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @if (Session["Id"] != null)
+                            {   <li style="padding:1rem;text-indent:5px">
+                                    <i class="fa fa-file-text" style="color:#fff">&nbsp;&nbsp;Declaration Form
+                                        <ul style="list-style:none;">
+                                            <li  class="first fa-arrow-right" style="padding-top: 2rem;">&nbsp;&nbsp;@Html.ActionLink("Previous Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
+                                            <li class="first fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
+                                            <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
+                                            <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Upcoming Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
+                                        </ul>
+                                       
+                                    </i>
+                                </li>
+                                
+                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration", "ITCalcDeclaration", "Tax", new { id = Session["Id"] }, null)</i></li>
+
+                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Submission", "ITCalculation", "Tax", new { id = Session["Id"] }, null)</i></li>
+                            }
+                        </ul>
+                    </li>
+
+
+                    <li class="treeview" id="liSettings">
+                        <a href="#">
+                            <i class="fa fa-cog"></i>
+                            <span>Settings</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Grade/GradeDetails"><i class="fa fa-search"></i> <span>Grade Details </span></a></li>
+                            <li><a href="~/Employee/Dropdownsettingslist"><i class="fa fa-search"></i> <span>Dropdown Settings </span></a></li>
+                            <li><a href="~/Tax/Form80Csettingslist"><i class="fa fa-search"></i> <span>TaxDecl Form Settings </span></a></li>
+                            <li><a href="~/Enrollment/EnrollmentList"><i class="fa fa-search"></i> <span>Enrollment Details </span></a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class=""></section>
+            <!-- Main content -->
+            @RenderBody()
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer" style="text-align: center;">
+            <div class="pull-right hidden-xs">
+                @*<b>Version</b> 1.0.0*@
+            </div>
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="#">Zuddhi Systems</a>.</strong> All rights
+            reserved.
+        </footer>
+        <!-- Control Sidebar -->
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
