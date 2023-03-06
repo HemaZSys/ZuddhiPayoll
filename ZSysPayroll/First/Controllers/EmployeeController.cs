@@ -83,25 +83,32 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@Name", e.Name);
                         cmd.Parameters.AddWithValue("@Designation", e.Designation);
                         cmd.Parameters.AddWithValue("@EmployeeId", e.EmployeeId);
-
-                        if (e.DateofJoin.ToString() != "01-01-0001 00:00:00")
+                        DateTime a;
+                        
+                        if (e.DateofJoin.Year > 1753 && e.DateofJoin.Year <9999)
+                        {
                             cmd.Parameters.AddWithValue("@DateofJoin", e.DateofJoin);
+                        }
                         else
                         {
                             DateTime curDt = DateTime.Now;
                             cmd.Parameters.AddWithValue("@DateofJoin", curDt);
                         }
 
-                        if (e.DateofRelieving.ToString() != "01-01-0001 00:00:00")
+                        if (e.DateofRelieving.Year > 1753 && e.DateofRelieving.Year < 9999)
+                        {
                             cmd.Parameters.AddWithValue("@DateofRelieving", e.DateofRelieving);
+                        }
                         else
                         {
                             DateTime curDt = DateTime.Now;
                             cmd.Parameters.AddWithValue("@DateofRelieving", curDt);
                         }
 
-                        if (e.DateofConfirmation.ToString() != "01-01-0001 00:00:00")
+                        if (e.DateofConfirmation.Year > 1753 && e.DateofConfirmation.Year < 9999)
+                        {
                             cmd.Parameters.AddWithValue("@DateofConfirmation", e.DateofConfirmation);
+                        }
                         else
                         {
                             DateTime curDt = DateTime.Now;
@@ -117,8 +124,10 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@Aadhar", e.Aadhar);
                         cmd.Parameters.AddWithValue("@Passport", e.Passport);
 
-                        if (e.DOB.ToString() != "01-01-0001 00:00:00")
+                        if (e.DOB.Year > 1753 && e.DOB.Year < 9999)
+                        {
                             cmd.Parameters.AddWithValue("@DOB", e.DOB);
+                        }
                         else
                         {
                             DateTime curDt = DateTime.Now;
