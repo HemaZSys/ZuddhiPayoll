@@ -45,7 +45,7 @@ namespace First.Controllers
         //}
 
         // 2. *************ADD NEW Employee Details ******************
-        [HandleError]
+        //[HandleError]
         [HttpPost]
         public ActionResult Index(Employee e)
         {

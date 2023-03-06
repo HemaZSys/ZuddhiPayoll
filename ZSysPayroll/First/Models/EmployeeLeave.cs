@@ -34,6 +34,8 @@ namespace First.Models
         public int LeaveType { get; set; }
 
         public int EmpId { get; set; }
+
+        public string EmpCode { get; set; }
         public string EmpName { get; set; }
 
         [Required]
@@ -61,6 +63,7 @@ namespace First.Models
         public string ApproveAction { get; set; }
 
         public int ReportingmanagerId { get; set; }
-
+        public int CasualLeaveBalance { get; set; }
+        public int SickLeaveBalance { get; set; }
     }
 }

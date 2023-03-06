@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ZSysPayroll",
+    "\\ZSysPayroll\\First",
+    "\\ZSysPayroll\\First\\Views",
+    "\\ZSysPayroll\\First\\Views\\Shared"
   ],
-  "SelectedNode": "\\D:\\ZuddhiPayroll",
   "PreviewInSolutionExplorer": false
 }

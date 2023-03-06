@@ -9,25 +9,6 @@
 
 <html>
 <head>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
     <style>
         #Month, .td1TotalDeduction, .td1TotalGrossPay, .td1TotalNetPay {
             pointer-events: none;
@@ -100,9 +81,6 @@
             text-align: left;
         }
 
-
-
-
         #tblHeader td {
             font-size: 12pt;
             padding: 0px 3px;
@@ -117,408 +95,305 @@
             border: 1px solid black;
         }
     </style>
-    <script>
-        (function () {
-            var
-                form = $('.form'),
-                cache_width = form.width(),
-                a4 = [595.28, 841.89]; // for a4 size paper width and height
 
-            $('#create_pdf').on('click', function () {
-                $('body').scrollTop(0);
-                createPDF();
-            });
-            //create pdf
-            function createPDF() {
-                getCanvas().then(function (canvas) {
-                    var
-                        img = canvas.toDataURL("image/png"),
-                        doc = new jsPDF({
-                            unit: 'px',
-                            format: 'a4'
-                        });
-                    doc.addImage(img, 'JPEG', 20, 20);
-                    doc.save('Bhavdip-html-to-pdf.pdf');
-                    form.width(cache_width);
-                });
-            }
-
-            // create canvas object
-            function getCanvas() {
-                form.width((a4[0] * 1.33333) - 80).css('max-width', 'none');
-                return html2canvas(form, {
-                    imageTimeout: 2000,
-                    removeContainer: true
-                });
-            }
-
-        }());
-    </script>
-    @*<script>
-        /*
-     * jQuery helper plugin for examples and tests
-     */
-        (function ($) {
-            $.fn.html2canvas = function (options) {
-                var date = new Date(),
-                    $message = null,
-                    timeoutTimer = false,
-                    timer = date.getTime();
-                html2canvas.logging = options && options.logging;
-                html2canvas.Preload(this[0], $.extend({
-                    complete: function (images) {
-                        var queue = html2canvas.Parse(this[0], images, options),
-                            $canvas = $(html2canvas.Renderer(queue, options)),
-                            finishTime = new Date();
-
-                        $canvas.css({ position: 'absolute', left: 0, top: 0 }).appendTo(document.body);
-                        $canvas.siblings().toggle();
-
-                        $(window).click(function () {
-                            if (!$canvas.is(':visible')) {
-                                $canvas.toggle().siblings().toggle();
-                                throwMessage("Canvas Render visible");
-                            } else {
-                                $canvas.siblings().toggle();
-                                $canvas.toggle();
-                                throwMessage("Canvas Render hidden");
-                            }
-                        });
-                        throwMessage('Screenshot created in ' + ((finishTime.getTime() - timer) / 1000) + " seconds<br />", 4000);
-                    }
-                }, options));
-
-                function throwMessage(msg, duration) {
-                    window.clearTimeout(timeoutTimer);
-                    timeoutTimer = window.setTimeout(function () {
-                        $message.fadeOut(function () {
-                            $message.remove();
-                        });
-                    }, duration || 2000);
-                    if ($message)
-                        $message.remove();
-                    $message = $('<div ></div>').html(msg).css({
-                        margin: 0,
-                        padding: 10,
-                        background: "#000",
-                        opacity: 0.7,
-                        position: "fixed",
-                        top: 10,
-                        right: 10,
-                        fontFamily: 'Tahoma',
-                        color: '#fff',
-                        fontSize: 12,
-                        borderRadius: 12,
-                        width: 'auto',
-                        height: 'auto',
-                        textAlign: 'center',
-                        textDecoration: 'none'
-                    }).hide().fadeIn().appendTo('body');
-                }
-            };
-        })(jQuery);
-
-    </script>*@
 </head>
 <body>
-    @using (Html.BeginForm("UpdatePayslipDetails", "Employee", FormMethod.Post, new { enctype = "multipart/form-data"}))
+    @using (Html.BeginForm("UpdatePayslipDetails", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-       
-            <div class="container" style="width: 70%" id="content">
-                <div style="border: 1px solid black;">
-                    <div style="font-size:15pt;font-weight:bold;text-align:left;">
-                        <table id="tblHeader" style="width: 720px; text-align: left;">
-                            <tr>
-                                <td rowspan="3" style="text-align:center;width:18%;">
-                                    <img src="~/images/zlogo.png" style="width:69px;height:auto;" />
-                                </td>
-                                <td style="font-size: 12pt; padding: 0px 3px; line-height: 24px;">
-                                    <div style="font-size: 19pt; font-family: Garamond; font-weight: bold; text-align: Left; padding-top: 12px; padding-bottom: 3px; text-align: center;">
-                                        <b>@Model.CompanyName</b>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 12pt; padding: 0px 3px; line-height: 16px; padding-bottom: 5px; font-family: Garamond;text-align:center;">No 2, Sri Nagar, 5th Street, Narayanapuram,</td>
-                            </tr>
-                            <tr>
-                                <td style="font-size: 12pt; padding: 0px 3px 10px 3px; line-height: 16px; font-family: Garamond; text-align: center;">Pallikaranai, Chennai - 600 100, India</td>
-                            </tr>
 
-                        </table>
-
-
-
-                    </div>
-                </div>
-
-                <table style="width: 100%; border: 1px solid black; border-top:none;">
+    <div class="container" style="width: 70%">
+        <div style="border: 1px solid black;">
+            <div style="font-size:15pt;font-weight:bold;text-align:left;">
+                <table id="tblHeader" style="width: 720px; text-align: left;">
                     <tr>
-                        <td colspan="4" style="border-bottom: 1px solid black;">
-                            <div style=" font-size: 18pt; font-weight: bold; text-align: center; padding: 10px 0px; font-family: Garamond;">
-
-
-                                Salary for the month of
-                                <label id="lblPayslipMonth">@Html.DisplayFor(Model => Model.MonthYear)</label>
-                                @Html.HiddenFor(Model => Model.MonthYear)
+                        <td rowspan="3" style="text-align:center;width:18%;">
+                            <img src="~/images/zlogo.png" style="width:69px;height:auto;" />
+                        </td>
+                        <td style="font-size: 12pt; padding: 0px 3px; line-height: 24px;">
+                            <div style="font-size: 19pt; font-family: Garamond; font-weight: bold; text-align: Left; padding-top: 12px; padding-bottom: 3px; text-align: center;">
+                                <b>@Model.CompanyName</b>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 25%; padding-left: 10px; padding-top: 10px;"><H5>Employee Id:</H5></td>
-                        <td style="padding-top:3px;width:20%;">
-                            <H5><b>@Html.DisplayFor(Model => Model.EmployeeId)</b></H5>
-                        </td>
-                        <td style="width: 25%;"><H5>Month Days:</H5></td>
-                        <td style="padding-top:3px;width:30%;">
-                            <H5>
-                                <b>
-                                    <label id="lblMonthDays">All</label>
-                                </b>
-                            </H5>
-                        </td>
-
+                        <td style="font-size: 12pt; padding: 0px 3px; line-height: 16px; padding-bottom: 5px; font-family: Garamond;text-align:center;">No 2, Sri Nagar, 5th Street, Narayanapuram,</td>
                     </tr>
                     <tr>
-                        <td style="width: 25%; padding-left: 10px; "><H5>Employee Name:</H5></td>
-                        <td style="padding-top:3px;width:30%;">
-                            <H5>
-                                <b>
-                                    @Html.DisplayFor(model => model.EmployeeName)
-                                    @Html.HiddenFor(model => model.EmployeeName)
-                                    @Html.HiddenFor(model => model.EmployeeId)
-                                    @Html.HiddenFor(model => model.EmpId)
-                                </b>
-                            </H5>
-                        </td>
-
-                        <td style="width:25%;"><H5>Leaves Taken:</H5></td>
-                        <td style="padding-top:3px;width:30%;">
-                            <H5>
-                                <b>
-                                    @Html.TextBoxFor(model => Model.LeavesTaken, "{0:n2}", new { @class = "txtbox", type = "number", id = "txtLeavesTaken", style = "text-align:left;font-weight:bold", maxlength = "2", min = "0", max = "31" })
-                                </b>
-                            </H5>
-                        </td>
+                        <td style="font-size: 12pt; padding: 0px 3px 10px 3px; line-height: 16px; font-family: Garamond; text-align: center;">Pallikaranai, Chennai - 600 100, India</td>
                     </tr>
-                    <tr>
-                        <td style="width: 25%; padding-left: 10px;"><H5>Designation:</H5></td>
-                        <td style="padding-top:3px;width:30%;">
-                            <H5><b>@Html.DisplayFor(model => model.Designation)</b></H5>
-                        </td>
-                        <td>
-                            <H5>LOP:</H5>
-                        </td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>@Html.TextBoxFor(model => Model.LOP, "{0:n2}", new { @class = "txtbox", type = "number", id = "txtLOP", style = "text-align:left;font-weight:bold", maxlength = "2", min = "0", max = "31" })</b>
-                            </H5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 25%; padding-left: 10px;"><H5>Department:</H5></td>
-                        <td style="padding-top:3px;width:30%;">
-                            <H5><b>@Html.DisplayFor(model => model.Department)</b></H5>
-                        </td>
-                        <td><H5>Gross Pay:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @Html.DisplayFor(Model => Model.EmployeeGrosspay, new { type = "number", style = "font-weight:bold", @class = "clsGrossPay" })
-                                    @Html.HiddenFor(Model => Model.EmployeeGrosspay)
-                                </b>
-                            </H5>
-                        </td>
 
-                    </tr>
-                    <tr>
-                        <td style="width: 25%; padding-left: 10px;"><H5>Location:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @Html.DisplayFor(model => model.Location)
-                                </b>
-                            </H5>
-                        </td>
-                        <td><H5>Payment Mode:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @Html.DropDownListFor(model => model.PaymentModeid, new SelectList(PaymentModeList, "Id", "description"), new { style = "font-weight:bold;color:black;" })
-
-                                </b>
-                            </H5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><H5>DOB:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @DateTime.Parse(Html.DisplayFor(model => model.DOB).ToString()).ToShortDateString()
-
-                                </b>
-                            </H5>
-                        </td>
-                        <td><H5>DOJ:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-
-                                    @DateTime.Parse(Html.DisplayFor(model => model.DateofJoin).ToString()).ToShortDateString()
-
-                                </b>
-                            </H5>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td style="width: 25%; padding-left: 10px;"><H5>Employee Grade:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @Html.DisplayFor(model => model.EmployeeGrade)
-                                    @Html.HiddenFor(model => model.EmployeeGrade)
-                                </b>
-                            </H5>
-                        </td>
-                        <td><H5>PF Account No:</H5></td>
-                        <td style="padding-top:3px;">
-                            <H5>
-                                <b>
-                                    @Html.DisplayFor(model => model.PFAccountNo)
-
-                                </b>
-                            </H5>
-                        </td>
-                    </tr>
                 </table>
 
 
-                <div id="divItemCount" style="display:none"> @Model.PayslipGradeEntryList.Count()</div>
 
-                <table style="width: 100%;" table-hover border="1">
+            </div>
+        </div>
 
-                    @for (int i = 0; i < Model.PayslipGradeEntryList.Count(); i++)
+        <table style="width: 100%; border: 1px solid black; border-top:none;">
+            <tr>
+                <td colspan="4" style="border-bottom: 1px solid black;">
+                    <div style=" font-size: 18pt; font-weight: bold; text-align: center; padding: 10px 0px; font-family: Garamond;">
+
+
+                        Salary for the month of
+                        <label id="lblPayslipMonth">@Html.DisplayFor(Model => Model.MonthYear)</label>
+                        @Html.HiddenFor(Model => Model.MonthYear)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%; padding-left: 10px; padding-top: 10px;"><H5>Employee Id:</H5></td>
+                <td style="padding-top:3px;width:20%;">
+                    <H5><b>@Html.DisplayFor(Model => Model.EmployeeId)</b></H5>
+                </td>
+                <td style="width: 25%;"><H5>Month Days:</H5></td>
+                <td style="padding-top:3px;width:30%;">
+                    <H5>
+                        <b>
+                            <label id="lblMonthDays">All</label>
+                        </b>
+                    </H5>
+                </td>
+
+            </tr>
+            <tr>
+                <td style="width: 25%; padding-left: 10px; "><H5>Employee Name:</H5></td>
+                <td style="padding-top:3px;width:30%;">
+                    <H5>
+                        <b>
+                            @Html.DisplayFor(model => model.EmployeeName)
+                            @Html.HiddenFor(model => model.EmployeeName)
+                            @Html.HiddenFor(model => model.EmployeeId)
+                            @Html.HiddenFor(model => model.EmpId)
+                        </b>
+                    </H5>
+                </td>
+
+                <td style="width:25%;"><H5>Leaves Taken:</H5></td>
+                <td style="padding-top:3px;width:30%;">
+                    <H5>
+                        <b>
+                            @Html.TextBoxFor(model => Model.LeavesTaken, "{0:n2}", new { @class = "txtbox", type = "number", id = "txtLeavesTaken", style = "text-align:left;font-weight:bold", maxlength = "2", min = "0", max = "31" })
+                        </b>
+                    </H5>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%; padding-left: 10px;"><H5>Designation:</H5></td>
+                <td style="padding-top:3px;width:30%;">
+                    <H5><b>@Html.DisplayFor(model => model.Designation)</b></H5>
+                </td>
+                <td>
+                    <H5>LOP:</H5>
+                </td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>@Html.TextBoxFor(model => Model.LOP, "{0:n2}", new { @class = "txtbox", type = "number", id = "txtLOP", style = "text-align:left;font-weight:bold", maxlength = "2", min = "0", max = "31" })</b>
+                    </H5>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%; padding-left: 10px;"><H5>Department:</H5></td>
+                <td style="padding-top:3px;width:30%;">
+                    <H5><b>@Html.DisplayFor(model => model.Department)</b></H5>
+                </td>
+                <td><H5>Gross Pay:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @Html.DisplayFor(Model => Model.EmployeeGrosspay, new { type = "number", style = "font-weight:bold", @class = "clsGrossPay" })
+                            @Html.HiddenFor(Model => Model.EmployeeGrosspay)
+                        </b>
+                    </H5>
+                </td>
+
+            </tr>
+            <tr>
+                <td style="width: 25%; padding-left: 10px;"><H5>Location:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @Html.DisplayFor(model => model.Location)
+                        </b>
+                    </H5>
+                </td>
+                <td><H5>Payment Mode:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @Html.DropDownListFor(model => model.PaymentModeid, new SelectList(PaymentModeList, "Id", "description"), new { style = "font-weight:bold;color:black;" })
+
+                        </b>
+                    </H5>
+                </td>
+            </tr>
+            <tr>
+                <td><H5>DOB:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @DateTime.Parse(Html.DisplayFor(model => model.DOB).ToString()).ToShortDateString()
+
+                        </b>
+                    </H5>
+                </td>
+                <td><H5>DOJ:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+
+                            @DateTime.Parse(Html.DisplayFor(model => model.DateofJoin).ToString()).ToShortDateString()
+
+                        </b>
+                    </H5>
+                </td>
+
+            </tr>
+            <tr>
+
+                <td style="width: 25%; padding-left: 10px;"><H5>Employee Grade:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @Html.DisplayFor(model => model.EmployeeGrade)
+                            @Html.HiddenFor(model => model.EmployeeGrade)
+                        </b>
+                    </H5>
+                </td>
+                <td><H5>PF Account No:</H5></td>
+                <td style="padding-top:3px;">
+                    <H5>
+                        <b>
+                            @Html.DisplayFor(model => model.PFAccountNo)
+
+                        </b>
+                    </H5>
+                </td>
+            </tr>
+        </table>
+
+
+        <div id="divItemCount" style="display:none"> @Model.PayslipGradeEntryList.Count()</div>
+
+        <table style="width: 100%;" table-hover border="1">
+
+            @for (int i = 0; i < Model.PayslipGradeEntryList.Count(); i++)
+                {
+
+
+                    if (section != Model.PayslipGradeEntryList[i].SectionDescription)
                     {
+            <tr>
+                <th style="width:77%;">@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</th>
 
-
-                        if (section != Model.PayslipGradeEntryList[i].SectionDescription)
+                <th style="display:none">Annual Amount</th>
+                <th style="width:21%;">Monthly Amount</th>
+            </tr>
+                        if (Model.PayslipGradeEntryList[i].SectionDescription == "Deductions")
                         {
-                            <tr>
-                                <th style="width:77%;">@Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].SectionDescription)</th>
-
-                                <th style="display:none">Annual Amount</th>
-                                <th style="width:21%;">Monthly Amount</th>
-                            </tr>
-                            if (Model.PayslipGradeEntryList[i].SectionDescription == "Deductions")
-                            {
-                                <div id="divDedCount" style="display:none">@i</div>
-                            }
-
-                            section = Model.PayslipGradeEntryList[i].SectionDescription;
+            <div id="divDedCount" style="display:none">@i</div>
                         }
 
-                        <tr class="info">
-                            <td style="width:77%;padding-left:10px;">
-                                @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].PayslipGradeid)
-                                @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Id)
-                                @if (Model.PayslipGradeEntryList[i].Description == "HRA")
-                                {
-                                    Model.PayslipGradeEntryList[i].Description = "House Rent Allowance";
-                                }
-                                else if (Model.PayslipGradeEntryList[i].Description == "LTA")
-                                {
-                                    Model.PayslipGradeEntryList[i].Description = "Leave Travel Allowance";
-                                }
-                                else if (Model.PayslipGradeEntryList[i].Description == "PF")
-                                {
-                                    Model.PayslipGradeEntryList[i].Description = "Provident Fund";
-                                }
-                                @Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].Description)
-                            </td>
-
-                            <td style="display:none;text-align: right;">
-                                @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
-                            </td>
-                            <td style="width: 21%; text-align: right; ">
-
-
-
-                                @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
-                                @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
-                            </td>
-                        </tr>
+                        section = Model.PayslipGradeEntryList[i].SectionDescription;
                     }
-                    <tr>
-                        <td style="padding-left:10px;">Gross Salary : </td>
-                        <td style="text-align: right; font-weight: bold;" class="clsTotals GrossSalary">@Html.TextBoxFor(Model => Model.GrossSalary, new { type = "number", @class = "td1TotalGrossPay" })</td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left: 10px;">Total Deductions :</td>
-                        <td style="text-align: right; font-weight: bold;" class="clsTotals TotalDeductions">@Html.TextBoxFor(Model => Model.TotalDeductions, new { type = "number", @class = "td1TotalDeduction" })</td>
 
-                    </tr>
+            <tr class="info">
+                <td style="width:77%;padding-left:10px;">
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].PayslipGradeid)
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Id)
+                    @if (Model.PayslipGradeEntryList[i].Description == "HRA")
+                            {
+                                Model.PayslipGradeEntryList[i].Description = "House Rent Allowance";
+                            }
+                            else if (Model.PayslipGradeEntryList[i].Description == "LTA")
+                            {
+                                Model.PayslipGradeEntryList[i].Description = "Leave Travel Allowance";
+                            }
+                            else if (Model.PayslipGradeEntryList[i].Description == "PF")
+                            {
+                                Model.PayslipGradeEntryList[i].Description = "Provident Fund";
+                            }
+                    @Html.DisplayFor(modelItem => Model.PayslipGradeEntryList[i].Description)
+                </td>
+
+                <td style="display:none;text-align: right;">
+                    @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
+                </td>
+                <td style="width: 21%; text-align: right; ">
 
 
-                    <tr>
-                        <td style="padding-left: 10px;">Net Salary :</td>
-                        <td style="text-align: right; font-weight: bold;" class="clsTotals NetSalary">
-                            @Html.TextBoxFor(Model => Model.NetSalary, new { type = "number", @class = "td1TotalNetPay" })
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left: 10px;">IT collected till now :</td>
-                        <td style="text-align: right; font-weight: bold;" class="clsTotals taxcollected">
-                            @Html.TextBoxFor(Model => Model.taxcollected, new { type = "number", @class = "td1TotalIT" })
-                        </td>
-                    </tr>
+
+                    @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
+                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+                </td>
+            </tr>
+                }
+            <tr>
+                <td style="padding-left:10px;">Gross Salary : </td>
+                <td style="text-align: right; font-weight: bold;" class="clsTotals GrossSalary">@Html.TextBoxFor(Model => Model.GrossSalary, new { type = "number", @class = "td1TotalGrossPay" })</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">Total Deductions :</td>
+                <td style="text-align: right; font-weight: bold;" class="clsTotals TotalDeductions">@Html.TextBoxFor(Model => Model.TotalDeductions, new { type = "number", @class = "td1TotalDeduction" })</td>
+
+            </tr>
 
 
-                    <tr>
-                        <td id="tdPayMonthWords" colspan="3" style="text-align:center;vertical-align:bottom">
-                            000.00
-                        </td>
+            <tr>
+                <td style="padding-left: 10px;">Net Salary :</td>
+                <td style="text-align: right; font-weight: bold;" class="clsTotals NetSalary">
+                    @Html.TextBoxFor(Model => Model.NetSalary, new { type = "number", @class = "td1TotalNetPay" })
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px;">IT collected till now :</td>
+                <td style="text-align: right; font-weight: bold;" class="clsTotals taxcollected">
+                    @Html.TextBoxFor(Model => Model.taxcollected, new { type = "number", @class = "td1TotalIT" })
+                </td>
+            </tr>
 
-                    </tr>
-                    <tr>
-                        <td id="tdNote" colspan="3" style="height:36px;text-align:center;vertical-align:bottom">
 
-                            <i>This is Computer generated Payslip and does not require Signature.</i>
-                        </td>
+            <tr>
+                <td id="tdPayMonthWords" colspan="3" style="text-align:center;vertical-align:bottom">
+                    000.00
+                </td>
 
-                    </tr>
-                </table>
-            </div>      
-        <div id="editor"></div>
-        <input type="button" id="create_pdf" value="Generate PDF">
-        <center>
+            </tr>
+            <tr>
+                <td id="tdNote" colspan="3" style="height:36px;text-align:center;vertical-align:bottom">
 
-            <table>
-                <tr>
-                    <td>
+                    <i>This is Computer generated Payslip and does not require Signature.</i>
+                </td>
 
-                        <input type="submit" value="Save" class="btnRegister" style="margin:10px;padding:3px 10px" />&nbsp;&nbsp;
+            </tr>
+        </table>
+    </div>
+    <center>
 
-                        @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+        <table>
+            <tr>
+                <td>
+
+                    <input type="submit" value="Save" class="btnRegister" style="margin:10px;padding:3px 10px" />&nbsp;&nbsp;
+
+                    @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                         {
-                            <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Back", "Details", "Employee")</button>
+                    <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Back", "Details", "Employee")</button>
                         }
                         else
                         {
-                            <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Back", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</button>
+                    <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Back", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</button>
                         }&nbsp;
 
 
-                        <input type="button" id="btnPrint" value="Print" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;" />&nbsp;&nbsp;
-                        <input type="button" id="btnPDF" value="Save as PDF" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;display:none;" />
-                    </td>
-                    <td>@Html.EditorFor(model => model.isSalaryStructure)</td>
-                    <td>&nbsp;&nbsp;Save as Template</td>
-                </tr>
-            </table>
-        </center>
+                    <input type="button" id="btnPrint" value="Print" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;" />&nbsp;&nbsp;
+                    <input type="button" id="btnPDF" value="Save as PDF" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;display:none;" />
+                </td>
+                <td>@Html.EditorFor(model => model.isSalaryStructure)</td>
+                <td>&nbsp;&nbsp;Save as Template</td>
+            </tr>
+        </table>
+    </center>
 
     }
 </body>
@@ -542,22 +417,22 @@
     var TotalDeductionMonthVal = 0;
     var TotalDeductionIncomeAnnualVal = 0;
 
-    
+
     $("#EmployeeGrosspay").val($("#EmployeeGrosspay").val().replaceAll(",", ""));
     var grossPay = $("#EmployeeGrosspay");
     grossPay = parseFloat(grossPay);
-    
+
 
     $(document).ready(function () {
         checkLogin();
-        
+
         calcTotals();
 
         $("input").keyup(function () {
             calcTotals();
         });
 
-        
+
         $("#txtLOP").keyup(function () {
             findGross();
         });
@@ -607,7 +482,7 @@
 
 
         if ($("#txtLOP").val() > 0) {
-            
+
             grossPay = $("#EmployeeGrosspay").val().replaceAll(",", "");
             grossPay = parseFloat(grossPay);
             var LOP = parseFloat($("#txtLOP").val());
@@ -638,7 +513,7 @@
         for (var a = 0; a < itemCnt; a++) {
 
             tmpMonVal = $("#PayslipGradeEntryList_" + a + "__MonthlyAmount").val();
-            tmpAnnVal = $("#PayslipGradeEntryList_" + a + "__AnnualAmount").val();           
+            tmpAnnVal = $("#PayslipGradeEntryList_" + a + "__AnnualAmount").val();
 
             tmpMonVal = tmpMonVal.replaceAll(",", "");
             tmpAnnVal = tmpAnnVal.replaceAll(",", "");
@@ -670,8 +545,8 @@
         $(".td1TotalGrossPay").val(TotalIncomeMonthVal.toFixed(2));
         $(".td1TotalDeduction").val(TotalDeductionMonthVal.toFixed(2));
         $(".td1TotalNetPay").val(TotalMonthVal.toFixed(2));
-        
-        
+
+
         //alert(TotalIncomeMonthVal.toFixed(2));
         //$("#GrossSalary").html(TotalIncomeMonthVal.toFixed(2));
         //$("#TotalDeductions").html(TotalDeductionMonthVal.toFixed(2));
@@ -683,7 +558,7 @@
     }
 
     $(function () {
-        
+
         if (document.URL.indexOf("view=") > -1)
         {
             var mode = document.URL.split("view=")[1];
@@ -712,7 +587,7 @@
         MonthDays = findNoOfDays(selectedDate);
         $("#tdMonthDays").html(MonthDays);
         $("#lblMonthDays").html(MonthDays);
-        
+
 
        // PayslipMonth = PayslipMonth.substring(3);
 
@@ -788,7 +663,7 @@
             $(this).val(formatAmount($(this).val(),2));
         });
 
-        
+
 
         $('input[type="text"]').each(function (i, obj) {
             $(this).val(formatAmount($(this).val(), 2));
@@ -919,7 +794,7 @@
         return words_string;
     }
 
-    
+
 
     function printDiv(divName) {
         //alert("pt");
@@ -1071,20 +946,4 @@
             }
         };
     })(jQuery);
-
-//PDF Download
-    var doc = new jsPDF();
-    var specialElementHandlers = {
-        '#editor': function (element, renderer) {
-            return true;
-        }
-    };
-
-    $('#cmd').click(function () {
-        doc.fromHTML($('#content').html(), 15, 15, {
-            'width': 170,
-            'elementHandlers': specialElementHandlers
-        });
-        doc.save('sample-file.pdf');
-    });
 </script>

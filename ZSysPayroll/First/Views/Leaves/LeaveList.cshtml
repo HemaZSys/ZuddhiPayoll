@@ -28,7 +28,7 @@
     <script type="text/javascript" src="~/payslipreportJSCSS/JScript/select/1.6.0/js/dataTables.select.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#tblLeaveList').DataTable({                
+            $('#tblLeaveList').DataTable({
                 select: true
             });
         });
@@ -153,7 +153,7 @@
             @using (Html.BeginForm("ApplyLeave", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
             <div id="EmployeeDetail" class="row card-layout1">
-                <div class="heading">Leave List</div>                
+                <div class="heading">Leave List</div>
                 <div class="col-lg-12">
                     <table class="table  table-bordered table-hover table-responsive" id="tblLeaveList">
                         <thead>
@@ -165,21 +165,21 @@
                                 <th>From Date</th>
                                 <th>To Date</th>
                                 <th>Reason</th>
-                                <th>Work Status</th>
                                 <th>Reporting Manager</th>
                                 <th>Approve Staus</th>
                                 <th>Action</th>
                             </tr>
 
                         </thead>
-                        <tbody>                           
-                                @for (int i = 0; i < Model.EmployeeLeaveList.Count(); i++)
+                        <tbody>
+                            @for (int i = 0; i < Model.EmployeeLeaveList.Count(); i++)
                                 {
                             <tr class="info">
                                 <td style="text-align:left;">
                                     @Html.HiddenFor(modelItem => Model.EmployeeLeaveList[i].Id)
                                     @Html.HiddenFor(modelItem => Model.EmployeeLeaveList[i].sessionId)
-                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EmpId)
+                                    @Html.HiddenFor(modelItem => Model.EmployeeLeaveList[i].EmpId)
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EmpCode)
                                 </td>
                                 <td style="text-align:left;">
                                     @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].EmpName)
@@ -194,47 +194,44 @@
                                     @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].LeaveReason)
                                 </td>
                                 <td style="text-align:left;">
-                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].LeaveStatus)
-                                </td>
-                                <td style="text-align:left;">
                                     @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].Reportingmanager)
                                 </td>
 
                                 @if (Model.EmployeeLeaveList[i].ApproveAction == "Approved")
                                 {
-                                    <td style="text-align: left; color: green; font-weight:bold">
-                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
-                                    </td>
+                                <td style="text-align: left; color: green; font-weight:bold">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                </td>
                                 }
                                 else if (Model.EmployeeLeaveList[i].ApproveAction == "Rejected")
                                 {
-                                    <td style="text-align: left; color: red; font-weight:bold">
-                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
-                                    </td>
+                                <td style="text-align: left; color: red; font-weight:bold">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                </td>
                                 }
                                 else
                                 {
-                                    <td style="text-align: left; color: dodgerblue; font-weight:bold">
-                                        @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
-                                        </td>
-                                        }                                    
-                                    @if (Model.EmployeeLeaveList[i].ReportingmanagerId == Model.EmployeeLeaveList[i].sessionId)
+                                <td style="text-align: left; color: dodgerblue; font-weight:bold">
+                                    @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
+                                </td>
+                                        }
+                                @if (Model.EmployeeLeaveList[i].ReportingmanagerId == Model.EmployeeLeaveList[i].sessionId)
                                     {
-                                        <td>@Html.ActionLink("Approve/Reject", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].EmpId, lid = Model.EmployeeLeaveList[i].Id, mode = "Approve" }, new { @class = "btn btn-success" })</td>
+                                <td>@Html.ActionLink("Approve/Reject", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].EmpId, lid = Model.EmployeeLeaveList[i].Id, mode = "Approve" }, new { @class = "btn btn-success" })</td>
                                     }
                                     else
                                     {
-                                        <td>@Html.ActionLink("Edit", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].sessionId, lid = Model.EmployeeLeaveList[i].Id, mode = "Apply" }, new { @class = "btn btn-success" })</td>
+                                <td>@Html.ActionLink("Edit", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].sessionId, lid = Model.EmployeeLeaveList[i].Id, mode = "Apply" }, new { @class = "btn btn-success" })</td>
                                     }
-                                </tr>
+                            </tr>
 
-                                }                                      
+                                }
                         </tbody>
                     </table>
                 </div>
             </div>
             }
-            </div>            
+        </div>
     </div>
 </body>
 </html>
@@ -243,16 +240,16 @@
     //$(".linkdisabled").click(function () {
     //    return false;
     //}
-       $(document).ready(function () {                 
-                    hideOrShow();
+    $(document).ready(function () {
+        hideOrShow();
 
-                });
+    });
 
-        function hideOrShow() {
-            var ctrls = $(".secureMenu");
-            for (var j = 0; j < ctrls.length; j++) {
-                $(ctrls[j]).hide();
-            }           
+    function hideOrShow() {
+        var ctrls = $(".secureMenu");
+        for (var j = 0; j < ctrls.length; j++) {
+            $(ctrls[j]).hide();
         }
+    }
 </script>
 

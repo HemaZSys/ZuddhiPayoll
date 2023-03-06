@@ -67,6 +67,7 @@ namespace First.Controllers
 
                                 Id = Convert.ToInt32(sdr["Id"] == DBNull.Value ? 0 : sdr["Id"]),
                                 EmpId = Convert.ToInt32(sdr["EmployeeId"] == DBNull.Value ? 0 : sdr["EmployeeId"]),
+                                EmpCode = Convert.ToString(sdr["EmpCode"] == DBNull.Value ? 0 : sdr["EmpCode"]),
                                 sessionId = Convert.ToInt32(sdr["sessionid"] == DBNull.Value ? 0 : sdr["sessionid"]),
                                 LeaveType = Convert.ToInt32(sdr["LeaveType"] == DBNull.Value ? 0 : sdr["LeaveType"]),
                                 EmpName = Convert.ToString(sdr["EmployeeName"] == DBNull.Value ? "" : sdr["EmployeeName"]),
@@ -78,7 +79,9 @@ namespace First.Controllers
                                 Reportingmanager = Convert.ToString(sdr["ReportingPerson"] == DBNull.Value ? "" : sdr["ReportingPerson"]),
                                 LeaveBalance = Convert.ToInt32(sdr["LeaveBalance"] == DBNull.Value ? 0 : sdr["LeaveBalance"]),
                                 ApproveAction = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "" : sdr["ApproveAction"]),
-                                ReportingmanagerId = Convert.ToInt32(sdr["ReportingmanagerId"] == DBNull.Value ? 0 : sdr["ReportingmanagerId"])
+                                ReportingmanagerId = Convert.ToInt32(sdr["ReportingmanagerId"] == DBNull.Value ? 0 : sdr["ReportingmanagerId"]),
+                                CasualLeaveBalance = Convert.ToInt32(sdr["CasualLeaveBalance"] == DBNull.Value ? 0 : sdr["CasualLeaveBalance"]),
+                                SickLeaveBalance = Convert.ToInt32(sdr["SickLeaveBalance"] == DBNull.Value ? 0 : sdr["SickLeaveBalance"])
                             });
                         }
                         con.Close();
@@ -142,6 +145,8 @@ namespace First.Controllers
                             oEmployeeLeave.Reportingmanager = Convert.ToString(sdr["ReportingmanagerName"] == DBNull.Value ? "" : sdr["ReportingmanagerName"]);
                             oEmployeeLeave.ApproveAction = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "Pending" : sdr["ApproveAction"]);
                             oEmployeeLeave.ReportingmanagerId = Convert.ToInt32(sdr["Reportingmanager"] == DBNull.Value ? 0 : sdr["Reportingmanager"]);
+                            oEmployeeLeave.CasualLeaveBalance = Convert.ToInt32(sdr["CasualLeaveBalance"] == DBNull.Value ? 0 : sdr["CasualLeaveBalance"]);
+                            oEmployeeLeave.SickLeaveBalance = Convert.ToInt32(sdr["SickLeaveBalance"] == DBNull.Value ? 0 : sdr["SickLeaveBalance"]);
                         }
                     }
                     con2.Close();
@@ -155,7 +160,7 @@ namespace First.Controllers
             }
             if (oEmployeeLeave.ApproveAction == "Approved" || oEmployeeLeave.ApproveAction == "Rejected")
             {
-                return RedirectToAction("LeaveList", "Leaves", new { mode = "ApproveList" });
+                return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
             }
             ViewBag.Leaveslist = GetLookup("LeaveType");
             ViewBag.AllEmployeeList = GetAllEmployeeList();
@@ -197,6 +202,8 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@ReportingPerson", oEmployeeLeave.Reportingmanager);
                         cmd.Parameters.AddWithValue("@ApproveAction", oEmployeeLeave.ApproveAction == null ? "Pending" : oEmployeeLeave.ApproveAction);
                         cmd.Parameters.AddWithValue("@ReportingManagerId", oEmployeeLeave.ReportingmanagerId);
+                        cmd.Parameters.AddWithValue("@CasualLeaveBalance", oEmployeeLeave.CasualLeaveBalance);
+                        cmd.Parameters.AddWithValue("@SickLeaveBalance", oEmployeeLeave.SickLeaveBalance);
                         con.Open();
                         ViewData["result"] = cmd.ExecuteNonQuery();
                         con.Close();
@@ -204,14 +211,6 @@ namespace First.Controllers
                 }
             }
             return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
-            //if (mode == "Apply")
-            //{
-            //    return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
-            //}
-            //else
-            //{
-            //    
-            //}
 
         }
 
@@ -219,8 +218,6 @@ namespace First.Controllers
         [HandleError]
         public List<Empalldropdown> GetLookup(string type)
         {
-            //SELECT distinct      [type]  FROM[Payroll]. [Empalldropdown]
-
             List<Empalldropdown> Empalldropdownlist = new List<Empalldropdown>();
             string query = "SELECT * FROM Empalldropdown where type = '" + type + "'";
             using (SqlConnection con = new SqlConnection(constr))
@@ -371,8 +368,8 @@ namespace First.Controllers
         public ActionResult LeaveBalanceReportList(int id)
         {
             RefreshLeaveReport(id);
-           
-            return View(GetLeaveReportList(id));              
+
+            return View(GetLeaveReportList(id));
         }
 
         [HandleError]
@@ -404,7 +401,7 @@ namespace First.Controllers
                                 EmployeeName = Convert.ToString(sdr["Name"]),
                                 Email = Convert.ToString(sdr["offcEmail"]),
                                 FinancialYear = Convert.ToInt32(sdr["FinancialYear"]),
-                                OpeningLeaveCasual = Convert.ToDecimal(sdr["OpeningLeaveCasual"]),                                
+                                OpeningLeaveCasual = Convert.ToDecimal(sdr["OpeningLeaveCasual"]),
                                 TakenTillCasual = Convert.ToDecimal(sdr["TakenTillCasual"]),
                                 TakenTillSick = Convert.ToDecimal(sdr["TakenTillSick"]),
                                 TakenTillToal = Convert.ToDecimal(sdr["TakenTillTotal"]),
@@ -424,19 +421,19 @@ namespace First.Controllers
         }
 
         public void RefreshLeaveReport(int id)
-        {           
+        {
             List<Employee> oemployeelist = new List<Employee>();
             string query1 = "";
             string query = "usp_LeaveReport_Calculate";
-            if (id ==-2)
+            if (id == -2)
             {
-                 query1 = "select id from EmployeeDetails";
+                query1 = "select id from EmployeeDetails";
             }
             else
             {
-                 query1 = "select id from EmployeeDetails where id = "+ id.ToString();
+                query1 = "select id from EmployeeDetails where id = " + id.ToString();
             }
-            
+
 
             //Get All Employee ID's
             using (SqlConnection con1 = new SqlConnection(constr))
@@ -452,9 +449,9 @@ namespace First.Controllers
                             oemployeelist.Add(new Employee
                             {
                                 Id = Convert.ToInt32(sdr1["Id"])
-                                
+
                             });
-                        }                       
+                        }
                     }
                     con1.Close();
                 }
@@ -471,13 +468,13 @@ namespace First.Controllers
                     foreach (Employee item in oemployeelist)
                     {
                         cmd2.Parameters.Clear();
-                        cmd2.Parameters.AddWithValue("@EmpID", item.Id);                        
+                        cmd2.Parameters.AddWithValue("@EmpID", item.Id);
                         cmd2.ExecuteNonQuery();
                     }
                     con2.Close();
                 }
             }
-           
+
         }
     }
 }
