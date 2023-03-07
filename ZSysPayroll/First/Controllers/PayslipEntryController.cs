@@ -78,10 +78,8 @@ namespace First.Controllers
                             payslipGradeEntry.Designation = Convert.ToString(sdr["Designation"]);
 
                             payslipGradeEntry.PFAccountNo = Convert.ToString(sdr["PFAccountNo"]);
-                            payslipGradeEntry.DOJ = Convert.ToDateTime(sdr["DateofJoin"]);
-                            payslipGradeEntry.DOC = Convert.ToDateTime(sdr["DateofConfirmation"]);
-
-
+                            payslipGradeEntry.DOJ = Convert.ToDateTime(sdr["DateofJoin"] == DBNull.Value ? DateTime.Now : sdr["DateofJoin"]);
+                            payslipGradeEntry.DOC = Convert.ToDateTime(sdr["DateofConfirmation"] == DBNull.Value ? DateTime.Now : sdr["DateofConfirmation"]);
                             payslipGradeEntry.SectionDescription = Convert.ToString(sdr["SectionDescription"]);
                             payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
                             if(sdr["Percentage"].ToString() != "")
@@ -130,10 +128,10 @@ namespace First.Controllers
                                 payslipGradeEntry.Designation = Convert.ToString(sdr["Designation"]);
 
                                 payslipGradeEntry.PFAccountNo = Convert.ToString(sdr["PFAccountNo"]);
-                                payslipGradeEntry.DOJ = Convert.ToDateTime(sdr["DateofJoin"]);
-                                payslipGradeEntry.DOC = Convert.ToDateTime(sdr["DateofConfirmation"]);
+                                payslipGradeEntry.DOJ = Convert.ToDateTime(sdr["DateofJoin"] == DBNull.Value ? DateTime.Now : sdr["DateofJoin"]);
+                            payslipGradeEntry.DOC = Convert.ToDateTime(sdr["DateofConfirmation"] == DBNull.Value ? DateTime.Now : sdr["DateofConfirmation"]);
 
-                                payslipGradeEntry.SectionDescription = Convert.ToString(sdr["SectionDescription"]);
+                            payslipGradeEntry.SectionDescription = Convert.ToString(sdr["SectionDescription"]);
 
                                 payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
                                 if (sdr["Percentage"].ToString() != "")
