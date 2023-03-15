@@ -10,6 +10,14 @@ using System.Configuration;
 using System.Net;
 using Rotativa;
 using System.Web.Security;
+using iTextSharp.text;
+using iTextSharp.text.html.simpleparser;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using System.IO;
+using HtmlAgilityPack;
+using System.Text;
+using System.Net.Mail;
 
 namespace First.Controllers
 {
@@ -40,7 +48,7 @@ namespace First.Controllers
         //    ViewBag.BloodGrouplist = GetLookup("BloodGroup");
         //    ViewBag.Departmentlist = GetLookup("Department");
         //    ViewBag.Qualificationlist = GetLookup("Qualification");
-        //    ViewBag.Gradelist = GetLookup("Grade");           
+        //    ViewBag5list = GetLookup("Grade");           
         //    return View(emp);
         //}
 
@@ -190,15 +198,16 @@ namespace First.Controllers
             EmpID = Convert.ToString(Session["Id"]);
             if (Convert.ToString(Session["AccessType"]).ToUpper() == "ADMIN")
             {
-                query = "SELECT em.*,isnull(emgrd.description,'') as EmployeeStatus , rptmgr.Name +' '+ rptmgr.LName as ReportingmanagerName" +
+                query = "SELECT em.*,isnull(emgrd.description,'') as EmployeeStatus , isnull(emgr.description,'') as EmployeeGrade,rptmgr.Name +' '+ rptmgr.LName as ReportingmanagerName" +
                         Environment.NewLine + "FROM EmployeeDetails em" +
                         Environment.NewLine + "left join[Empalldropdown](nolock) emgrd on emgrd.Id = em.Empstatus" +
                         Environment.NewLine + "left join EmployeeDetails(nolock) rptmgr on em.Reportingmanager = rptmgr.Id" +
+                        Environment.NewLine + "left join[Empalldropdown](nolock) emgr on emgr.Id = em.Grade" +
                         Environment.NewLine + "ORDER BY EmployeeId";
             }
             else
-            {
-                query = "SELECT em.*,isnull(emgrd.description,'') as EmployeeStatus FROM EmployeeDetails em where id = " + EmpID + "left join [Empalldropdown](nolock) emgrd on emgrd.Id = em.Empstatus  ORDER BY EmployeeId ";
+            {               
+                query = "SELECT em.*,isnull(emgrd.description,'') as EmployeeStatus FROM EmployeeDetails em left join [Empalldropdown](nolock) emgrd on emgrd.Id = em.Empstatus where id = " + EmpID + " ORDER BY EmployeeId ";
             }
 
             if (EmpID != "")
@@ -231,7 +240,7 @@ namespace First.Controllers
                                     Aadhar = Convert.ToString(sdr["Aadhar"] == DBNull.Value ? "" : sdr["Aadhar"]),
                                     Passport = Convert.ToString(sdr["Passport"] == DBNull.Value ? "" : sdr["Passport"]),
                                     DOB = Convert.ToDateTime(sdr["DOB"] == DBNull.Value ? DateTime.Now : sdr["DOB"]),
-                                    Grade = Convert.ToString(sdr["Grade"] == DBNull.Value ? "" : sdr["Grade"]),
+                                    Grade = Convert.ToString(sdr["EmployeeGrade"] == DBNull.Value ? "" : sdr["EmployeeGrade"]),
                                     Grosspay = Convert.ToDecimal(sdr["Grosspay"] == DBNull.Value ? 0 : sdr["Grosspay"]),
                                     Age = Convert.ToInt32(sdr["Age"] == DBNull.Value ? 0 : sdr["Age"]),
                                     Email = Convert.ToString(sdr["Email"] == DBNull.Value ? "" : sdr["Email"]),
@@ -242,7 +251,7 @@ namespace First.Controllers
                                     Department = Convert.ToString(sdr["Department"] == DBNull.Value ? "" : sdr["Department"]),
                                     Empstatus = Convert.ToString(sdr["EmployeeStatus"] == DBNull.Value ? "" : sdr["EmployeeStatus"]),
                                     Location = Convert.ToString(sdr["EmployeeStatus"] == DBNull.Value ? "" : sdr["Location"]),
-                                    Reportingmanager = Convert.ToString(sdr["Reportingmanager"] == DBNull.Value ? "" : sdr["Reportingmanager"]),
+                                    Reportingmanager = Convert.ToString(sdr["ReportingmanagerName"] == DBNull.Value ? "" : sdr["ReportingmanagerName"]),
                                     Precompanyname = Convert.ToString(sdr["Precompanyname"] == DBNull.Value ? "" : sdr["Precompanyname"]),
                                     Predesignation = Convert.ToString(sdr["Predesignation"] == DBNull.Value ? "" : sdr["Predesignation"]),
                                     Preexperience = Convert.ToString(sdr["Preexperience"] == DBNull.Value ? "" : sdr["Preexperience"]),
@@ -530,12 +539,10 @@ namespace First.Controllers
                     //using string substring method to get the number of the last inserted employee's EmployeeID 
                     emp.EmployeeId = "ZS" + (Convert.ToInt32(lastemployee.EmployeeId.Substring(2, lastemployee.EmployeeId.Length - 2)) + 1).ToString("D3");
                 }
-
-                //ViewBag.Designationlist = GetLookup("Designation");
-                //ViewBag.Bloodgrouplist = GetLookup("Bloodgroup");
-                //ViewBag.Departmentlist = GetLookup("Department");
-                //ViewBag.Qualificationlist = GetLookup("Qualification");
-                //ViewBag.Gradelist = GetLookup("Grade");
+                emp.DateofConfirmation = DateTime.Now;
+                emp.DateofJoin = DateTime.Now;
+                emp.DateofRelieving = DateTime.Now;
+                emp.DOB = DateTime.Now;
                 return View(emp);
             }
 
@@ -597,11 +604,8 @@ namespace First.Controllers
                                 BloodGroup = Convert.ToString(sdr["Bloodgroup"] == DBNull.Value ? "" : sdr["Bloodgroup"]),
                                 Availability = Convert.ToString(sdr["Availability"] == DBNull.Value ? "" : sdr["Availability"]),
                                 AccessType = Convert.ToString(sdr["AccessType"] == DBNull.Value ? "" : sdr["AccessType"]),
-                                CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
-                                //CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
-                                //CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
-                                //CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
-                                //CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"])
+                                CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"])
+                               
                             };
                         }
                     }
@@ -1128,7 +1132,7 @@ namespace First.Controllers
         // GET: Home/UpdatePayslipDetails/5
         [HandleError]
         public ActionResult UpdatePayslipDetails(int? id, DateTime month)
-        {
+        {            
             if (Convert.ToInt32(Session["Id"]) != id && Convert.ToString(Session["AccessType"]).ToUpper() != "ADMIN")
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -1267,8 +1271,10 @@ namespace First.Controllers
         [HandleError]
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader)
+        [ValidateInput(false)]
+        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader, string ExportData)
         {
+            //ExportHTML(ExportData);
             //if (ModelState.IsValid)
             //{
             int headerid = 0;
@@ -1441,6 +1447,53 @@ namespace First.Controllers
             }
             return "success";
         }
+        //public void ExportHTML(string ExportData)
+        //{
+        //    HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
+        //    HtmlNode.ElementsFlags["input"] = HtmlElementFlag.Closed;
+        //    HtmlDocument doc = new HtmlDocument();
+        //    doc.OptionFixNestedTags = true;
+        //    doc.LoadHtml(ExportData);
+        //    ExportData = doc.DocumentNode.OuterHtml;
+        //    string HTMLContent = ExportData;
+        //    Response.Clear();
+        //    Response.ContentType = "application/pdf";
+        //    Response.AddHeader("content-disposition", "attachment;filename=" + "PDFfile.pdf");
+        //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        //    Response.BinaryWrite(GetPDF(HTMLContent));
+        //    Response.End();
+
+        //}
+        //public byte[] GetPDF(string pHTML)
+        //{
+        //    byte[] bPDF = null;
+        //    MemoryStream ms = new MemoryStream();
+        //    StringReader txtReader = new StringReader(pHTML);
+        //    Document doc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);           
+        //    PdfWriter oPdfWriter = PdfWriter.GetInstance(doc, ms);
+        //    doc.Open();
+        //    XMLWorkerHelper.GetInstance().ParseXHtml(oPdfWriter, doc, txtReader);
+        //    doc.Close();
+        //    bPDF = ms.ToArray();
+
+        //    //mail send
+        //    //MailMessage mm = new MailMessage("itadmin@zuddhisystems.com", "hemalatha@zuddhisystems.com");
+        //    //mm.Subject = "GridView Exported PDF";
+        //    //mm.Body = "GridView Exported PDF Attachment";
+        //    //mm.Attachments.Add(new Attachment(new MemoryStream(bPDF), "PDFfile.pdf"));
+        //    //mm.IsBodyHtml = true;
+        //    //SmtpClient smtp = new SmtpClient();
+        //    //smtp.Host = "smtp.office365.com";
+        //    //smtp.EnableSsl = true;
+        //    //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
+        //    //NetworkCred.UserName = "itadmin@zuddhisystems.com";
+        //    //NetworkCred.Password = "zsys#2023#";
+        //    //smtp.UseDefaultCredentials = true;
+        //    //smtp.Credentials = NetworkCred;
+        //    //smtp.Port = 587;
+        //    //smtp.Send(mm);
+        //    return bPDF;
+        //}
 
     }
 }

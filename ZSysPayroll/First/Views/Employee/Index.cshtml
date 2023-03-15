@@ -194,6 +194,9 @@
                 options = "<option value='0'>- Select -</option>" + options;
             $("#BloodGroup").html(options);
 
+            var options = $("#Reportingmanager").html();
+            options = "<option value='0'>- Select -</option>" + options;
+            $("#Reportingmanager").html(options);
 
             $('#Name').keypress(function (e) {
                     allowAplabetsOnly(e);
@@ -295,16 +298,22 @@
 
             $("#Aadhar").change(function () {
                     var inputvalues = $(this).val();
-                    var regex = /[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
-                    if (!regex.test(inputvalues)) {
-                        // $("#Aadhar").val("");
-                        //alert("invalid PAN no");
-                        lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
-                        return regex.test(inputvalues);
-                    }
-                    else {
-                        lblErrAadhar.innerHTML = "";
-                    }
+                var regex = /[2-9]{1}[0-9]{3}\s{1}[0-9]{4}\s{1}[0-9]{4}$/;
+                
+                if (!regex.test(inputvalues)) {
+                    lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
+                } else {
+                    lblErrAadhar.innerHTML = "";
+                }
+                    //if (!regex.test(inputvalues)) {
+                    //    // $("#Aadhar").val("");
+                    //    //alert("invalid PAN no");
+                    //    lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
+                    //    return regex.test(inputvalues);
+                    //}
+                    //else {
+                    //    lblErrAadhar.innerHTML = "";
+                    //}
                 });
 
             $("#Aadhar").keypress(function () {
@@ -418,10 +427,10 @@
                     //alert(age);
                     var dob = new Date(age);
                     var today = new Date();
-                    var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));
-                $('#Age').val(age);
-                }
-
+                    var age = Math.floor((today - dob) / (365.25 * 24 * 60 * 60 * 1000));                    
+                        $('#Age').val(age);
+                    }              
+                
                 function formatDate(dt) {
                     var year = dt.getFullYear();
                     year = year.toString();
@@ -524,7 +533,8 @@
                         $("#Aadhar").val().trim() == "" ||
                         $("#Age").val().trim()<=18 ||
                         maritalstatus == undefined ||
-                        gender == undefined
+                        gender == undefined ||
+                        $("#BloodGroup").val().trim() == ""
                ) {
                     isValid = false;
                     errMessage = "Please enter all mandatory (*) fields";
@@ -843,7 +853,7 @@
                                         <div class="col-sm-4 p-3">
                                             <div class="row">
                                                 <div class="col-lg-5">
-                                                    <label for="Bloodgrp" style="margin-top: 15px;"><b>BloodGroup</b></label>
+                                                    <label for="Bloodgrp" style="margin-top: 15px;" class="required"><b>BloodGroup</b></label>
                                                 </div>
                                                 <div class="col-lg-7">
 
@@ -1329,7 +1339,7 @@
                                                     <label for="Aadhar" style="margin-top: 15px;" class="required"><b>Aadhar Number</b></label>
                                                 </div>
                                                 <div class="col-lg-7">
-                                                    @Html.TextBoxFor(e => e.Aadhar, new { type = "text" })
+                                                    @Html.TextBoxFor(e => e.Aadhar, new { type = "text", maxLength = "12" })
                                                     @*Html.ValidationMessageFor(e => e.Aadhar)*@
                                                     <span id="lblErrAadhar" style="color:red"></span>
                                                 </div>

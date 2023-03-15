@@ -271,7 +271,7 @@
         function Logout()
         {
             alert("logout start");
-            var EmployeeId1 =  @Session["id"];
+            var EmployeeId1 =  @Session["id"];                        
             $.get("/Employee/SaveLogout", {
                 logintime: $("#txtlogin").val(), logouttime: $("#txtlogout").val(), comment: $("#txtComments").val(), EmployeeId: EmployeeId1, workingstatus: $("#cbLeave").val()
             }
@@ -342,7 +342,7 @@
                                     <div class="col-lg-6" style="text-align:center">
 
                                        
-                                        <button type="button" onclick="Logout();" href="#" class="btn btn-primary" width="120px;">Submit</button>
+                                        <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Submit</button>
                                     </div>
                                     </div>
 

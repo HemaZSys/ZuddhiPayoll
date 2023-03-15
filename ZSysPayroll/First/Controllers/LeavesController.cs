@@ -4,10 +4,10 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Text;
 using First.Models;
+using System.Net;
+using System.Net.Mail;
 
 ///using First.Models;
 ///using System.Security.Cryptography;
@@ -135,6 +135,8 @@ namespace First.Controllers
                             oEmployeeLeave.EmpId = Convert.ToInt32(sdr["EmployeeId"] == DBNull.Value ? 0 : sdr["EmployeeId"]);
                             oEmployeeLeave.sessionId = Convert.ToInt32(sdr["sessionid"] == DBNull.Value ? EmpID : sdr["sessionid"]);
                             oEmployeeLeave.EmpName = Convert.ToString(sdr["name"] == DBNull.Value ? "" : sdr["name"]);
+                            oEmployeeLeave.UserEmailId = Convert.ToString(sdr["UserEmailId"] == DBNull.Value ? "" : sdr["UserEmailId"]);
+                            oEmployeeLeave.ReportingMgrEmailID = Convert.ToString(sdr["ReportingMgrEmailID"] == DBNull.Value ? "" : sdr["ReportingMgrEmailID"]);
                             oEmployeeLeave.LeaveType = Convert.ToInt32(sdr["LeaveType"] == DBNull.Value ? 0 : sdr["LeaveType"]);
                             oEmployeeLeave.startDate = Convert.ToDateTime(sdr["startDate"] == DBNull.Value ? DateTime.Now : sdr["startDate"]);
                             oEmployeeLeave.EndDate = Convert.ToDateTime(sdr["EndDate"] == DBNull.Value ? DateTime.Now : sdr["EndDate"]);
@@ -172,6 +174,8 @@ namespace First.Controllers
         [HttpPost]
         public ActionResult ApplyLeave(EmployeeLeave oEmployeeLeave)
         {
+            //SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
+
             if (Request.HttpMethod == "POST")
             {
                 string EmpID = Convert.ToString(Session["Id"]);
@@ -476,5 +480,67 @@ namespace First.Controllers
             }
 
         }
+
+        //public void SendEmailNotification(string FromEmail, string ToEmail)
+        //{
+        //    //string resetURL = ConfigurationManager.AppSettings["resetURL"];
+        //    //string resetCode = Guid.NewGuid().ToString();
+        //    //var verifyUrl = "~/UserLogin/ResetPassword/" + resetCode;
+        //    //resetURL = resetURL + resetCode;
+        //    ////var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
+        //    //var existingURL = Request.Url.AbsoluteUri.ToLower();
+        //    //var link = existingURL.Replace("/userlogin/forgotpassword", verifyUrl);
+
+        //    using (var context = new AppEntities1())
+        //    {
+        //        var getFromMail = (from s in context.Enrollments where s.Email == FromEmail select s).FirstOrDefault();
+        //        var getToMail = (from s in context.Enrollments where s.Email == ToEmail select s).FirstOrDefault();
+        //        if (getFromMail != null)
+        //        {
+        //            //getUser.ResetPasswordCode = resetCode;
+
+        //            //This line I have added here to avoid confirm password not match issue , as we had added a confirm password property 
+
+        //            context.Configuration.ValidateOnSaveEnabled = false;
+        //            context.SaveChanges();
+
+        //            var subject = "Leave Approve Request";
+        //            //link = link.Replace("~", "");
+
+        //            var body = "Hi <b>" + getToMail.FirstName
+        //                + "You Have Leave Approve Request From Your Team.<br/>Please Check in Your Login Aprroval List<br/><br/> Thank you<br/><b>System Admin</b>.";
+
+        //            SendEmail(getToMail.Email,body, subject);
+
+        //            ViewBag.Message = "Mail Sent to Your Reporting Person";
+        //        }
+        //        else
+        //        {
+        //            ViewBag.Message = "Something Went Wrong.";
+        //        }
+        //    }
+        //}
+
+        //[HandleError]
+        //private void SendEmail(string ToemailAddress, string body, string subject)
+        //{
+        //    using (MailMessage mm = new MailMessage("hemalatha90cs@gmail.com", ToemailAddress))
+        //    {
+        //        mm.Subject = subject;
+        //        mm.Body = body;
+        //        mm.IsBodyHtml = true;
+        //        SmtpClient smtp = new SmtpClient();
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.Credentials = new System.Net.NetworkCredential("hemalatha90cs@gmail.com", "jxdrdboitscavysk");
+        //        smtp.Port = 587; // You can use Port 25 if 587 is blocked
+        //        smtp.Host = "smtp.gmail.com";
+        //        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+        //        smtp.EnableSsl = true;
+               
+        //            smtp.Send(mm);
+
+        //    }
+        //}
+
     }
 }

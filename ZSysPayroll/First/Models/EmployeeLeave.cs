@@ -38,6 +38,9 @@ namespace First.Models
         public string EmpCode { get; set; }
         public string EmpName { get; set; }
 
+        public string UserEmailId { get; set; }
+        public string ReportingMgrEmailID { get; set; }
+
         [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Start Date")]
