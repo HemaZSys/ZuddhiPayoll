@@ -160,7 +160,7 @@
                 </tr>
                 <tr>
                     <td style="width: 25%; padding-left: 10px; "><H5>Employee Name:</H5></td>
-                    <td style="padding-top:3px;width:30%;">
+                    <td style="padding-top:3px;width:30%;" id="txtEmpName">
                         <H5>
                             <b>
                                 @Html.DisplayFor(model => model.EmployeeName)
@@ -387,9 +387,9 @@
 
                         <input type="button" id="btnPrint" value="Print" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;" />&nbsp;&nbsp;
                         @*<input type="button" id="btnPDF" value="Save as PDF" class="btnRegister" style="margin:15px 0;width:60px;font-weight:bold;display:none;" />*@
-                        <input type="button" value="Create PDF" onclick="convertHTMLtoPDF()">
+                        <input type="button" value="Save As PDF" onclick="convertHTMLtoPDF()">&nbsp;&nbsp;
                         @*<input type="hidden" name="ExportData" />
-                            <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Downloas PDF", "ExportPDF", "Employee", new { id = Session["Id"] }, null)</button>*@
+        <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Downloas PDF", "ExportPDF", "Employee", new { id = Session["Id"] }, null)</button>*@
                     </td>
                     <td>
                         @Html.EditorFor(model => model.isSalaryStructure)
@@ -425,20 +425,29 @@
 <script src="~/savepdfJS/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script type="text/javascript">
-    function convertHTMLtoPDF() {
+    function convertHTMLtoPDF() {       
         const { jsPDF } = window.jspdf;
-
-        //var doc = new jsPDF('l', 'mm', [2500, 1800]);
-        var doc = new jsPDF('p', 'mm', [2500, 1800]);
-        var pdfjs = document.querySelector('#PrintPDF');
-
-        doc.html(pdfjs, {
-            callback: function (doc) {
-                doc.save("newpdf.pdf");
-            },
-            //x: 12,
-            //y: 12
+        const quality = 1 // Higher the better but larger file
+        html2canvas(document.querySelector('#PrintPDF'),
+            { scale: quality }
+        ).then(canvas => {
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, 211, 298);            
+            pdf.save($("#lblPayslipMonth").html() + "_" + $("#EmployeeName").val() + '.pdf');
         });
+       // const { jsPDF } = window.jspdf;
+
+        ////var doc = new jsPDF('l', 'mm', [2500, 1800]);
+        //var doc = new jsPDF('p', 'mm', [2500, 1800]);
+        //var pdfjs = document.querySelector('#PrintPDF');
+
+        //doc.html(pdfjs, {
+        //    callback: function (doc) {
+        //        doc.save("newpdf.pdf");
+        //    },
+        //    //x: 12,
+        //    //y: 12
+        //});
     }
 </script>
 
