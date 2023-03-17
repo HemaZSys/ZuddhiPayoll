@@ -22,7 +22,7 @@
         public string EmployeeName { get; set; }
 
         public string EmployeeGrade { get; set; }
-
+        public string EmployeeGradeId { get; set; }
         public decimal EmployeeGrosspay { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:#,##0.00}")]

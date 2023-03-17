@@ -153,52 +153,54 @@
     {
         <div class="container-fluid">
             <div class="card card-layout">
-                <div id="EmployeeDetail" class="row card-layout1">
+                <div id="EmployeeDetail" class="card-layout1">
                    
                         <div class="heading">Leave Settings</div>
-                   
-                    <table class="table  table-bordered table-hover table-responsive" id="tblLeaveSetting">
-                        <thead>
+                        <div style="overflow-x:scroll;">
+                            <table class="table  table-bordered table-hover table-responsive" id="tblLeaveSetting">
+                                <thead>
 
-                            <tr>
-                                <th>S.No</th>
-                                <th>Leave Descriptiom</th>
-                                <th>No. of Days</th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            @if (Model.LeaveSettingList.Count > 0)
-                            {
-
-                                for (int i = 0; i < Model.LeaveSettingList.Count(); i++)
-                                {
-                                    cnt++;
-                                    <tr class="info">
-                                        <td style="text-align:center;">
-                                            @cnt
-                                        </td>
-                                        <td style="text-align:left;">
-                                            @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].id)
-                                            @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].LeaveTypeId)
-                                            @Html.DisplayFor(modelItem => Model.LeaveSettingList[i].LeaveDescription)
-                                        </td>
-                                        <td style="text-align:left;">
-                                            @Html.TextBoxFor(modelItem => Model.LeaveSettingList[i].NoOfDays)
-                                        </td>                                        
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Leave Descriptiom</th>
+                                        <th>No. of Days</th>
                                     </tr>
 
-                                }
-                            }
-                            else
-                            {
-                        <tr>No Records Found</tr>
-                            }
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    @if (Model.LeaveSettingList.Count > 0)
+                                    {
+
+                                        for (int i = 0; i < Model.LeaveSettingList.Count(); i++)
+                                        {
+                                            cnt++;
+                                            <tr class="info">
+                                                <td style="text-align:center;">
+                                                    @cnt
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].id)
+                                                    @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].LeaveTypeId)
+                                                    @Html.DisplayFor(modelItem => Model.LeaveSettingList[i].LeaveDescription)
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    @Html.TextBoxFor(modelItem => Model.LeaveSettingList[i].NoOfDays)
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>No Records Found</tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                   
                     <div class="row" style="display: block;float: right;">
                         <button type="submit" class="btn btn-success toastsDefaultSuccess">Save</button>&nbsp;
-                        <a href="" type="button" class="btn btn-primary">Cancel</a>
+                        <a href="~/Employee/Index/0" type="button" class="btn btn-primary">Cancel</a>
                     </div>
                 </div>
             </div>

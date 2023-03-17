@@ -131,7 +131,7 @@
     @using (Html.BeginForm("ApplyLeave", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
     <div>
-        <div id="EmployeeDetail" class=" row card-layout1">
+        <div id="EmployeeDetail" class="card-layout1">
             @if (Model.ReportingmanagerId == Model.Id)
                     {
             <div class="heading">Approve Leave</div>

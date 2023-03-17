@@ -1206,8 +1206,8 @@ namespace First.Controllers
                             payslipGradeHeader.DateofJoin = Convert.ToDateTime(sdr["DateofJoin"]);
                             payslipGradeHeader.PFAccountNo = Convert.ToString(sdr["PFAccountNo"]);
                             payslipGradeEntry.EmployeeGrade = Convert.ToString(sdr["GradeName"]);
+                            payslipGradeEntry.EmployeeGradeId = Convert.ToString(sdr["Grade"]);
                             payslipGradeEntry.EmployeeGrosspay = Convert.ToDecimal(sdr["Grosspay"]);
-
                             payslipGradeEntry.Location = Convert.ToString(sdr["Location"]);
                             payslipGradeEntry.Department = Convert.ToString(sdr["Department"]);
                             payslipGradeEntry.Designation = Convert.ToString(sdr["Designation"]);
@@ -1223,16 +1223,19 @@ namespace First.Controllers
                     }
                     con.Close();
                 }
-                string query2 = "select Convert(decimal(19,2),isnull(sum(pe.MonthlyAmount),0)) as taxcollected " +
-                                 " from [dbo].[EmployeeDetails] e " +
-                                 " left join[dbo].[PayslipEntry] pe on pe.EmployeeId = e.Id " +
-                                 " left join[dbo].[PayslipGrade] pg on pg.Id = pe.PayslipGradeid " +
-                                 " where pg.Description = 'Income Tax' and e.id = @empid and YEAR(pe.MonthYear) = YEAR(@month)";
-                using (SqlCommand cmd = new SqlCommand(query2))
+                //string query2 = "select Convert(decimal(19,2),isnull(sum(pe.MonthlyAmount),0)) as taxcollected " +
+                //                 " from [dbo].[EmployeeDetails] e " +
+                //                 " left join[dbo].[PayslipEntry] pe on pe.EmployeeId = e.Id " +
+                //                 " left join[dbo].[PayslipGrade] pg on pg.Id = pe.PayslipGradeid " +
+                //                 " where pg.Description = 'Income Tax' and e.id = @empid and YEAR(pe.MonthYear) = YEAR(@month)";
+
+                using (SqlCommand cmd = new SqlCommand("sp_Get_TaxCalculated_Amount"))
                 {
                     cmd.Connection = con;
                     cmd.Parameters.AddWithValue("@empid", id);
-                    cmd.Parameters.AddWithValue("@month", DateTime.Now);
+                    //cmd.Parameters.AddWithValue("@month", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@year", month);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     con.Open();
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
@@ -1256,6 +1259,7 @@ namespace First.Controllers
                     payslipGradeHeader.EmployeeId = payslipGradeHeader.PayslipGradeEntryList.First().EmployeeId;
                     payslipGradeHeader.EmployeeName = payslipGradeHeader.PayslipGradeEntryList.First().EmployeeName;
                     payslipGradeHeader.EmployeeGrade = payslipGradeHeader.PayslipGradeEntryList.First().EmployeeGrade;
+                    payslipGradeHeader.EmployeeGradeID = payslipGradeHeader.PayslipGradeEntryList.First().EmployeeGradeId;
                     payslipGradeHeader.EmployeeGrosspay = payslipGradeHeader.PayslipGradeEntryList.First().EmployeeGrosspay.ToString();
                     payslipGradeHeader.Department = payslipGradeHeader.PayslipGradeEntryList.First().Department;
                     payslipGradeHeader.Designation = payslipGradeHeader.PayslipGradeEntryList.First().Designation;
@@ -1306,6 +1310,7 @@ namespace First.Controllers
                     cmd.Parameters.AddWithValue("@GrossSalary", payslipGradeHeader.GrossSalary);
                     cmd.Parameters.AddWithValue("@TotalDeductions", payslipGradeHeader.TotalDeductions);
                     cmd.Parameters.AddWithValue("@isSalaryStructure", payslipGradeHeader.isSalaryStructure);
+                    cmd.Parameters.AddWithValue("@Grade", payslipGradeHeader.EmployeeGradeID);
                     ///////
                     con.Open();
                     headerid = Convert.ToInt32(cmd.ExecuteScalar());
