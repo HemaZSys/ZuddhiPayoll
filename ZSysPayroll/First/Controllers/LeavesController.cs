@@ -103,7 +103,7 @@ namespace First.Controllers
         [HttpGet]
         public ActionResult ApplyLeave(int id, int lid, string mode)
         {
-
+            RefreshLeaveReport(id);
             EmployeeLeave oEmployeeLeave = new EmployeeLeave();
             var spName = "";
             string EmpID = Convert.ToString(Session["Id"]);
@@ -123,8 +123,9 @@ namespace First.Controllers
                 {
                     cmd2.CommandType = CommandType.StoredProcedure;
                     cmd2.Connection = con2;
-                    cmd2.Parameters.AddWithValue("@id", EmpID);
-                    cmd2.Parameters.AddWithValue("@lid", lid);
+                    cmd2.Parameters.AddWithValue("@id", id);
+                    cmd2.Parameters.AddWithValue("@rid", EmpID);
+                    cmd2.Parameters.AddWithValue("@lid", lid);                   
                     con2.Open();
                     using (SqlDataReader sdr = cmd2.ExecuteReader())
                     {
@@ -146,6 +147,7 @@ namespace First.Controllers
                             oEmployeeLeave.LeaveBalance = Convert.ToInt32(sdr["LeaveBalance"] == DBNull.Value ? 0 : sdr["LeaveBalance"]);
                             oEmployeeLeave.Reportingmanager = Convert.ToString(sdr["ReportingmanagerName"] == DBNull.Value ? "" : sdr["ReportingmanagerName"]);
                             oEmployeeLeave.ApproveAction = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "Pending" : sdr["ApproveAction"]);
+                            oEmployeeLeave.ApproveActionStatus = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "Pending" : sdr["ApproveAction"]);
                             oEmployeeLeave.ReportingmanagerId = Convert.ToInt32(sdr["Reportingmanager"] == DBNull.Value ? 0 : sdr["Reportingmanager"]);
                             oEmployeeLeave.CasualLeaveBalance = Convert.ToInt32(sdr["CasualLeaveBalance"] == DBNull.Value ? 0 : sdr["CasualLeaveBalance"]);
                             oEmployeeLeave.SickLeaveBalance = Convert.ToInt32(sdr["SickLeaveBalance"] == DBNull.Value ? 0 : sdr["SickLeaveBalance"]);
@@ -175,7 +177,7 @@ namespace First.Controllers
         public ActionResult ApplyLeave(EmployeeLeave oEmployeeLeave)
         {
             //SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
-
+            RefreshLeaveReport(oEmployeeLeave.EmpId);
             if (Request.HttpMethod == "POST")
             {
                 string EmpID = Convert.ToString(Session["Id"]);
@@ -213,9 +215,8 @@ namespace First.Controllers
                         con.Close();
                     }
                 }
-            }
+            }         
             return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
-
         }
 
 

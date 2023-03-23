@@ -175,7 +175,9 @@
 
         window.onload = window.history.forward(0);
         checkLogin();
-        $('#tblEmployees').DataTable();
+        $('#tblEmployees').DataTable({
+            stateSave: true,
+        });
     });
 </script>
 

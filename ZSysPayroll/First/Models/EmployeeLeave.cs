@@ -64,7 +64,7 @@ namespace First.Models
 
         public bool IsApproved { get; set; }
         public string ApproveAction { get; set; }
-
+        public string ApproveActionStatus { get; set; }
         public int ReportingmanagerId { get; set; }
         public int CasualLeaveBalance { get; set; }
         public int SickLeaveBalance { get; set; }

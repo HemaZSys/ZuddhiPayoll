@@ -1452,7 +1452,7 @@ namespace First.Controllers
             }
             return "success";
         }
-        
+
         //public void ExportHTML(string ExportData)
         //{
         //    HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
@@ -1501,5 +1501,55 @@ namespace First.Controllers
         //    return bPDF;
         //}
 
+        //Leave Balance Report List
+        [HandleError]
+        [HttpGet]
+        public ActionResult AttendanceReport(int id)
+        {            
+
+            return View(GetAttendanceReportList(id));
+        }
+        [HandleError]
+        public AttendanceReportHeader GetAttendanceReportList(int id)
+        {
+            AttendanceReportHeader attendanceReportHeaderList = new AttendanceReportHeader();
+
+            string attendancereport = "sp_attendance_Report";
+
+            using (SqlConnection con2 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand(attendancereport))
+                {
+
+                    ReportRow oReportRow = new ReportRow();
+                    cmd2.Connection = con2;
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@id", id);
+
+                    con2.Open();
+
+                    using (SqlDataReader sdr = cmd2.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            attendanceReportHeaderList.AttendanceReportList.Add(new AttendanceReport
+                            {
+                                EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
+                                EmployeeName = Convert.ToString(sdr["Name"] == DBNull.Value ? "" : sdr["Name"]),
+                                shiftDate = Convert.ToString(sdr["shiftDate"] == DBNull.Value ? DateTime.Now : sdr["shiftDate"]),
+                                LogInTime = Convert.ToString(sdr["LogInTime"] == DBNull.Value ? "" : sdr["LogInTime"]),
+                                LogOutTime = Convert.ToString(sdr["LogOutTime"] == DBNull.Value ? "" : sdr["LogOutTime"]),
+                                TotalTime = Convert.ToString(sdr["Total_Time"] == DBNull.Value ? "" : sdr["Total_Time"]),
+                                WorkStatus = Convert.ToString(sdr["WorkStatus"] == DBNull.Value ? "" : sdr["WorkStatus"])
+                            });
+                        }   
+
+                        con2.Close();
+                    }
+                }
+                ViewBag.leavedetails = attendanceReportHeaderList.AttendanceReportList;
+                return attendanceReportHeaderList;
+            }
+        }
     }
 }

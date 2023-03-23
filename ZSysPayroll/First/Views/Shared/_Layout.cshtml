@@ -45,6 +45,14 @@
             border: none;
         }
 
+        .submitbtn {
+            background-color: #b23b3b;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -308,7 +316,7 @@
 
                 @*<a href="#" onclick="logout()" class="btn btn-danger pull-right logout" style="padding:15px">Logout</a>*@
 
-               
+
 
 
                 <div class="dropdown" style="float:right;">
@@ -320,13 +328,13 @@
                                     <p>Login</p>
                                 </div>
                                 <div class="col-lg-8" style="margin-bottom:5px;margin-top:5px;">
-                                    <input id="txtlogin" class="form-control" value="10:00" type="time" width="100%"  style="text-align:center;"/>
+                                    <input id="txtlogin" class="form-control" value="10:00" type="time" width="100%" style="text-align:center;" />
                                 </div>
                                 <div class="col-lg-4 " style="margin-bottom: 5px;">
                                     <p>Logout</p>
                                 </div>
                                 <div class="col-lg-8" style="margin-bottom: 6px;">
-                                    <input id="txtlogout" class="form-control" value="19:00"  type="time" width="100%" style="text-align:center;"/>
+                                    <input id="txtlogout" class="form-control" value="19:00" type="time" width="100%" style="text-align:center;" />
                                 </div>
                                 <div class="col-lg-12" style="margin-bottom:12px;">
                                     <input id="txtComments" class="form-control" type="text" title=" Enter Status/Comments" placeholder="Enter Status/Comments" width="100%" />
@@ -340,20 +348,19 @@
                                         </p>
                                     </div>
                                     <div class="col-lg-6" style="text-align:center">
-
-                                       
                                         <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Submit</button>
                                     </div>
-                                    </div>
-
-
                                 </div>
-                        </div>
-                           
-                        </ul>
-                </div>
-                @*<label onclick="logout();" class = "btn btn-danger pull-right" >Logout</label>*@
 
+
+                            </div>
+                        </div>
+
+                    </ul>
+                </div>
+                <div>                    
+                    <button type="submit" class="submitbtn" style="float:right;">@Html.ActionLink("LOGOUT", "Logout", "UserLogin", null, new { style = "color:white;" })</button>                    
+                </div>
             </nav>
 
             @*<script>
@@ -369,12 +376,12 @@
                     {
                         First.Models.Enroll user = (First.Models.Enroll)HttpContext.Current.Session["CurrentUser"];
                         @*<li { list-style: none;}><a href="https://www.zuddhisystems.com/" >Contact us</a></li>
-                        <li>@Html.ActionLink("Logout", "Index", "UserLogin")</li>*@
+            <li>@Html.ActionLink("Logout", "Index", "UserLogin")</li>*@
                     }
                     @if (Session["Email"] != null)
                     {
-                        <li style="margin-top: -5rem; z-index: 1111; margin-right: 10rem;"><a id="currentLoggedInUser" style="color:#fff;" class="menu-top-active">Welcome @Session["Email"].ToString()</a></li>
-                        <li><div id="userPrivilege" style="display:none;">@Session["AccessType"].ToString()</div></li>
+                        <li style="margin-top: -4rem; z-index: 1111; margin-right: 22rem;"><b id="currentLoggedInUser" style="color:#fff;" class="menu-top-active">Welcome @Session["Email"].ToString()</b></li>
+                        <li><div id="userPrivilege" style="display:none;">@Session["AccessType"].ToString()</div></li>                        
                     }
                 </ul>
             </div>
@@ -403,21 +410,22 @@
                         <ul class="treeview-menu">
                             @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                             {
-                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Add Employee", "Index", "Employee", new { id = 0 }, null)</i></li>
-                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
-                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Add Employee", "Index", "Employee", new { id = 0 }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)</i></li>
 
-                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("All Employee", "Details", "Employee", new { id = Session["Id"] }, null)</i></li>
-                            @*<li style="text-indent: 5px" id="AdminEmpList"><a href="~/EmployeePayslip/GeneratePayslip"><i class="fa fa-money"></i> <span>Generate Payslip</span></a></li>*@
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-users" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("All Employee", "Details", "Employee", new { id = Session["Id"] }, null)</i></li>
+                                @*<li style="text-indent: 5px" id="AdminEmpList"><a href="~/EmployeePayslip/GeneratePayslip"><i class="fa fa-money"></i> <span>Generate Payslip</span></a></li>*@
 
                             }
                             else
                             {
-                            <li><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
-                            <li><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
+                                <li><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                                <li><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
 
                             }
-
+                            @*<li><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0, lid = 0, mode = "Apply" }, null)</i></li>*@
+                            <li><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply"><i class="fa fa-search"></i><span>Apply Leave</span></a></li>
                         </ul>
                     </li>
 
@@ -462,12 +470,11 @@
                             </span>
 
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply"><i class="fa fa-search"></i><span>Apply Leave</span></a></li>
+                        <ul class="treeview-menu">                            
                             @*<li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = Session["Id"] }, null)</i></li>*@
                             @*<li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Leave List", "LeaveList", "Leaves", new { id = Session["Id"] }, null)</i></li>*@
                             <li>
-                                <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Apply Leave List</span></i></a>
+                                <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
                             </li>
                             <li>
                                 <a href="~/Leaves/LeaveList?mode=ApproveList"><i class="fa fa-search"><span>&nbsp;&nbsp; Approve Leave List</span></i></a>
@@ -506,11 +513,12 @@
                         <ul class="treeview-menu">
                             <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "PayslipReport", "PayslipEntry", new { id = -2, mode = 2 }, null)</i></li>
                             <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Leave Balance", "LeaveBalanceReportList", "Leaves", new { id = -2, mode = 2 }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Attendance", "AttendanceReport", "Employee", new { id = -2, mode = 2 }, null)</i></li>
                         </ul>
                     </li>
                     }
 
-                    <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-sign-out" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("LOGOUT", "Logout", "UserLogin", null, null)</i></li>
+                    @*<li style="padding: 1rem;text-indent: 5px"><i class="fa fa-sign-out" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("LOGOUT", "Logout", "UserLogin", null, null)</i></li>*@
                 </ul>
                
                    

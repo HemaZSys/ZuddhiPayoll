@@ -526,7 +526,7 @@
 
                     if ($("#Name").val().trim() == "" || $("#LName").val().trim() == "" ||
                         $("#DOB").val().trim() == "" ||
-                        $("#Qualification").val().trim() == "" ||
+                        $("#Qualification").val().trim() == 0 ||
                         $("#Contact").val().trim() == "" || $("#Alternativeno").val().trim() == "" ||
                         $("#Email").val().trim() == "" || $("#Address").val().trim() == "" ||
                         $("#PermanentAddress").val().trim() == "" ||
@@ -534,7 +534,7 @@
                         $("#Age").val().trim()<=18 ||
                         maritalstatus == undefined ||
                         gender == undefined ||
-                        $("#BloodGroup").val().trim() == ""
+                        $("#BloodGroup").val().trim() == 0
                ) {
                     isValid = false;
                     errMessage = "Please enter all mandatory (*) fields";

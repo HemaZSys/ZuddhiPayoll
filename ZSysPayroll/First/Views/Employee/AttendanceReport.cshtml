@@ -1,6 +1,6 @@
-﻿@model First.Models.LeaveReportHeader
+﻿@model First.Models.AttendanceReportHeader
 @{
-    ViewBag.Title = "LeaveBalanceReport";
+    ViewBag.Title = "AttendanceReport";
     //List<First.Models.LeaveReportHeader> leaveReportHeaderlist = ViewBag.leavedetails;
     int cnt = 0;
 }
@@ -29,8 +29,8 @@
     <script type="text/javascript" src="~/payslipreportJSCSS/JScript/select/1.6.0/js/dataTables.select.min.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {           
-            $('#tblLeaveBalanceReport').DataTable({ 
+        $(document).ready(function () {
+            $('#tblAttendanceReport').DataTable({
                 select: true
             });
             checkLogin();
@@ -114,72 +114,43 @@
 <body>
     <div class="container-fluid">
         <div class="card card-layout">
-            <div class="heading">Leave Balance  Details Report</div>
+            <div class="heading">Attendance Details Report</div>
 
             <div style="padding: 2%; overflow-x: scroll;">
                 @*<button class="registerbtn" style="padding: 5px; color: red; background: #fff; width: 100px; float: right;" title="Export To Excel" id="btnExport">Export</button>*@
-                <table id="tblLeaveBalanceReport" class="table table-hover" align="center">
+                <table id="tblAttendanceReport" class="table table-hover" align="center">
                     <thead>
                         <tr>
-                            <th style="text-align: center;" rowspan="2" align="center">
+                            <th style="text-align: center;" align="center">
                                 S.No.
                             </th>
-                            <th style="text-align: center;" rowspan="2" align="center">
+                            <th style="text-align: center;"align="center">
                                 Employee ID
                             </th>
-                            <th style="text-align: center;" rowspan="2">
+                            <th style="text-align: center;">
                                 Employee Name
                             </th>
-                            <th style="text-align: center;" rowspan="2">
-                                Email
-                            </th>
-                            <th style="text-align: center;" rowspan="2">
-                                Year
+                            <th style="text-align: center;">
+                                Date
                             </th>
                             <th style="text-align: center;">
-                                Opening Balance
+                                Login Time
                             </th>
-                            <th style="text-align: center;" colspan="2">
-                                Eligible Leave Till Date
+                            <th style="text-align: center;">
+                                Logout Time
                             </th>
-                            <th style="text-align: center;" colspan="3">
-                                Leave Taken Till Date
+                            <th style="text-align: center;">
+                                Total Time
                             </th>
-                            <th style="text-align: center;" colspan="2">
-                                Balance Leave
-                            </th>
-                        </tr>
-                        <tr>                    
-                           <th style="text-align: center">
-                                Casual
-                            </th>
-                            <th style="text-align: center">
-                                Casual
-                            </th>
-                            <th style="text-align: center">
-                                Sick
-                            </th>
-                            <th style="text-align: center">
-                                Casual
-                            </th>
-                            <th style="text-align: center">
-                                Sick
-                            </th>
-                            <th style="text-align: center">
-                                Total
-                            </th>
-                            <th style="text-align: center">
-                                Casual
-                            </th>
-                            <th style="text-align: center">
-                                Sick
-                            </th>
-                        </tr>
+                            <th style="text-align: center;">
+                                Work Status
+                            </th>                            
+                        </tr>                       
                     </thead>
                     <tbody>
-                        @if (Model.LeaveReportList.Count() > 0)
+                        @if (Model.AttendanceReportList.Count() > 0)
                         {
-                            for (int i = 0; i < Model.LeaveReportList.Count(); i++)
+                            for (int i = 0; i < Model.AttendanceReportList.Count(); i++)
                             {
                                 cnt++;
 
@@ -187,43 +158,37 @@
                             <td style="text-align:center;">
                                 @cnt
                             </td>
-                            <td>
-                                @Html.HiddenFor(modelItem => Model.LeaveReportList[i].id)
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].EmployeeId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].EmployeeName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].Email)
+                            <td style="text-align:center;">
+                                @Html.HiddenFor(modelItem => Model.AttendanceReportList[i].id)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeId)
                             </td>
                             <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].FinancialYear)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeName)
                             </td>
                             <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].OpeningLeaveCasual)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].shiftDate)
                             </td>
                             <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].EligibleCasual)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogInTime, "{0:hh\\:mm\\:tt}")
                             </td>
                             <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].EligibleSick)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogOutTime)
                             </td>
                             <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].TakenTillCasual)
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].TotalTime)
+                            </td>                            
+                             @if (Model.AttendanceReportList[i].WorkStatus == "Present")
+                                {
+                            <td style="text-align: center; color: green; font-weight:bold">
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
                             </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].TakenTillSick)
+                            }
+                            else
+                            {
+                            <td style="text-align: center; color: red; font-weight:bold">
+                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
                             </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].TakenTillToal)
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].BalanceCasual,new { style ="bold"})
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.LeaveReportList[i].BalanceSick, new { style = "bold" })
-                            </td>
+                            }                            
                         </tr>
 
                             }
