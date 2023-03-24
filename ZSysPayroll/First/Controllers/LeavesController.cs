@@ -123,9 +123,19 @@ namespace First.Controllers
                 {
                     cmd2.CommandType = CommandType.StoredProcedure;
                     cmd2.Connection = con2;
-                    cmd2.Parameters.AddWithValue("@id", id);
-                    cmd2.Parameters.AddWithValue("@rid", EmpID);
-                    cmd2.Parameters.AddWithValue("@lid", lid);                   
+                    if (mode == "Apply")
+                    {
+                        cmd2.Parameters.AddWithValue("@id", EmpID);
+                        cmd2.Parameters.AddWithValue("@rid", id);
+                        cmd2.Parameters.AddWithValue("@lid", lid);
+                    }
+                    else if (mode == "Approve")
+                    {
+                        cmd2.Parameters.AddWithValue("@id", id);
+                        cmd2.Parameters.AddWithValue("@rid", EmpID);
+                        cmd2.Parameters.AddWithValue("@lid", lid);
+                    }
+                                      
                     con2.Open();
                     using (SqlDataReader sdr = cmd2.ExecuteReader())
                     {
