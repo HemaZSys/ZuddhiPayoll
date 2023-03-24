@@ -145,10 +145,15 @@ namespace First.Models
 
         public string FinancialYear { get; set; }
         #endregion
-
+        public List<ReportRow> ReportRowList { get; set; }
         public Form80CHeader()
         {
             Form80CList = new List<Form80C>();
+            ReportRowList = new List<ReportRow>();
         }
+
+        
+
+        
     }
 }

@@ -33,6 +33,9 @@ namespace First.Models
         public decimal OldTotalTax { get; set; }
         public decimal OldTaxOutGo { get; set; }
 
+        public decimal Oldtaxableamount { get; set; }
+        public decimal taxableAmount { get; set; }
+
         public decimal AvancepaiIncometax { get; set; }
 
         public bool isOldRegimeSelected { get; set; }
