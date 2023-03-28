@@ -176,26 +176,23 @@ namespace First.Controllers
             {
                 mm.Subject = subject;
                 mm.Body = body;
-
-
-
                 mm.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient();
-                //smtp.UseDefaultCredentials = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
+                smtp.EnableSsl = true;
+                NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailUsername"], ConfigurationManager.AppSettings["EmailPassword"]);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = NetworkCred;
+                smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
+                smtp.Send(mm);
+                //smtp.UseDefaultCredentials = false;                
+                //smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], "zsys#2023#");
+                //smtp.Port = 587; // You can use Port 25 if 587 is blocked
                 //smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
+                // smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 //smtp.EnableSsl = true;
-                //NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
-                //smtp.UseDefaultCredentials = true;
-                //smtp.Credentials = NetworkCred;
-                //smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
                 //smtp.Send(mm);
-               smtp.UseDefaultCredentials = false;                
-               smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], "zsys#2023#");
-               smtp.Port = 587; // You can use Port 25 if 587 is blocked
-               smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-               smtp.EnableSsl = true;
-               smtp.Send(mm);
 
 
 

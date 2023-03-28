@@ -1909,9 +1909,14 @@ namespace First.Controllers
                             taxCalculation.TaxOutGo = Convert.ToDecimal(sdr["TaxOutGo"]);
                             taxCalculation.earningpayslip = Convert.ToDecimal(sdr["earningpayslip"]);
                             taxCalculation.deductionpayslip = Convert.ToDecimal(sdr["deductionpayslip"]);
-                            taxCalculation.earningform80 = Convert.ToDecimal(sdr["earningform80"]);
-                            taxCalculation.deductionform80 = Convert.ToDecimal(sdr["deductionform80"]);
+                            taxCalculation.earningform80 = Convert.ToDecimal(sdr["earningform80"]);                            
                             taxCalculation.AvancepaiIncometax = Convert.ToDecimal(sdr["AvancepaidIncometax"]);
+                            taxCalculation.deductionform80 = Convert.ToDecimal(sdr["totaldeductionform80"]);
+                            taxCalculation.Oldtaxableamount = Convert.ToDecimal(sdr["Oldtaxableamount"]);
+                            taxCalculation.taxableAmount = Convert.ToDecimal(sdr["taxableAmount"]);
+                            taxCalculation.HRADeductions = Convert.ToDecimal(sdr["LowestofHRArent"]);
+                            taxCalculation.OtherDeductions = Convert.ToDecimal(sdr["deductionform80"]);
+                            taxCalculation.standardDedusctions = Convert.ToDecimal(sdr["standarddeductions"]);
 
                         }
                     }
@@ -1972,42 +1977,75 @@ namespace First.Controllers
 
             //PAYSLIP         
 
+            //using (SqlConnection con2 = new SqlConnection(constr))
+            //{
+            //    using (SqlCommand cmd2 = new SqlCommand("sp_paysilp_getbyempid"))
+            //    {
+            //        cmd2.Connection = con2;
+            //        cmd2.Parameters.AddWithValue("@empid", id);
+            //        cmd2.CommandType = CommandType.StoredProcedure;
+            //        con2.Open();
+
+            //        using (SqlDataReader sdr = cmd2.ExecuteReader())
+            //        {
+            //            while (sdr.Read())
+            //            {
+            //                if (sdr["MonthYear"].ToString() != "")
+            //                {
+
+            //                    PayslipGradeEntry payslipGradeEntry = new PayslipGradeEntry();
+            //                    payslipGradeEntry.EmployeeId = Convert.ToString(sdr["EmployeeId"]);
+            //                    payslipGradeEntry.EmpId = Convert.ToInt32(sdr["Id"]);
+            //                    payslipGradeEntry.MonthYear = Convert.ToDateTime(sdr["MonthYear"]);
+            //                    payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
+            //                    payslipGradeEntry.MonthlyAmount = Convert.ToDecimal(sdr["MonthlyAmount"]);
+            //                    payslipGradeEntry.AnnualAmount = Convert.ToDecimal(sdr["AnnualAmount"]);
+            //                    payslipGradeEntry.PayslipGradeid = Convert.ToInt32(sdr["gradeid"]);
+            //                    payslipGradeHeader.PayslipGradeEntryList.Add(payslipGradeEntry);
+            //                }
+            //            }
+            //        }
+            //        con2.Close();
+            //    }
+            //    if (payslipGradeHeader.PayslipGradeEntryList.Count == 0)
+            //    {
+            //        payslipGradeHeader.PayslipGradeEntryList.Add(new PayslipGradeEntry());
+            //    }
+            //}
+            //ViewBag.payslips = payslipGradeHeader.PayslipGradeEntryList;
+            string payslip = "sp_paysilp_getbyempid1";
             using (SqlConnection con2 = new SqlConnection(constr))
             {
-                using (SqlCommand cmd2 = new SqlCommand("sp_paysilp_getbyempid"))
+                using (SqlCommand cmd2 = new SqlCommand(payslip))
                 {
+
+                    ReportRow oReportRow = new ReportRow();
                     cmd2.Connection = con2;
-                    cmd2.Parameters.AddWithValue("@empid", id);
                     cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@empid", id);
+
                     con2.Open();
 
                     using (SqlDataReader sdr = cmd2.ExecuteReader())
                     {
                         while (sdr.Read())
                         {
-                            if (sdr["MonthYear"].ToString() != "")
+                            oReportRow = new ReportRow();
+                            for (int i = 0; i < sdr.FieldCount; i++)
                             {
-
-                                PayslipGradeEntry payslipGradeEntry = new PayslipGradeEntry();
-                                payslipGradeEntry.EmployeeId = Convert.ToString(sdr["EmployeeId"]);
-                                payslipGradeEntry.EmpId = Convert.ToInt32(sdr["Id"]);
-                                payslipGradeEntry.MonthYear = Convert.ToDateTime(sdr["MonthYear"]);
-                                payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
-                                payslipGradeEntry.MonthlyAmount = Convert.ToDecimal(sdr["MonthlyAmount"]);
-                                payslipGradeEntry.AnnualAmount = Convert.ToDecimal(sdr["AnnualAmount"]);
-                                payslipGradeEntry.PayslipGradeid = Convert.ToInt32(sdr["gradeid"]);
-                                payslipGradeHeader.PayslipGradeEntryList.Add(payslipGradeEntry);
+                                ReportField oReportField = new ReportField();
+                                oReportField.FieldName = sdr.GetName(i);
+                                oReportField.FieldValue = Convert.ToString(sdr.GetValue(i));
+                                oReportRow.ReportFieldList.Add(oReportField);
                             }
+                            form80CHeader.ReportRowList.Add(oReportRow);
                         }
                     }
                     con2.Close();
-                }
-                if (payslipGradeHeader.PayslipGradeEntryList.Count == 0)
-                {
-                    payslipGradeHeader.PayslipGradeEntryList.Add(new PayslipGradeEntry());
+
+
                 }
             }
-            ViewBag.payslips = payslipGradeHeader.PayslipGradeEntryList;
             return View(form80CHeader);
         }
 
@@ -2320,9 +2358,12 @@ namespace First.Controllers
                             taxCalculation.earningpayslip = Convert.ToDecimal(sdr["earningpayslip"]);
                             taxCalculation.deductionpayslip = Convert.ToDecimal(sdr["deductionpayslip"]);
                             taxCalculation.earningform80 = Convert.ToDecimal(sdr["earningform80"]);
-                            taxCalculation.deductionform80 = Convert.ToDecimal(sdr["deductionform80"]);
+                            taxCalculation.deductionform80 = Convert.ToDecimal(sdr["totaldeductionform80"]);
                             taxCalculation.Oldtaxableamount = Convert.ToDecimal(sdr["Oldtaxableamount"]);
                             taxCalculation.taxableAmount = Convert.ToDecimal(sdr["taxableAmount"]);
+                            taxCalculation.HRADeductions = Convert.ToDecimal(sdr["LowestofHRArent"]);
+                            taxCalculation.OtherDeductions = Convert.ToDecimal(sdr["deductionform80"]);
+                            taxCalculation.standardDedusctions = Convert.ToDecimal(sdr["standarddeductions"]);
 
                         }
                     }
@@ -2336,7 +2377,7 @@ namespace First.Controllers
 
             //using (SqlConnection con2 = new SqlConnection(constr))
             //{
-            //    using (SqlCommand cmd2 = new SqlCommand("sp_paysilp_getbyempid1"))
+            //    using (SqlCommand cmd2 = new SqlCommand("sp_paysilp_getbyempid"))
             //    {
             //        cmd2.Connection = con2;
             //        cmd2.CommandType = CommandType.StoredProcedure;

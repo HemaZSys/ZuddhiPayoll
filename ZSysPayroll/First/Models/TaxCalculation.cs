@@ -41,6 +41,10 @@ namespace First.Models
         public bool isOldRegimeSelected { get; set; }
 
         public bool isNewRegimeSelected { get; set; }
+        public decimal HRADeductions { get; set; }
+        public decimal OtherDeductions { get; set; }
+        public decimal standardDedusctions { get; set; }
+
 
     }
 }
