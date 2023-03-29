@@ -186,7 +186,7 @@ namespace First.Controllers
         [HttpPost]
         public ActionResult ApplyLeave(EmployeeLeave oEmployeeLeave)
         {
-            //SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
+            SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
             RefreshLeaveReport(oEmployeeLeave.EmpId);
             if (Request.HttpMethod == "POST")
             {
@@ -492,66 +492,53 @@ namespace First.Controllers
 
         }
 
-        //public void SendEmailNotification(string FromEmail, string ToEmail)
-        //{
-        //    //string resetURL = ConfigurationManager.AppSettings["resetURL"];
-        //    //string resetCode = Guid.NewGuid().ToString();
-        //    //var verifyUrl = "~/UserLogin/ResetPassword/" + resetCode;
-        //    //resetURL = resetURL + resetCode;
-        //    ////var link = Request.Url.AbsoluteUri.Replace(Request.Url.PathAndQuery, verifyUrl);
-        //    //var existingURL = Request.Url.AbsoluteUri.ToLower();
-        //    //var link = existingURL.Replace("/userlogin/forgotpassword", verifyUrl);
+        public void SendEmailNotification(string FromEmail, string ToEmail)
+        {           
 
-        //    using (var context = new AppEntities1())
-        //    {
-        //        var getFromMail = (from s in context.Enrollments where s.Email == FromEmail select s).FirstOrDefault();
-        //        var getToMail = (from s in context.Enrollments where s.Email == ToEmail select s).FirstOrDefault();
-        //        if (getFromMail != null)
-        //        {
-        //            //getUser.ResetPasswordCode = resetCode;
+            using (var context = new AppEntities1())
+            {
+                var getFromMail = (from s in context.Enrollments where s.Email == FromEmail select s).FirstOrDefault();
+                var getToMail = (from s in context.Enrollments where s.Email == ToEmail select s).FirstOrDefault();
+                if (getFromMail != null)
+                {                   
 
-        //            //This line I have added here to avoid confirm password not match issue , as we had added a confirm password property 
+                    context.Configuration.ValidateOnSaveEnabled = false;
+                    context.SaveChanges();
 
-        //            context.Configuration.ValidateOnSaveEnabled = false;
-        //            context.SaveChanges();
+                    var subject = "Leave Approve Request";                  
 
-        //            var subject = "Leave Approve Request";
-        //            //link = link.Replace("~", "");
+                    var body = "Hi <b>" + getToMail.FirstName
+                        + "<br/>You Have Leave Request From Your Team Memeber.<br/>Please Check in Your Payroll Login Aprroval List<br/><br/> Thank you<br/><b>System Admin</b>.";
 
-        //            var body = "Hi <b>" + getToMail.FirstName
-        //                + "You Have Leave Approve Request From Your Team.<br/>Please Check in Your Login Aprroval List<br/><br/> Thank you<br/><b>System Admin</b>.";
+                    SendEmail(getToMail.Email, body, subject);
 
-        //            SendEmail(getToMail.Email,body, subject);
+                   ViewBag.Message = "Sent";
+                }
+                else
+                {
+                    ViewBag.Message = "Something Went Wrong.";
+                }
+            }
+        }
 
-        //            ViewBag.Message = "Mail Sent to Your Reporting Person";
-        //        }
-        //        else
-        //        {
-        //            ViewBag.Message = "Something Went Wrong.";
-        //        }
-        //    }
-        //}
-
-        //[HandleError]
-        //private void SendEmail(string ToemailAddress, string body, string subject)
-        //{
-        //    using (MailMessage mm = new MailMessage("hemalatha90cs@gmail.com", ToemailAddress))
-        //    {
-        //        mm.Subject = subject;
-        //        mm.Body = body;
-        //        mm.IsBodyHtml = true;
-        //        SmtpClient smtp = new SmtpClient();
-        //        smtp.UseDefaultCredentials = false;
-        //        smtp.Credentials = new System.Net.NetworkCredential("hemalatha90cs@gmail.com", "jxdrdboitscavysk");
-        //        smtp.Port = 587; // You can use Port 25 if 587 is blocked
-        //        smtp.Host = "smtp.gmail.com";
-        //        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-        //        smtp.EnableSsl = true;
-               
-        //            smtp.Send(mm);
-
-        //    }
-        //}
+        [HandleError]
+        private void SendEmail(string ToemailAddress, string body, string subject)
+        {
+            using (MailMessage mm = new MailMessage(ConfigurationManager.AppSettings["EmailFrom"], ToemailAddress))
+            {
+                mm.Subject = subject;
+                mm.Body = body;
+                mm.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.office365.com",587);
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials =
+                new System.Net.NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
+                smtp.Port = 587;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.EnableSsl = true;
+                smtp.Send(mm);
+            }
+        }
 
     }
 }

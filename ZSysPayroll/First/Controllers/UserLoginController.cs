@@ -181,14 +181,11 @@ namespace First.Controllers
                 smtp.UseDefaultCredentials = false;
                 smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
                 smtp.EnableSsl = true;
-                NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailUsername"], ConfigurationManager.AppSettings["EmailPassword"]);
+                NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
                 smtp.UseDefaultCredentials = true;
                 smtp.Credentials = NetworkCred;
                 smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);                              
                 smtp.Send(mm);
-
-
-
             }
         }
         [HandleError]

@@ -334,26 +334,7 @@ namespace First.Controllers
 
             List<Form80CHeader> Form80CHeaderlist = new List<Form80CHeader>();
 
-
-            string form = "select max (e.EmployeeId) as EmployeeId, max (e.Id) as Id, max (e.Name) as Name, max(isnull(y.monthyear,getdate())) as monthyear" +
-                            Environment.NewLine + ", case when Month(max(isnull(y.monthyear, getdate()))) <= 3 then Convert(varchar, Year(dateadd(year,-1,max(isnull(y.monthyear, getdate()))))) +'-' + Convert(varchar, Year(max(isnull(y.monthyear, getdate()))))" +
-                            Environment.NewLine + " else Convert(varchar, Year(max(isnull(y.monthyear, getdate())))) + '-' + Convert(varchar, Year(dateadd(year, 1, max(isnull(y.monthyear, getdate()))))) end as FinancialYear" +
-                            Environment.NewLine + ",ROW_NUMBER() OVER(ORDER BY year(isnull(y.monthyear, getdate())) desc) AS ranking" +
-                            Environment.NewLine + ", Isnull(Max(r.NewTaxProjection), 0) as NewTaxProjection ,Isnull(Max(r.OldTaxProjection), 0) as OldTaxProjection" +
-                            Environment.NewLine + ",case when Max(r.OldregimeOrNewregime) = 1 then 'New Regime'" +
-                            Environment.NewLine + " when Max(r.OldregimeOrNewregime) = 0 then 'Old Regime'" +
-                            Environment.NewLine + " else 'Regime not selected' end as OldregimeOrNewregime" +
-                            Environment.NewLine + ",Isnull(Max(r.TaxCollected), 0) as TaxCollected" +
-                            Environment.NewLine + "from EmployeeDetails e" +
-                            Environment.NewLine + "join [TaxDeclFormEntry] y on y.EmployeeId = e.Id" +
-                            Environment.NewLine + "left" +
-                            Environment.NewLine + "join [TaxDeclFormSettings] s on s.Id = y.[TaxDeclFormid]" +
-                            Environment.NewLine + "left" +
-                            Environment.NewLine + "join [TaxRegime] r on e.Id = r.Employeeid and Year(y.monthyear) = Year(r.MonthYear)" +
-                            Environment.NewLine + "where e.Id = case when " + id + " = -1 then e.Id else " + id + " end" +
-                            Environment.NewLine + " group by year(isnull(y.monthyear, getdate()))";
-
-
+            string form = "Get_Employee_Taxregime";
 
             using (SqlConnection con2 = new SqlConnection(constr))
             {
@@ -361,7 +342,8 @@ namespace First.Controllers
                 {
                     cmd2.Connection = con2;
                     con2.Open();
-
+                    cmd2.Parameters.AddWithValue("@empid", id);
+                    cmd2.CommandType = CommandType.StoredProcedure;
 
 
                     using (SqlDataReader sdr = cmd2.ExecuteReader())
@@ -380,9 +362,6 @@ namespace First.Controllers
                                 OldregimeOrNewregime = Convert.ToString(sdr["OldregimeOrNewregime"]),
                                 FinancialYear = Convert.ToString(sdr["FinancialYear"]),
                                 TaxCollected = Convert.ToDecimal(sdr["TaxCollected"])
-
-
-
                             });
                         }
                     }
@@ -1475,29 +1454,29 @@ namespace First.Controllers
         //    byte[] bPDF = null;
         //    MemoryStream ms = new MemoryStream();
         //    StringReader txtReader = new StringReader(pHTML);
-        //    Document doc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);           
+        //    Document doc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
         //    PdfWriter oPdfWriter = PdfWriter.GetInstance(doc, ms);
         //    doc.Open();
         //    XMLWorkerHelper.GetInstance().ParseXHtml(oPdfWriter, doc, txtReader);
         //    doc.Close();
         //    bPDF = ms.ToArray();
 
-        //    //mail send
-        //    //MailMessage mm = new MailMessage("itadmin@zuddhisystems.com", "hemalatha@zuddhisystems.com");
-        //    //mm.Subject = "GridView Exported PDF";
-        //    //mm.Body = "GridView Exported PDF Attachment";
-        //    //mm.Attachments.Add(new Attachment(new MemoryStream(bPDF), "PDFfile.pdf"));
-        //    //mm.IsBodyHtml = true;
-        //    //SmtpClient smtp = new SmtpClient();
-        //    //smtp.Host = "smtp.office365.com";
-        //    //smtp.EnableSsl = true;
-        //    //System.Net.NetworkCredential NetworkCred = new System.Net.NetworkCredential();
-        //    //NetworkCred.UserName = "itadmin@zuddhisystems.com";
-        //    //NetworkCred.Password = "zsys#2023#";
-        //    //smtp.UseDefaultCredentials = true;
-        //    //smtp.Credentials = NetworkCred;
-        //    //smtp.Port = 587;
-        //    //smtp.Send(mm);
+        //    using (MailMessage mm = new MailMessage(ConfigurationManager.AppSettings["EmailFrom"], "hemalatha@zuddhisystems.com"))
+        //    {
+        //        mm.Subject = "Payslip";
+        //        mm.Body = "Please Find the attachement for this month payslip";
+        //        mm.Attachments.Add(new Attachment(new MemoryStream(bPDF), "PDFfile.pdf"));
+        //        mm.IsBodyHtml = true;
+        //        SmtpClient smtp = new SmtpClient();
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
+        //        smtp.EnableSsl = true;
+        //        NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
+        //        smtp.UseDefaultCredentials = true;
+        //        smtp.Credentials = NetworkCred;
+        //        smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
+        //        smtp.Send(mm);
+        //    }           
         //    return bPDF;
         //}
 
