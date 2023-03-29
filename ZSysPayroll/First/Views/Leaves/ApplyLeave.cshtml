@@ -382,7 +382,9 @@
         window.onload = window.history.forward(0);
         checkLogin();
         daysDifference();
-
+        if ('@ViewBag.Message' == 'Sent') {
+            alert('Mail has been sent successfully');
+        }
     });
     function daysDifference() {
 

@@ -420,12 +420,12 @@
                             }
                             else
                             {
-                                <li><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
-                                <li><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
 
                             }
                             @*<li><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0, lid = 0, mode = "Apply" }, null)</i></li>*@
-                            <li><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply"><i class="fa fa-search"></i><span>Apply Leave</span></a></li>
+                            <li><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply"><i class="fa fa-file-text"></i><span>Apply Leave</span></a></li>
                         </ul>
                     </li>
 

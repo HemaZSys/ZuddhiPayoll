@@ -387,8 +387,9 @@
                         <input type="button" id="btnPrint" value="Print" class="btnRegister" style="display:none;margin:15px 0;width:60px;font-weight:bold;" />&nbsp;&nbsp;
                         @*<input type="button" id="btnPDF" value="Save as PDF" class="btnRegister" style="margin:15px 0;width:60px;font-weight:bold;display:none;" />*@
                         <input type="button" value="Save As PDF" onclick="convertHTMLtoPDF()">&nbsp;&nbsp;
-                        @*<input type="hidden" name="ExportData" />
-        <button type="submit" style="margin:10px;padding:3px 10px" class="registerbtn  float-right">@Html.ActionLink("Downloas PDF", "ExportPDF", "Employee", new { id = Session["Id"] }, null)</button>*@
+                        <input type="hidden" name="ExportData" />
+                        @*<button type="submit" id="btnSubmit1" style="margin:10px;padding:3px 10px" class="registerbtn float-right">@Html.ActionLink("send mail", "UpdatePayslipDetails", "Employee")</button>*@
+                    @*<button type="submit" id="btnSubmit1" class="registerbtn" style="margin-top: 0%;">send mail</button>*@
                     </td>
                     <td>
                         @Html.EditorFor(model => model.isSalaryStructure)
@@ -410,14 +411,14 @@
 <script src="~/Js/jquery.validate.min.js"></script>
 <script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
 
-@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $("#btnSubmit1").click(function () {
                 $("input[name='ExportData']").val($("#PrintPDF").html());
             });
         });
-    </script>*@
+    </script>
 
 <script src="~/savepdfJS/jquery/3.2.1/jquery.min.js"></script>
 <script src="~/savepdfJS/jspdf/2.5.1/jspdf.umd.min.js"></script>
