@@ -276,7 +276,8 @@
                             <b>Select the starting date of leave(s)</b>
                         </td>
                         <td style="text-align:left;">
-                            @Html.TextBoxFor(model => model.startDate, new { @class = "form-control", @type = "date", @Value = Model.startDate.ToString("yyyy-MM-dd"), id = "start_date", onchange = "daysDifference()" })
+                            @Html.TextBoxFor(model => model.startDate, new { @class = "form-control", @type = "date", @Value = Model.startDate.ToString("yyyy-MM-dd"), id = "start_date", onchange = "daysDifference()",
+                           onblur = "comparedate()" })
                         </td>
                     </tr>
                     <tr class="info">
@@ -284,7 +285,7 @@
                             <b>Select the Ending date of leave(s)</b>
                         </td>
                         <td style="text-align:left;">
-                            @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "date", @Value = Model.EndDate.ToString("yyyy-MM-dd"), id = "end_date", onchange = "daysDifference()" })
+                            @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control", @type = "date", @Value = Model.EndDate.ToString("yyyy-MM-dd"), id = "end_date", onchange = "daysDifference()", onblur = "comparedate()" })
                         </td>
                     </tr>
                     <tr class="info">
@@ -381,11 +382,22 @@
         checkLogin();
         window.onload = window.history.forward(0);
         checkLogin();
-        daysDifference();
+        comparedate();
+        daysDifference();        
         if ('@ViewBag.Message' == 'Sent') {
-            alert('Mail has been sent successfully');
+            alert('Apply Leave Mail has been sent successfully');
         }
     });
+
+    function comparedate() {        
+        var fromdate = document.getElementById("start_date").value;
+        var todate = document.getElementById("end_date").value;        
+        if (fromdate > todate) {
+            alert("Start date should be less than end date");
+            return false;
+        }
+    }
+
     function daysDifference() {
 
         var start_date = new Date(document.getElementById('start_date').value);
@@ -400,7 +412,10 @@
         var days_difference = time_difference / (1000 * 3600 * 24);
         //alert(days);
         days_difference = days_difference + 1;
-        document.getElementById('days').value = days_difference;
+        if (document.getElementById('days').value == 0) {
+            document.getElementById('days').value = days_difference;
+        }
+        
     }
 
 

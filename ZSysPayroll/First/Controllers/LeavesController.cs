@@ -28,16 +28,16 @@ namespace First.Controllers
         }
         [HandleError]
         [HttpGet]
-        public ActionResult LeaveList(string mode)
+        public ActionResult LeaveList(int id, string mode)
         {
-            ViewBag.LeaveList = GetLeaveList("0", mode);
+            ViewBag.LeaveList = GetLeaveList(id, mode);
             return View(ViewBag.LeaveList);
         }
 
         [HandleError]
-        public LeaveDetailsHeader GetLeaveList(string strApprove, string mode)
+        public LeaveDetailsHeader GetLeaveList(int id, string mode)
         {
-            string EmpID = Convert.ToString(Session["Id"]);
+            //string EmpID = Convert.ToString(Session["Id"]);
             var spName = "";
             LeaveDetailsHeader leaveDetailsHeader = new LeaveDetailsHeader();
             List<EmployeeLeave> oListEmployeeLeave = new List<EmployeeLeave>();
@@ -56,7 +56,7 @@ namespace First.Controllers
                 {
                     cmd.Connection = con;
                     con.Open();
-                    cmd.Parameters.AddWithValue("@employeeid", EmpID);
+                    cmd.Parameters.AddWithValue("@employeeid", id);
                     cmd.CommandType = CommandType.StoredProcedure;
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
@@ -499,6 +499,8 @@ namespace First.Controllers
             {
                 var getFromMail = (from s in context.Enrollments where s.Email == FromEmail select s).FirstOrDefault();
                 var getToMail = (from s in context.Enrollments where s.Email == ToEmail select s).FirstOrDefault();
+                //string resetURL = "https://localhost:44360/UserLogin/Index";
+                string resetURL = "http://122.165.55.128/payroll/UserLogin/Index";
                 if (getFromMail != null)
                 {                   
 
@@ -508,7 +510,7 @@ namespace First.Controllers
                     var subject = "Leave Approve Request";                  
 
                     var body = "Hi <b>" + getToMail.FirstName
-                        + "<br/>You Have Leave Request From Your Team Memeber.<br/>Please Check in Your Payroll Login Aprroval List<br/><br/> Thank you<br/><b>System Admin</b>.";
+                        + "<br/>You Have Leave Request From Your Team Memeber<br/> '" + FromEmail + "'.<br/>Please Check in Your Payroll Login Aprroval List<br/><a href='" + resetURL + "'>" + resetURL + "</a> <br/><br/> Thank you<br/><b>System Admin</b>.";
 
                     SendEmail(getToMail.Email, body, subject);
 
@@ -529,6 +531,9 @@ namespace First.Controllers
                 mm.Subject = subject;
                 mm.Body = body;
                 mm.IsBodyHtml = true;
+                // Add a carbon copy recipient.
+                mm.CC.Add("hemalatha90cs@gmail.com");
+               // mm.CC.Add("saravanan@zuddhisystems.com");
                 SmtpClient smtp = new SmtpClient("smtp.office365.com",587);
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials =

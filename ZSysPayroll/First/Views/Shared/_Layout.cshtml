@@ -470,15 +470,20 @@
                             </span>
 
                         </a>
-                        <ul class="treeview-menu">                            
-                            @*<li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = Session["Id"] }, null)</i></li>*@
-                            @*<li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Leave List", "LeaveList", "Leaves", new { id = Session["Id"] }, null)</i></li>*@
-                            <li>
+                        <ul class="treeview-menu">                           
+                            @*<li>
                                 <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
-                            </li>
-                            <li>
-                                <a href="~/Leaves/LeaveList?mode=ApproveList"><i class="fa fa-search"><span>&nbsp;&nbsp; Approve Leave List</span></i></a>
-                            </li>
+                            </li>*@
+                            @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
+                            {
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApplyList" }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApproveList" }, null)</i></li>
+                            }
+                            else
+                            {
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApplyList" }, null)</i></li>
+                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApproveList" }, null)</i></li>
+                            }
                         </ul>
                     </li>
 

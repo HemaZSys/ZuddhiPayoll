@@ -372,55 +372,16 @@ namespace First.Controllers
 
 
 
-            Employee emp = new Employee();
-            string query = "SELECT e.Id,[Name],[Designation]," +
-            Environment.NewLine + "desg.description as DesignationName," +
-            Environment.NewLine + "[EmployeeId]," +
-            Environment.NewLine + "[DateofJoin]," +
-            Environment.NewLine + "[DateofRelieving]," +
-            Environment.NewLine + "[DateofConfirmation]," +
-            Environment.NewLine + " isnull([Gender],'') as [Gender],[Qualification]," +
-            Environment.NewLine + "edu.description as QualificationName," +
-            Environment.NewLine + "[Address],[Contact],[PAN],[PFAccountNo],[Aadhar],[Passport],[DOB],grad.[description] as Grade, " +
-            Environment.NewLine + "[Grosspay],[Age], isnull([PId],'') as [PId], [Created],[modified], isnull([Email],'') as [Email], " +
-            Environment.NewLine + " isnull([LName],'') as [LName], " +
-            Environment.NewLine + " isnull([Alternativeno],'') as [Alternativeno], " +
-            Environment.NewLine + " isnull([offcEmail],'') as [offcEmail], " +
-            Environment.NewLine + " isnull([PermanentAddress],'') as [PermanentAddress], " +
-            Environment.NewLine + "[Department], " +
-            Environment.NewLine + "dept.description as DepartmentName," +
-            Environment.NewLine + " isnull(empst.[description],'') as [Empstatus]," +
-            Environment.NewLine + " isnull(loc.[description],'') as [Location]," +
-            Environment.NewLine + " isnull([Reportingmanager],'') as [Reportingmanager], " +
-            Environment.NewLine + " isnull([Precompanyname],'') as [Precompanyname], " +
-            Environment.NewLine + " isnull([Predesignation],'') as [Predesignation], " +
-            Environment.NewLine + " isnull([Preexperience],'') as [Preexperience]," +
-            Environment.NewLine + " isnull([Bankname],'') as [Bankname], " +
-            Environment.NewLine + " isnull([Bankacno],'') as [Bankacno], " +
-            Environment.NewLine + " isnull([Bankbranch],'') as [Bankbranch], " +
-            Environment.NewLine + " isnull([Bankifsc],'') as [Bankifsc]," +
-            Environment.NewLine + " isnull([Maritalstatus],'') as [Maritalstatus]," +
-            Environment.NewLine + " isnull([Availability],'') as [Availability], " +
-            Environment.NewLine + "[Bloodgroup]," +
-            Environment.NewLine + "blood.description as BloodgroupName," +
-            Environment.NewLine + "cnm.description as CompanyName" +
-            Environment.NewLine + "FROM EmployeeDetails e" +
-            Environment.NewLine + "left join [Empalldropdown] desg on e.Designation = desg.Id" +
-            Environment.NewLine + "left join [Empalldropdown] blood on e.Bloodgroup = blood.Id" +
-            Environment.NewLine + "left join [Empalldropdown] edu on e.Qualification = edu.Id" +
-            Environment.NewLine + "left join [Empalldropdown] dept on e.Department = dept.Id" +
-            Environment.NewLine + "left join [Empalldropdown] grad on e.Grade = grad.Id" +
-            Environment.NewLine + "left join [Empalldropdown] empst on e.Empstatus = empst.Id" +
-            Environment.NewLine + "left join [Empalldropdown] loc on e.Location = loc.Id" +
-            Environment.NewLine + "left join [Empalldropdown] cnm on e.CompanyName = cnm.Id" +
-            Environment.NewLine + "where e.Id = @id";
+            Employee emp = new Employee();            
+            string query = "Get_Individual_Employee_Detail";
             using (SqlConnection con = new SqlConnection(constr))
             {
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@empid", id);
                     cmd.Connection = con;
                     con.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
                     using (SqlDataReader sdr = cmd.ExecuteReader())
                     {
                         while (sdr.Read())
@@ -1255,7 +1216,7 @@ namespace First.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader, string ExportData)
+        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader)
         {
             //ExportHTML(ExportData);
             //if (ModelState.IsValid)

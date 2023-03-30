@@ -227,7 +227,7 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div>
         <div class="card card-layout">
             <div id="EmployeeDetail" class="card-layout1">
                 <div class="heading">Employee Details</div>
@@ -424,20 +424,26 @@
                                 <td style="text-align:center;">
                                     @Html.ActionLink(" ", "UpdatePayslipDetails", new { id = item.EmpId, month = item.MonthYear, view = 2 }, new { @class = "glyphicon glyphicon-eye-open" })
                                 </td>
-                                <td class="clsAdmin" style="text-align:center;">
-                                    @if (item.Ranking == 1)
-                                {
+                                <td style="text-align:center;">
                                     @Html.ActionLink(" ", "UpdatePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-pencil" })
-
-                                }
                                 </td>
-                                <td class="clsAdmin" style="text-align:center;">
-                                    @if (item.Ranking == 1)
-                                {
-
+                                <td style="text-align:center;">
                                     @Html.ActionLink(" ", "DeletePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-trash" })
-                                }
                                 </td>
+                                @*<td class="clsAdmin1" style="text-align:center;">
+            @if (item.Ranking == 1)
+        {
+            @Html.ActionLink(" ", "UpdatePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-pencil" })
+
+        }
+        </td>
+        <td class="clsAdmin1" style="text-align:center;">
+            @if (item.Ranking == 1)
+        {
+
+            @Html.ActionLink(" ", "DeletePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-trash" })
+        }
+        </td>*@
                             </tr>
                             }
                         }
