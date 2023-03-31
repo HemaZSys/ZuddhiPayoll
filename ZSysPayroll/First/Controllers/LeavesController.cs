@@ -37,7 +37,7 @@ namespace First.Controllers
         [HandleError]
         public LeaveDetailsHeader GetLeaveList(int id, string mode)
         {
-            //string EmpID = Convert.ToString(Session["Id"]);
+            //string EmpID = Convert.ToString(Session["Id"]);            
             var spName = "";
             LeaveDetailsHeader leaveDetailsHeader = new LeaveDetailsHeader();
             List<EmployeeLeave> oListEmployeeLeave = new List<EmployeeLeave>();
@@ -55,7 +55,7 @@ namespace First.Controllers
                 using (SqlCommand cmd = new SqlCommand(spName))
                 {
                     cmd.Connection = con;
-                    con.Open();
+                    con.Open();                    
                     cmd.Parameters.AddWithValue("@employeeid", id);
                     cmd.CommandType = CommandType.StoredProcedure;
                     using (SqlDataReader sdr = cmd.ExecuteReader())
@@ -104,7 +104,7 @@ namespace First.Controllers
         public ActionResult ApplyLeave(int id, int lid, string mode)
         {
             RefreshLeaveReport(id);
-            EmployeeLeave oEmployeeLeave = new EmployeeLeave();
+            EmployeeLeave oEmployeeLeave = new EmployeeLeave();            
             var spName = "";
             string EmpID = Convert.ToString(Session["Id"]);
             string AccessType = Convert.ToString(Session["AccessType"]);
@@ -122,7 +122,7 @@ namespace First.Controllers
                 using (SqlCommand cmd2 = new SqlCommand(spName))
                 {
                     cmd2.CommandType = CommandType.StoredProcedure;
-                    cmd2.Connection = con2;
+                    cmd2.Connection = con2;                   
                     if (mode == "Apply")
                     {
                         cmd2.Parameters.AddWithValue("@id", EmpID);
@@ -131,9 +131,19 @@ namespace First.Controllers
                     }
                     else if (mode == "Approve")
                     {
-                        cmd2.Parameters.AddWithValue("@id", id);
-                        cmd2.Parameters.AddWithValue("@rid", EmpID);
-                        cmd2.Parameters.AddWithValue("@lid", lid);
+                        if (AccessType != null && AccessType != "User")
+                        {
+                            cmd2.Parameters.AddWithValue("@id", id);
+                            cmd2.Parameters.AddWithValue("@rid", -2);
+                            cmd2.Parameters.AddWithValue("@lid", lid);
+                        }
+                        else
+                        {
+                            cmd2.Parameters.AddWithValue("@id", id);
+                            cmd2.Parameters.AddWithValue("@rid", EmpID);
+                            cmd2.Parameters.AddWithValue("@lid", lid);
+                        }
+                        
                     }
                                       
                     con2.Open();
@@ -166,7 +176,11 @@ namespace First.Controllers
                     con2.Close();
                 }
             }
-
+           
+            if (AccessType != null && AccessType != "User")
+            {
+                EmpID = Convert.ToString(-2);
+            }
 
             if (string.IsNullOrEmpty(oEmployeeLeave.ApproveAction))
             {
@@ -174,7 +188,7 @@ namespace First.Controllers
             }
             if (oEmployeeLeave.ApproveAction == "Approved" || oEmployeeLeave.ApproveAction == "Rejected")
             {
-                return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
+                return RedirectToAction("LeaveList", "Leaves", new {id= EmpID, mode = "ApplyList" });
             }
             ViewBag.Leaveslist = GetLookup("LeaveType");
             ViewBag.AllEmployeeList = GetAllEmployeeList();
@@ -188,9 +202,11 @@ namespace First.Controllers
         {
             SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
             RefreshLeaveReport(oEmployeeLeave.EmpId);
+            string EmpID = Convert.ToString(Session["Id"]);
+            string AccessType = Convert.ToString(Session["AccessType"]);
             if (Request.HttpMethod == "POST")
             {
-                string EmpID = Convert.ToString(Session["Id"]);
+                
                 using (SqlConnection con = new SqlConnection(constr))
                 {
                     using (SqlCommand cmd = new SqlCommand("sp_EmployeeLeaves_create", con))
@@ -225,8 +241,12 @@ namespace First.Controllers
                         con.Close();
                     }
                 }
-            }         
-            return RedirectToAction("LeaveList", "Leaves", new { mode = "ApplyList" });
+            }
+            if (AccessType != null && AccessType != "User")
+            {
+                EmpID = Convert.ToString(-2);
+            }
+            return RedirectToAction("LeaveList", "Leaves", new { id = EmpID, mode = "ApplyList" });
         }
 
 

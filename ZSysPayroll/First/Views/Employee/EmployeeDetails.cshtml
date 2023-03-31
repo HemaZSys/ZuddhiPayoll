@@ -424,10 +424,12 @@
                                 <td style="text-align:center;">
                                     @Html.ActionLink(" ", "UpdatePayslipDetails", new { id = item.EmpId, month = item.MonthYear, view = 2 }, new { @class = "glyphicon glyphicon-eye-open" })
                                 </td>
-                                <td style="text-align:center;">
+                                <td class="clsAdmin" style="text-align:center;">
+
                                     @Html.ActionLink(" ", "UpdatePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-pencil" })
+
                                 </td>
-                                <td style="text-align:center;">
+                                <td class="clsAdmin" style="text-align:center;">
                                     @Html.ActionLink(" ", "DeletePayslipDetails", "Employee", new { id = item.EmpId, month = item.MonthYear }, new { @class = "glyphicon glyphicon-trash" })
                                 </td>
                                 @*<td class="clsAdmin1" style="text-align:center;">
@@ -445,8 +447,8 @@
         }
         </td>*@
                             </tr>
+                                }
                             }
-                        }
                         </tbody>
                     </table>
                 </div>
