@@ -176,6 +176,7 @@ namespace First.Controllers
                     con2.Close();
                 }
             }
+            oEmployeeLeave.mode = mode;
            
             if (AccessType != null && AccessType != "User")
             {
@@ -200,7 +201,11 @@ namespace First.Controllers
         [HttpPost]
         public ActionResult ApplyLeave(EmployeeLeave oEmployeeLeave)
         {
-            SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
+            if (oEmployeeLeave.mode == "Apply")
+            {
+                SendEmailNotification(oEmployeeLeave.UserEmailId, oEmployeeLeave.ReportingMgrEmailID);
+            }
+            
             RefreshLeaveReport(oEmployeeLeave.EmpId);
             string EmpID = Convert.ToString(Session["Id"]);
             string AccessType = Convert.ToString(Session["AccessType"]);
@@ -553,7 +558,7 @@ namespace First.Controllers
                 mm.IsBodyHtml = true;
                 // Add a carbon copy recipient.
                 mm.CC.Add("hemalatha90cs@gmail.com");
-               // mm.CC.Add("saravanan@zuddhisystems.com");
+               //mm.CC.Add("saravanan@zuddhisystems.com");
                 SmtpClient smtp = new SmtpClient("smtp.office365.com",587);
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials =

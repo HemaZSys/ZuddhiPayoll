@@ -68,5 +68,6 @@ namespace First.Models
         public int ReportingmanagerId { get; set; }
         public int CasualLeaveBalance { get; set; }
         public int SickLeaveBalance { get; set; }
+        public string mode { get; set; }
     }
 }
