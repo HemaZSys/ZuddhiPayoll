@@ -216,16 +216,22 @@
                                         @Html.DisplayFor(modelItem => Model.EmployeeLeaveList[i].ApproveAction)
                                     </td>
                                 }
-                                
-                                    @if (Model.EmployeeLeaveList[i].ReportingmanagerId == Model.EmployeeLeaveList[i].sessionId)
-                                    {
-                                        <td>@Html.ActionLink("Approve/Reject", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].EmpId, lid = Model.EmployeeLeaveList[i].Id, mode = "Approve" }, new { @class = "btn btn-success" })</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@Html.ActionLink("Edit", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].sessionId, lid = Model.EmployeeLeaveList[i].Id, mode = "Apply" }, new { @class = "btn btn-success" })</td>
-                                    }
-                                
+
+                                @if (Model.EmployeeLeaveList[i].ReportingmanagerId == Model.EmployeeLeaveList[i].sessionId)
+                                {
+                            <td>
+                                @Html.ActionLink("Approve/Reject", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].EmpId, lid = Model.EmployeeLeaveList[i].Id, mode = "Approve" }, new { @class = "btn btn-success" })                                
+                            </td>
+                                    
+                                }
+                                else
+                                {
+                            <td>
+                                @Html.ActionLink("Edit", "ApplyLeave", "Leaves", new { id = Model.EmployeeLeaveList[i].sessionId, lid = Model.EmployeeLeaveList[i].Id, mode = "Apply" }, new { @class = "btn btn-success" })                                
+                            </td>
+                                   
+                                }
+
                             </tr>
 
                                 }
@@ -244,8 +250,7 @@
     //    return false;
     //}
     $(document).ready(function () {
-        hideOrShow();
-
+        hideOrShow();        
     });
 
     function hideOrShow() {

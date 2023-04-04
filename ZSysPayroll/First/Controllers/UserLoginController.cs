@@ -66,7 +66,30 @@ namespace First.Controllers
             //{
             //string SqlQuery = "select Email,Password,AccessType from Enrollment where Email=@Email and Password=@Password";
 
-            string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
+            //Attendance
+            string query = "select max(a.LogIn) as LastLoginTime from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and CONVERT(DATE, a.LogIn) = CONVERT(DATE, GETDATE()) group by e.Name,a.EmployeeId";
+            using (SqlConnection con1 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd1 = new SqlCommand(query))
+                {
+                    cmd1.Parameters.AddWithValue("@Email", e.Email);
+                    cmd1.Parameters.AddWithValue("@Password", encryptedpassword);
+                    cmd1.Connection = con1;
+                    con1.Open();
+                    using (SqlDataReader sdr1 = cmd1.ExecuteReader())
+                    {
+
+                        while (sdr1.Read())
+                        {
+                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToString("yyyy/MM/dd hh:mm:ss");
+                            //Session["LastLoginTime"] = Convert.ToString(sdr1["LogIn"] == DBNull.Value ? DateTime.Now : sdr1["LogIn"]);
+                        }
+                    }
+                    con1.Close();
+                }
+            }
+
+                string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
 
             con.Open();
             SqlCommand cmd = new SqlCommand(SqlQuery, con);            
