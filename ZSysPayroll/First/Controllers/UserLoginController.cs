@@ -55,25 +55,23 @@ namespace First.Controllers
         [HandleError]
         [HttpPost]
         public ActionResult Index(Enroll e)
-        {
-            //string status;
+        {            
+            Session["EnrollData"] = e;
             Session["Email"] = "";
             Session["AccessType"] = "";
             string encryptedpassword = EncryptPassword(e.Password);
             String SqlCon = ConfigurationManager.ConnectionStrings["ConnDB"].ConnectionString;
-            SqlConnection con = new SqlConnection(SqlCon);
-            //if (ModelState.IsValid)
-            //{
-            //string SqlQuery = "select Email,Password,AccessType from Enrollment where Email=@Email and Password=@Password";
+            SqlConnection con = new SqlConnection(SqlCon);          
 
             //Attendance
-            string query = "select max(a.LogIn) as LastLoginTime from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and CONVERT(DATE, a.LogIn) = CONVERT(DATE, GETDATE()) group by e.Name,a.EmployeeId";
+            string query = "select max(a.LogIn) as LastLoginTime,max(a.Logout) as LastLogoutTime from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and CONVERT(DATE, a.LogIn) = CONVERT(DATE, GETDATE()) group by e.Name,a.EmployeeId";
             using (SqlConnection con1 = new SqlConnection(constr))
             {
                 using (SqlCommand cmd1 = new SqlCommand(query))
                 {
                     cmd1.Parameters.AddWithValue("@Email", e.Email);
                     cmd1.Parameters.AddWithValue("@Password", encryptedpassword);
+
                     cmd1.Connection = con1;
                     con1.Open();
                     using (SqlDataReader sdr1 = cmd1.ExecuteReader())
@@ -81,13 +79,14 @@ namespace First.Controllers
 
                         while (sdr1.Read())
                         {
-                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToString("yyyy/MM/dd hh:mm:ss");
-                            //Session["LastLoginTime"] = Convert.ToString(sdr1["LogIn"] == DBNull.Value ? DateTime.Now : sdr1["LogIn"]);
+                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();
+                            Session["LastLogoutTime"] = sdr1["LastLogoutTime"] == DBNull.Value ? "" : Convert.ToDateTime(sdr1["LastLogoutTime"]).ToShortTimeString();
                         }
                     }
                     con1.Close();
                 }
             }
+            
 
                 string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
 
@@ -100,8 +99,14 @@ namespace First.Controllers
             if (sdr.Read())
             {
                 Session["Email"] = e.Email.ToString();
+                Session["Password"] = encryptedpassword;
                 Session["Id"] = Convert.ToString(sdr["Id"]);
-                Session["AccessType"] = Convert.ToString(sdr["AccessType"]);
+                string AccessType = Convert.ToString(sdr["AccessType"]);
+                if (string.IsNullOrEmpty(AccessType.Trim()))
+                {
+                    AccessType = "User";
+                }
+                Session["AccessType"] = AccessType;
 
                 if(Convert.ToString(Session["AccessType"]).ToUpper() == "ADMIN")
                 { 
@@ -290,5 +295,34 @@ namespace First.Controllers
 
         }
 
+
+        public string StatusRefresh(string sessionemail, string sessionpassword)
+        {
+            string query = "select max(a.LogIn) as LastLoginTime,max(a.Logout) as LastLogoutTime from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and CONVERT(DATE, a.LogIn) = CONVERT(DATE, GETDATE()) group by e.Name,a.EmployeeId";
+            using (SqlConnection con1 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd1 = new SqlCommand(query))
+                {
+                    if (sessionemail != null & sessionpassword != null)
+                    {
+                        cmd1.Parameters.AddWithValue("@Email", sessionemail);
+                        cmd1.Parameters.AddWithValue("@Password", sessionpassword);
+                    }                    
+                    cmd1.Connection = con1;
+                    con1.Open();
+                    using (SqlDataReader sdr1 = cmd1.ExecuteReader())
+                    {
+
+                        while (sdr1.Read())
+                        {
+                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();
+                            Session["LastLogoutTime"] = sdr1["LastLogoutTime"] == DBNull.Value ? "" : Convert.ToDateTime(sdr1["LastLogoutTime"]).ToShortTimeString();
+                        }
+                    }
+                    con1.Close();
+                }
+            }
+            return "success";
+        }
     }
 }

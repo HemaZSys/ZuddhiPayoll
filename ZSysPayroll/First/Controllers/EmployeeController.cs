@@ -469,15 +469,40 @@ namespace First.Controllers
                 //Employee emp = new Employee();
                 AppEntities1 db = new AppEntities1();
                 //sort the employee and get the last insert employee.
-                var lastemployee = db.Emps.OrderByDescending(c => c.EmployeeId).FirstOrDefault();
-                if (lastemployee == null)
+                //var lastemployee = db.Emps.OrderByDescending(c => c.EmployeeId).FirstOrDefault();
+                //var lastemployee = db.Emps.OrderByDescending(w => !w.EmployeeId.Contains("ZSPL")).FirstOrDefault();
+                var query1 =  "select top 1 EmployeeId from [dbo].[EmployeeDetails] where EmployeeId not like '%PL%' order by EmployeeId desc";
+                using (SqlConnection con = new SqlConnection(constr))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query1))
+                    {
+                        cmd.Connection = con;
+                        con.Open();
+                        using (SqlDataReader sdr = cmd.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                emp = new Employee
+                                {                                    
+                                    EmployeeId = Convert.ToString(sdr["EmployeeId"] )
+
+                                };
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+                if (emp.EmployeeId == null)
                 {
                     emp.EmployeeId = "ZS001";
                 }
                 else
                 {
                     //using string substring method to get the number of the last inserted employee's EmployeeID 
-                    emp.EmployeeId = "ZS" + (Convert.ToInt32(lastemployee.EmployeeId.Substring(2, lastemployee.EmployeeId.Length - 2)) + 1).ToString("D3");
+                    //emp.EmployeeId = "ZS" + (Convert.ToInt32(lastemployee.EmployeeId.Substring(2, lastemployee.EmployeeId.Length - 2)) + 1).ToString("D3");
+                    //emp.EmployeeId = "ZS" + (Convert.ToInt32(lastemployee.Substring(2, lastemployee.Length - 2)) + 1).ToString("D3");           
+                    emp.EmployeeId = "ZS" + (Convert.ToInt32(emp.EmployeeId.Substring(2, emp.EmployeeId.Length - 2)) + 1).ToString("D3");
+
                 }
                 emp.DateofConfirmation = DateTime.Now;
                 emp.DateofJoin = DateTime.Now;
@@ -1216,7 +1241,7 @@ namespace First.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader)
+        public ActionResult UpdatePayslipDetails(PayslipGradeHeader payslipGradeHeader, string ExportData)
         {
             //ExportHTML(ExportData);
             //if (ModelState.IsValid)
@@ -1363,12 +1388,11 @@ namespace First.Controllers
 
         }
         public string SaveLogout(string logintime, string logouttime,string comment, string EmployeeId, string workingstatus)
-        {
+        {            
             if (EmployeeId == null)
             {
                 return "";
-            }
-            
+            }            
             string query = "sp_Attendance_createupdate";
             using (SqlConnection con = new SqlConnection(constr))
             {
@@ -1376,15 +1400,15 @@ namespace First.Controllers
                 {
                     cmd.Connection = con;
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Clear();
+                    cmd.Parameters.Clear();                    
                     cmd.Parameters.AddWithValue("@ID", 0);
-                    cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                    cmd.Parameters.AddWithValue("@LogIn", Convert.ToDateTime(logintime));
-                    cmd.Parameters.AddWithValue("@LogOut", Convert.ToDateTime(logouttime));
+                    cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);                    
+                    cmd.Parameters.AddWithValue("@LogIn", logintime == "" ? DateTime.Now : Convert.ToDateTime(logintime));
+                    cmd.Parameters.AddWithValue("@LogOut", logouttime ==  "" ? Convert.ToDateTime("1900-01-01 00:00:00.000") : Convert.ToDateTime(logouttime));
                     cmd.Parameters.AddWithValue("@Comments", comment);
                     cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
                     cmd.Parameters.AddWithValue("@CreatedBy",Convert.ToInt32(Session["id"]));
-                    cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus);
+                    cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus ==  null ? "" : workingstatus);
                     con.Open();
                     string result = Convert.ToString(cmd.ExecuteScalar());
                     con.Close();
@@ -1395,20 +1419,35 @@ namespace First.Controllers
 
         //public void ExportHTML(string ExportData)
         //{
-        //    HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
-        //    HtmlNode.ElementsFlags["input"] = HtmlElementFlag.Closed;
-        //    HtmlDocument doc = new HtmlDocument();
-        //    doc.OptionFixNestedTags = true;
-        //    doc.LoadHtml(ExportData);
-        //    ExportData = doc.DocumentNode.OuterHtml;
-        //    string HTMLContent = ExportData;
-        //    Response.Clear();
-        //    Response.ContentType = "application/pdf";
-        //    Response.AddHeader("content-disposition", "attachment;filename=" + "PDFfile.pdf");
-        //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        //    Response.BinaryWrite(GetPDF(HTMLContent));
-        //    Response.End();
-
+        //    //HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
+        //    //HtmlNode.ElementsFlags["input"] = HtmlElementFlag.Closed;
+        //    //HtmlDocument doc = new HtmlDocument();
+        //    //doc.OptionFixNestedTags = true;
+        //    //doc.LoadHtml(ExportData);
+        //    //ExportData = doc.DocumentNode.OuterHtml;
+        //    //string HTMLContent = ExportData;
+        //    //Response.Clear();
+        //    //Response.ContentType = "application/pdf";
+        //    //Response.AddHeader("content-disposition", "attachment;filename=" + "PDFfile.pdf");
+        //    //Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        //    //Response.BinaryWrite(GetPDF(HTMLContent));
+        //    //Response.End();
+        //    using (MailMessage mm = new MailMessage(ConfigurationManager.AppSettings["EmailFrom"], "hemalatha@zuddhisystems.com"))
+        //    {
+        //        mm.Subject = "Payslip";
+        //        mm.Body = "Please Find the attachement for this month payslip";
+        //        mm.Attachments.Add(new Attachment(new MemoryStream(Convert.ToInt32(ExportData)), "PDFfile.pdf"));
+        //        mm.IsBodyHtml = true;
+        //        SmtpClient smtp = new SmtpClient();
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
+        //        smtp.EnableSsl = true;
+        //        NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
+        //        smtp.UseDefaultCredentials = true;
+        //        smtp.Credentials = NetworkCred;
+        //        smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
+        //        smtp.Send(mm);
+        //    }
         //}
         //public byte[] GetPDF(string pHTML)
         //{
@@ -1437,7 +1476,7 @@ namespace First.Controllers
         //        smtp.Credentials = NetworkCred;
         //        smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
         //        smtp.Send(mm);
-        //    }           
+        //    }
         //    return bPDF;
         //}
 

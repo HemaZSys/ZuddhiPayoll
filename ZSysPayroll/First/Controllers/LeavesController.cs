@@ -557,8 +557,8 @@ namespace First.Controllers
                 mm.Body = body;
                 mm.IsBodyHtml = true;
                 // Add a carbon copy recipient.
-                mm.CC.Add("hemalatha90cs@gmail.com");
-               //mm.CC.Add("saravanan@zuddhisystems.com");
+               // mm.CC.Add("hemalatha90cs@gmail.com");
+               mm.CC.Add("saravanan@zuddhisystems.com");
                 SmtpClient smtp = new SmtpClient("smtp.office365.com",587);
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials =
