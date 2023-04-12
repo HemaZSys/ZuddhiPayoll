@@ -2452,6 +2452,161 @@ namespace First.Controllers
             return View(form80CHeader);
         }
 
+
+        //GET: Tax Declaration Calculation 2023 New Regime
+        [HandleError]
+        [HttpGet]
+        public ActionResult ITCalcDeclaration2023(int? id)
+        {
+
+            if (Convert.ToInt32(Session["Id"]) != id && Convert.ToString(Session["AccessType"]).ToUpper() != "ADMIN")
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            Form80CHeader form80CHeader = new Form80CHeader();            
+            if (id == null)
+                id = 1;
+
+            using (AppEntities1 db = new AppEntities1())
+            {
+                List<Emp> employees = db.Emps.Where(s => s.Availability == "Active").ToList();
+                List<Setting> Settings = db.Settings.ToList();
+
+
+                if (employees != null)
+                {
+                    ViewBag.employees = employees;
+                }
+
+                if (Settings != null)
+                {
+                    ViewBag.Settings = Settings;
+                }
+            }
+
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand("sp_itcalc_getEmployee"))
+                {
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@empid", id);
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            form80CHeader.Empid = Convert.ToInt32(sdr["Id"]);
+                            form80CHeader.Employeeid = Convert.ToString(sdr["Employeeid"]);
+                            form80CHeader.EmployeeName = Convert.ToString(sdr["Name"]);
+                            form80CHeader.DateofJoin = Convert.ToDateTime(sdr["DateofJoin"]);
+                            form80CHeader.Gender = Convert.ToString(sdr["Gender"]);
+                            form80CHeader.DOB = Convert.ToDateTime(sdr["DOB"]);
+                            form80CHeader.PAN = Convert.ToString(sdr["PAN"]);
+                            form80CHeader.Address = Convert.ToString(sdr["Address"]);
+                            form80CHeader.Bankname = Convert.ToString(sdr["Bankname"]);
+                            form80CHeader.Bankacno = Convert.ToString(sdr["Bankacno"]);
+                            form80CHeader.PFAccountNo = Convert.ToString(sdr["PFAccountNo"]);
+                            form80CHeader.Designation = Convert.ToString(sdr["Designation"]);
+                            form80CHeader.DesignationName = Convert.ToString(sdr["DesignationName"]);
+                            form80CHeader.DepartmentName = Convert.ToString(sdr["DepartmentName"]);
+                            form80CHeader.GradeName = Convert.ToString(sdr["GradeName"]);
+                        }
+                    }
+                    con.Close();
+                }
+
+            }
+
+            PayslipGradeHeader payslipGradeHeader = new PayslipGradeHeader();
+            payslipGradeHeader.PayslipGradeEntryList = new List<PayslipGradeEntry>();
+
+            //ITCALCULATION
+            TaxCalculation taxCalculation = new TaxCalculation();
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand("Get_TaxCalculations_Declaredamt_2023"))
+                {
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@empid", id);
+                    cmd.Parameters.AddWithValue("@year", DateTime.Now);
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            taxCalculation.HRADeductions = Convert.ToDecimal(sdr["LowestofHRArent"]);
+                            taxCalculation.OtherDeductions = Convert.ToDecimal(sdr["deductionform80"]);
+                            taxCalculation.standardDedusctions = Convert.ToDecimal(sdr["standarddeductions"]);
+                            taxCalculation.earningpayslip = Convert.ToDecimal(sdr["earningpayslip"]);
+                            taxCalculation.deductionpayslip = Convert.ToDecimal(sdr["deductionpayslip"]);
+                            taxCalculation.earningform80 = Convert.ToDecimal(sdr["earningform80"]);
+                            taxCalculation.deductionform80 = Convert.ToDecimal(sdr["totaldeductionform80"]);
+                            taxCalculation.Oldtaxableamount = Convert.ToDecimal(sdr["Oldtaxableamount"]);
+                            taxCalculation.taxableAmount = Convert.ToDecimal(sdr["taxableAmount"]);
+                            taxCalculation.TotalTax = Convert.ToDecimal(sdr["TotalTax"]);
+                            taxCalculation.Educationcess = Convert.ToDecimal(sdr["Educationcess"]);
+                            taxCalculation.TaxOutGo = Convert.ToDecimal(sdr["TaxOutGo"]);                            
+                            taxCalculation.Taxone = Convert.ToDecimal(sdr["Taxone"]);
+                            taxCalculation.Taxtwo = Convert.ToDecimal(sdr["Taxtwo"]);
+                            taxCalculation.Taxthree = Convert.ToDecimal(sdr["Taxthree"]);
+                            taxCalculation.Taxfour = Convert.ToDecimal(sdr["Taxfour"]);
+                            taxCalculation.Taxfive = Convert.ToDecimal(sdr["Taxfive"]);
+                           taxCalculation.Taxsix = Convert.ToDecimal(sdr["Taxsix"]);
+                            taxCalculation.OldTaxone = Convert.ToDecimal(sdr["OldTaxone"]);
+                            taxCalculation.OldTaxtwo = Convert.ToDecimal(sdr["OldTaxtwo"]);
+                            taxCalculation.OldTaxthree = Convert.ToDecimal(sdr["OldTaxthree"]);
+                            taxCalculation.OldTaxfour = Convert.ToDecimal(sdr["OldTaxfour"]);
+                            taxCalculation.OldTotalTax = Convert.ToDecimal(sdr["OldTotalTax"]);
+                            taxCalculation.OldEducationcess = Convert.ToDecimal(sdr["OldEducationcess"]);
+                            taxCalculation.OldTaxOutGo = Convert.ToDecimal(sdr["OldTaxOutGo"]);
+                        }
+                    }
+                    con.Close();
+                }
+
+            }
+            ViewBag.taxcalculations = taxCalculation;            
+
+            List<PayslipGradeHeader> payslipGradeHeaderList = new List<PayslipGradeHeader>();
+
+            string payslip = "sp_paysilp_getbyempid1";
+
+            using (SqlConnection con2 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand(payslip))
+                {
+
+                    ReportRow oReportRow = new ReportRow();
+                    cmd2.Connection = con2;
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@empid", id);
+
+                    con2.Open();
+
+                    using (SqlDataReader sdr = cmd2.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            oReportRow = new ReportRow();
+                            for (int i = 0; i < sdr.FieldCount; i++)
+                            {
+                                ReportField oReportField = new ReportField();
+                                oReportField.FieldName = sdr.GetName(i);
+                                oReportField.FieldValue = Convert.ToString(sdr.GetValue(i));
+                                oReportRow.ReportFieldList.Add(oReportField);
+                            }
+                            form80CHeader.ReportRowList.Add(oReportRow);
+                        }
+                    }
+                    con2.Close();
+
+
+                }
+            }
+            return View(form80CHeader);
+        }
     }
 }
 

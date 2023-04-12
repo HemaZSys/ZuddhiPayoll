@@ -126,14 +126,14 @@
             $("#txtlogin").val(lastloggedin);
             $("#txtlogout").val(lastloggedout);
             setHours(lastloggedin, lastloggedout);
-
+            findWorkingHours(lastloggedin, lastloggedout);            
             $('#statusButton').on('click', function (e) {
                 var EmployeeEmail =  '@Session["Email"]';                
                 var EmployeePassword = '@Session["Password"]';                
                 $.get("/UserLogin/StatusRefresh", {
                     sessionemail: EmployeeEmail, sessionpassword: EmployeePassword
             }
-                    , function (data) { alert(data); });               
+                    , function (data) { data; });               
                 window.location.reload();
                 setHours(lastloggedin, lastloggedout);               
 
@@ -201,10 +201,10 @@
             var outMins = (parseInt(outTime.split(":")[0]) * 60) + parseInt(outTime.split(":")[1]);
             var inMins = (parseInt(inTime.split(":")[0]) * 60) + parseInt(inTime.split(":")[1]);
 
-          //  alert(outMins + ":"+ inMins);
+            //alert(outMins + ":"+ inMins);
             WorkingHours = outMins - inMins;
-            WorkingHours = parseInt(WorkingHours / 60) + " " + parseInt(WorkingHours % 60);
-            return WorkingHours;
+            WorkingHours = parseInt(WorkingHours / 60) + ":" + parseInt(WorkingHours % 60);
+            $("#sptotalhours").html(WorkingHours);            
         }
 
 
@@ -302,13 +302,12 @@
             }
         }
         function Logout()
-        {
-            alert("login start");
+        {            
             var EmployeeId1 =  @Session["id"];
             $.get("/Employee/SaveLogout", {
                 logintime: $("#txtlogin").val(), logouttime: $("#txtlogout").val(), comment: $("#txtComments").val(), EmployeeId: EmployeeId1, workingstatus: $("#cbLeave").val()
             }
-                , function (data) {alert(data); });            
+                , function (data) {data; });            
         }
 
 
@@ -382,13 +381,22 @@
                                     <input id="txtComments" class="form-control" type="text" title=" Enter Status/Comments" placeholder="Enter Status/Comments" width="100%" />
                                 </div>
                                 <div class="" style="text-align: left; margin-bottom: 3px;">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6" style="display: none;">
                                         <p>
                                             <span style="padding-top:10px;vertical-align:bottom;">Leave&nbsp;&nbsp;&nbsp;</span>
                                             <input id="cbLeave" type="checkbox" style="width: 23px; height: 23px;vertical-align:middle;" />
 
                                         </p>
                                     </div>
+                                    <div>
+                                        @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
+                                        {
+                                            if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
+                                            {
+                                        <h5 class="nav-link"><b>Total Working Hours :</b>&nbsp;&nbsp;<span id="sptotalhours" style="color: darkorange;"><b>&nbsp;&nbsp;Hrs : Mins</b></span></h5>
+                                            }
+                                        }
+                                        </div>
                                     @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                     {
                                         if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
@@ -518,7 +526,7 @@
                                 </li>
 
                                 <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration", "ITCalcDeclaration", "Tax", new { id = Session["Id"] }, null)</i></li>
-
+                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration 2023", "ITCalcDeclaration2023", "Tax", new { id = Session["Id"]}, null)</i></li>
                                 <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Submission", "ITCalculation", "Tax", new { id = Session["Id"] }, null)</i></li>
                             }
                         </ul>

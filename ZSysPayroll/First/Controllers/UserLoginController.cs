@@ -55,8 +55,8 @@ namespace First.Controllers
         [HandleError]
         [HttpPost]
         public ActionResult Index(Enroll e)
-        {            
-            Session["EnrollData"] = e;
+        {
+            Session["Name"] = "";
             Session["Email"] = "";
             Session["AccessType"] = "";
             string encryptedpassword = EncryptPassword(e.Password);
@@ -88,7 +88,7 @@ namespace First.Controllers
             }
             
 
-                string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
+                string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType,en.FirstName FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
 
             con.Open();
             SqlCommand cmd = new SqlCommand(SqlQuery, con);            
@@ -99,6 +99,7 @@ namespace First.Controllers
             if (sdr.Read())
             {
                 Session["Email"] = e.Email.ToString();
+               // Session["Name"] = e.FirstName.ToString();
                 Session["Password"] = encryptedpassword;
                 Session["Id"] = Convert.ToString(sdr["Id"]);
                 string AccessType = Convert.ToString(sdr["AccessType"]);
@@ -295,7 +296,7 @@ namespace First.Controllers
 
         }
 
-
+//Login/Logout Status Refresh
         public string StatusRefresh(string sessionemail, string sessionpassword)
         {
             string query = "select max(a.LogIn) as LastLoginTime,max(a.Logout) as LastLogoutTime from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and CONVERT(DATE, a.LogIn) = CONVERT(DATE, GETDATE()) group by e.Name,a.EmployeeId";
@@ -322,7 +323,7 @@ namespace First.Controllers
                     con1.Close();
                 }
             }
-            return "success";
+            return "";
         }
     }
 }
