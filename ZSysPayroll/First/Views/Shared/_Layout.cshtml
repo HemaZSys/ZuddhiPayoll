@@ -119,6 +119,8 @@
 
         var WorkingHours;
         $(document).ready(function () {
+            //Login Disable for on leave employees
+
             var lastloggedin = '@Session["LastLoginTime"]';
             var lastloggedout = '@Session["LastLogoutTime"]';
             var dt = new Date();
@@ -126,16 +128,18 @@
             $("#txtlogin").val(lastloggedin);
             $("#txtlogout").val(lastloggedout);
             setHours(lastloggedin, lastloggedout);
-            findWorkingHours(lastloggedin, lastloggedout);            
+            findWorkingHours(lastloggedin, lastloggedout);
+            chkLeaveStatus();
             $('#statusButton').on('click', function (e) {
-                var EmployeeEmail =  '@Session["Email"]';                
-                var EmployeePassword = '@Session["Password"]';                
+
+                var EmployeeEmail =  '@Session["Email"]';
+                var EmployeePassword = '@Session["Password"]';
                 $.get("/UserLogin/StatusRefresh", {
                     sessionemail: EmployeeEmail, sessionpassword: EmployeePassword
             }
-                    , function (data) { data; });               
+                    , function (data) { data; });
                 window.location.reload();
-                setHours(lastloggedin, lastloggedout);               
+                setHours(lastloggedin, lastloggedout);
 
             });
 
@@ -167,6 +171,28 @@
                 });
 
         });
+
+        function chkLeaveStatus() {
+            var LeaveStartDate = '@Session["LeaveStartDate"]';
+            var  LeaveEndDate = '@Session["LeaveEndDate"]';
+            var LeaveStatus = '@Session["LeaveStatus"]';
+
+            const formatDate = _date =>
+                (([year, month, date]) =>
+                    `${date}-${month}-${year} `)
+                    (_date.toISOString().split(/[^\d]/g));
+
+            const currentdate = new Date();            
+            //alert(((LeaveEndDate = formatDate(currentdate)) || (LeaveStartDate = formatDate(currentdate))) && LeaveStatus == 'Approved');
+            if (((LeaveEndDate = formatDate(currentdate)) || (LeaveStartDate = formatDate(currentdate))) && LeaveStatus == 'Approved')
+            {
+                $(".btnlogin").hide();
+            }
+            else {             
+                $(".btnlogin").show();
+            }
+
+        }
 
         function setHours(lastloggedin, lastloggedout) {
             var dt = new Date();
@@ -204,7 +230,7 @@
             //alert(outMins + ":"+ inMins);
             WorkingHours = outMins - inMins;
             WorkingHours = parseInt(WorkingHours / 60) + ":" + parseInt(WorkingHours % 60);
-            $("#sptotalhours").html(WorkingHours);            
+            $("#sptotalhours").html(WorkingHours);
         }
 
 
@@ -236,11 +262,7 @@
                 }
             });
         function logout1() {
-            //alert("s");
-            //sessionStorage.removeItem('$("#currentLoggedInUser").html("")');
             $("#currentLoggedInUser").html("");
-            //alert($("#currentLoggedInUser").html());
-            //sessionStorage.removeItem('$("#userPrivilege").html("")');
            $("#userPrivilege").html("");
             window.location.href = "@Url.Action("Index", "UserLogin")";
             sessionStorage.clear();
@@ -256,8 +278,6 @@
             for (var i = 0; i < inputWord.length; i++) {
                 outputWord += (inputWord.charCodeAt(i) + EncPwd.charCodeAt(i) ) + ".";
             }
-
-            //alert(outputWord);
             return outputWord;
         }
 
@@ -281,7 +301,7 @@
                 window.location.href = "@Url.Action("Index", "UserLogin")";
             }
             else {
-                if (Accessibility == "Admin") {
+                if (Accessibility === "Admin") {
                     $("#liSettings").show();
                 }
                 else {
@@ -302,12 +322,12 @@
             }
         }
         function Logout()
-        {            
+        {
             var EmployeeId1 =  @Session["id"];
             $.get("/Employee/SaveLogout", {
                 logintime: $("#txtlogin").val(), logouttime: $("#txtlogout").val(), comment: $("#txtComments").val(), EmployeeId: EmployeeId1, workingstatus: $("#cbLeave").val()
             }
-                , function (data) {data; });            
+                , function (data) {data; });
         }
 
 
@@ -393,10 +413,10 @@
                                         {
                                             if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
                                             {
-                                        <h5 class="nav-link"><b>Total Working Hours :</b>&nbsp;&nbsp;<span id="sptotalhours" style="color: darkorange;"><b>&nbsp;&nbsp;Hrs : Mins</b></span></h5>
+                                                <h5 class="nav-link"><b>Total Working Hours :</b>&nbsp;&nbsp;<span id="sptotalhours" style="color: darkorange;"><b>&nbsp;&nbsp;Hrs : Mins</b></span></h5>
                                             }
                                         }
-                                        </div>
+                                    </div>
                                     @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                     {
                                         if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
@@ -415,9 +435,10 @@
                                     }
                                     else
                                     {
-                                        <div class="col-lg-6" style="text-align:center;">
-                                            <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Login</button>
-                                        </div>
+                                           <div class="col-lg-6" style="text-align: center;">
+                                                <button type="button" onclick="Logout()" href="#" class="btnlogin btn btn-primary" width="120px;">Login</button>
+                                            </div>
+                                     
                                     }
 
                                 </div>
@@ -526,7 +547,7 @@
                                 </li>
 
                                 <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration", "ITCalcDeclaration", "Tax", new { id = Session["Id"] }, null)</i></li>
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration 2023", "ITCalcDeclaration2023", "Tax", new { id = Session["Id"]}, null)</i></li>
+                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration 2023", "ITCalcDeclaration2023", "Tax", new { id = Session["Id"] }, null)</i></li>
                                 <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Submission", "ITCalculation", "Tax", new { id = Session["Id"] }, null)</i></li>
                             }
                         </ul>
@@ -543,8 +564,8 @@
                         </a>
                         <ul class="treeview-menu">
                             @*<li>
-                                    <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
-                                </li>*@
+                    <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
+                </li>*@
                             @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                             {
                                 <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApplyList" }, null)</i></li>
@@ -557,26 +578,26 @@
                             }
                         </ul>
                     </li>
-
-                    <li class="treeview" id="liSettings">
-                        <a href="#">
-                            <i class="fa fa-cog"></i>
-                            <span>Settings</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="~/Grade/GradeDetails"><i class="fa fa-search"></i> <span>Grade Details </span></a></li>
-                            <li><a href="~/Employee/Dropdownsettingslist"><i class="fa fa-search"></i> <span>Dropdown Settings </span></a></li>
-                            <li><a href="~/Tax/Form80Csettingslist"><i class="fa fa-search"></i> <span>TaxDecl Form Settings </span></a></li>
-                            <li><a href="~/Enrollment/EnrollmentList"><i class="fa fa-search"></i> <span>Enrollment Details </span></a></li>
-                            <li><a href="~/Leaves/LeaveSettingsList"><i class="fa fa-search"></i> <span>Leave Settings</span></a></li>
-                        </ul>
-                    </li>
                     @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                     {
+                        <li class="treeview" id="liSettings">
+                            <a href="#">
+                                <i class="fa fa-cog"></i>
+                                <span>Settings</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="~/Grade/GradeDetails"><i class="fa fa-search"></i> <span>Grade Details </span></a></li>
+                                <li><a href="~/Employee/Dropdownsettingslist"><i class="fa fa-search"></i> <span>Dropdown Settings </span></a></li>
+                                <li><a href="~/Tax/Form80Csettingslist"><i class="fa fa-search"></i> <span>TaxDecl Form Settings </span></a></li>
+                                <li><a href="~/Enrollment/EnrollmentList"><i class="fa fa-search"></i> <span>Enrollment Details </span></a></li>
+                                <li><a href="~/Leaves/LeaveSettingsList"><i class="fa fa-search"></i> <span>Leave Settings</span></a></li>
+                            </ul>
+                        </li>
+
                         <li class="treeview" id="liSettings">
                             <a href="#">
                                 <i class="fa fa-file-excel-o"></i>

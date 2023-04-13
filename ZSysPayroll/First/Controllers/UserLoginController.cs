@@ -86,9 +86,31 @@ namespace First.Controllers
                     con1.Close();
                 }
             }
-            
+            //Attendance Disable For Leave Applied Employees
+            string qry = "select e.name,l.StartDate as LeaveStartDate,l.EndDate as LeaveEndDate,l.ApproveAction as LeaveStatus from Attendance a join EmployeeDetails e on a.EmployeeId = e.Id join EmployeeLeaves l on e.Id = l.EmployeeId RIGHT JOIN Enrollment en on e.offcEmail = en.Email where en.Email = @Email and en.Password = @Password and (CONVERT(DATE, l.StartDate) = CONVERT(DATE, GETDATE()) or CONVERT(DATE, l.EndDate) = CONVERT(DATE, GETDATE()) and l.ApproveAction = 'Approved') group by e.Name,a.EmployeeId,l.StartDate,l.EndDate,l.ApproveAction";
+            using (SqlConnection con2 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand(qry))
+                {
+                    cmd2.Parameters.AddWithValue("@Email", e.Email);
+                    cmd2.Parameters.AddWithValue("@Password", encryptedpassword);
 
-                string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType,en.FirstName FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
+                    cmd2.Connection = con2;
+                    con2.Open();
+                    using (SqlDataReader sdr2 = cmd2.ExecuteReader())
+                    {
+                        while (sdr2.Read())
+                        {
+                            Session["LeaveStartDate"] = sdr2["LeaveStartDate"] == DBNull.Value ? Convert.ToDateTime("1900-01-01 00:00:00.000").ToShortDateString() : Convert.ToDateTime(sdr2["LeaveStartDate"]).ToShortDateString();
+                            Session["LeaveEndDate"] = sdr2["LeaveEndDate"] == DBNull.Value ? Convert.ToDateTime("1900-01-01 00:00:00.000").ToShortDateString() : Convert.ToDateTime(sdr2["LeaveEndDate"]).ToShortDateString();
+                            Session["LeaveStatus"] = sdr2["LeaveStatus"] == DBNull.Value ? "" : Convert.ToString(sdr2["LeaveStatus"]);
+                        }
+                    }
+                    con2.Close();
+                }
+            }
+
+            string SqlQuery = "select e.id,e.offcEmail,en.Email,en.[Password],en.AccessType,en.FirstName FROM EmployeeDetails e RIGHT JOIN Enrollment en on e.offcEmail=en.Email where en.Email=@Email and en.Password=@Password";
 
             con.Open();
             SqlCommand cmd = new SqlCommand(SqlQuery, con);            
