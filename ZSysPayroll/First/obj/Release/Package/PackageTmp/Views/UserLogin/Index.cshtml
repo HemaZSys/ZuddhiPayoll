@@ -68,6 +68,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         @Html.TextBoxFor(e => e.Email, new { @class = "form-control", placeholder = "Official Email *" })
+                                        @Html.HiddenFor(e => e.FirstName, new { @class = "form-control" })
                                         @*@Html.ValidationMessageFor(e => e.Email)*@
                                     </div>
                                 </div>

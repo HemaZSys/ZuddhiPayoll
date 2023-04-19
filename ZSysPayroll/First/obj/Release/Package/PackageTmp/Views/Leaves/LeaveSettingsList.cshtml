@@ -1,0 +1,210 @@
+﻿@model First.Models.LeaveSettingHeader
+@{
+    ViewBag.Title = "LeaveSettingsList";
+    int cnt = 0;   
+}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/1.13.2/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/buttons/2.3.4/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/payslipreportJSCSS/CSS/select/1.6.0/css/select.dataTables.min.css">
+
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/buttons/2.3.4/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="~/payslipreportJSCSS/JScript/select/1.6.0/js/dataTables.select.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            checkLogin();
+            $('#tblLeaveSetting').DataTable({
+                select: true
+            });
+        });
+    </script>
+
+
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .card-layout1 {
+            background: #fff;
+            box-shadow: 0 0 6px #340452;
+        }
+
+        .card-layout {
+            box-shadow: 0 0 15px #322f2f37;
+            padding: 2%;
+            background: #dbaaef30;
+            margin: 0;
+        }
+
+        .registerbtn a, .registerbtn a:visited {
+            color: #fff !important;
+        }
+
+        .registerbtn {
+            float: right;
+            height: 30px;
+            border: none;
+            border-radius: 0.65rem;
+            padding: 1%;
+            background: #340452;
+            color: #fff;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 3px 5px;
+        }
+
+        /* Clearfix (clear floats) */
+        .row::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 300px;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px 15px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .heading {
+            text-align: center;
+            font-size: 27px !important;
+            font-weight: bold;
+            padding: 5px 0px 0px 0px;
+        }
+
+
+        #empList {
+            margin-left: 20px;
+            padding: 2px;
+        }
+
+        .glyphicon-pencil {
+            font-weight: bold;
+            color: #ffeb00;
+        }
+
+        .glyphicon-trash {
+            color: red;
+        }
+
+        .fa-calculator {
+            color: #4fe12b;
+        }
+
+        .bottomborder, .bottomborder td {
+            border-bottom: 2px solid black;
+        }
+
+        .row {
+            padding: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    @using (Html.BeginForm("LeaveSettingsList", "Leaves", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="container-fluid">
+            <div class="card card-layout">
+                <div id="EmployeeDetail" class="card-layout1">
+                   
+                        <div class="heading">Leave Settings</div>
+                        <div style="overflow-x:scroll;">
+                            <table class="table  table-bordered table-hover table-responsive" id="tblLeaveSetting">
+                                <thead>
+
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Leave Descriptiom</th>
+                                        <th>No. of Days</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @if (Model.LeaveSettingList.Count > 0)
+                                    {
+
+                                        for (int i = 0; i < Model.LeaveSettingList.Count(); i++)
+                                        {
+                                            cnt++;
+                                            <tr class="info">
+                                                <td style="text-align:center;">
+                                                    @cnt
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].id)
+                                                    @Html.HiddenFor(modelItem => Model.LeaveSettingList[i].LeaveTypeId)
+                                                    @Html.DisplayFor(modelItem => Model.LeaveSettingList[i].LeaveDescription)
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    @Html.TextBoxFor(modelItem => Model.LeaveSettingList[i].NoOfDays)
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>No Records Found</tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                   
+                    <div class="row" style="display: block;float: right;">
+                        <button type="submit" class="btn btn-success toastsDefaultSuccess">Save</button>&nbsp;
+                        <a href="~/Employee/Index/0" type="button" class="btn btn-primary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</body>
+</html>

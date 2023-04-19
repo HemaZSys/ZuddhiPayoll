@@ -1,8 +1,8 @@
 ﻿@model First.Models.AttendanceReportHeader
 @{
     ViewBag.Title = "AttendanceReport";
-    //List<First.Models.LeaveReportHeader> leaveReportHeaderlist = ViewBag.leavedetails;
-    int cnt = 0;
+    List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
+    //List<First.Models.LeaveReportHeader> leaveReportHeaderlist = ViewBag.leavedetails;    
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +34,79 @@
                 select: true
             });
             checkLogin();
+            
+            if (decrypt($("#userPrivilege").html()) == "Admin") {
+
+                $('.clsUser').each(function (i, obj) {
+                    $(this).hide();
+                });
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).show();
+                });
+            }
+            else {
+                $('.clsUser').each(function (i, obj) {
+                    $(this).show();
+                });
+
+                $('.clsAdmin').each(function (i, obj) {
+                    $(this).hide();
+                });
+            }
+           
+            var options = $("#EmpName").html();
+            options = "<option value='-2' selected>- Select All-</option>" + options;
+            $("#EmpName").html(options);
+           
+
+            var tmpURL = document.location.href.split("/");
+            tmpURL = tmpURL[tmpURL.length - 1];
+            $("#EmpName").val(tmpURL);
+           
+
+            $("#EmpName").change(function () {                
+                var tmpURL = document.location.href;               
+                tmpURL = tmpURL.split("AttendanceReport")[0]
+                $("#datepicker").val()
+                if ($("#datepicker").val() == "") {                   
+                    $("#datepicker").val(DateTime.Now.ToString("yyyy - MM"));                    
+                }
+                $("#EmpName").val()
+                if ($("#EmpName").val() == "") {
+                    $("#EmpName").val() = -2;
+                }
+                alert($("#EmpName").val());
+                alert($("#datepicker").val());
+                
+                document.location.href = tmpURL + "AttendanceReport/" + $("#EmpName").val() + "?month=" + $("#datepicker").val();
+                
+            });
+
+            
+            var tmpURL = document.location.href.split("/");
+            tmpURL = tmpURL[tmpURL.length - 1];
+            $("#datepicker").val(tmpURL);
+
+
+            $("#datepicker").change(function () {               
+                var tmpURL = document.location.href;                
+                tmpURL = tmpURL.split("AttendanceReport")[0]
+                $("#EmpName").val()
+                if ($("#EmpName").val() == "") {                   
+                    $("#EmpName").val() = -2;                    
+                }
+                $("#datepicker").val()
+                if ($("#datepicker").val() == "") {
+                    $("#datepicker").val(DateTime.Now.ToString("yyyy - MM"));
+                }
+                alert($("#EmpName").val());
+                alert($("#datepicker").val());
+                
+                document.location.href = tmpURL + "AttendanceReport/" + $("#EmpName").val() + "?month=" + $("#datepicker").val();                
+            });
+            
+
+
         });
     </script>
 
@@ -118,92 +191,114 @@
 
             <div style="padding: 2%; overflow-x: scroll;">
                 @*<button class="registerbtn" style="padding: 5px; color: red; background: #fff; width: 100px; float: right;" title="Export To Excel" id="btnExport">Export</button>*@
-                <table id="tblAttendanceReport" class="table table-hover" align="center">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;" align="center">
-                                S.No.
-                            </th>
-                            <th style="text-align: center;"align="center">
-                                Employee ID
-                            </th>
-                            <th style="text-align: center;">
-                                Employee Name
-                            </th>
-                            <th style="text-align: center;">
-                                Date
-                            </th>
-                            <th style="text-align: center;">
-                                Login Time
-                            </th>
-                            <th style="text-align: center;">
-                                Logout Time
-                            </th>
-                            <th style="text-align: center;">
-                                Total Time
-                            </th>
-                            <th style="text-align: center;">
-                                Work Status
-                            </th>                            
-                        </tr>                       
-                    </thead>
-                    <tbody>
-                        @if (Model.AttendanceReportList.Count() > 0)
-                        {
-                            for (int i = 0; i < Model.AttendanceReportList.Count(); i++)
-                            {
-                                cnt++;
 
-                        <tr class="info">
-                            <td style="text-align:center;">
-                                @cnt
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.HiddenFor(modelItem => Model.AttendanceReportList[i].id)
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeId)
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeName)
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].shiftDate)
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogInTime, "{0:hh\\:mm\\:tt}")
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogOutTime)
-                            </td>
-                            <td style="text-align:center;">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].TotalTime)
-                            </td>                            
-                             @if (Model.AttendanceReportList[i].WorkStatus == "Present")
+                <div class="col-lg-12 row">
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <p><b>Employee Name</b></p>
+                            </div>
+                            <div class="col-lg-6">
+                                @*<p class="clsUser" style="display:none">@Html.DisplayFor(Model => Model.EmpName)</p>*@
+                                <div>
+                                    @Html.DropDownListFor(Model => Model.EmpName, new SelectList(Employeelist, "Id", "Name"))
+                                </div>                                
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <p><b>Select Month</b></p>
+                            </div>
+                            <div class="col-lg-6">                               
+                                @Html.TextBoxFor(Model => Model.MonthYear, new { type = "Month", name = "start", id = "datepicker", @class = "form-control" })
+                               
+                            </div>
+
+                        </div>
+                       
+                    </div>
+                    </div>
+
+                        <table id="tblAttendanceReport" class="table table-hover" align="center">
+                            <thead>
+                                <tr>                                    
+                                    <th style="text-align: center;" align="center">
+                                        Employee ID
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Employee Name
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Date
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Login Time
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Logout Time
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Total Time
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Work Status
+                                    </th>                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @*@if (Model.AttendanceReportList.Count() > 0)
+                                {*@
+                                    @for (int i = 0; i < Model.AttendanceReportList.Count(); i++)
+                                    {                                       
+
+                                <tr class="info">                                    
+                                    <td style="text-align:center;">
+                                        @Html.HiddenFor(modelItem => Model.AttendanceReportList[i].id)
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeId)
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeName)
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].shiftDate)
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogInTime, "{0:hh\\:mm\\:tt}")
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].LogOutTime)
+                                    </td>
+                                    <td style="text-align:center;">
+                                        @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].TotalTime)
+                                    </td>
+                                    @if (Model.AttendanceReportList[i].WorkStatus == "Present")
+                                    {
+                                        <td style="text-align: center; color: green; font-weight:bold">
+                                            @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="text-align: center; color: red; font-weight:bold">
+                                            @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
+                                        </td>
+                                    }                                   
+                                </tr>
+
+                                    }
+                                @*}
+                                else
                                 {
-                            <td style="text-align: center; color: green; font-weight:bold">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
-                            </td>
-                            }
-                            else
-                            {
-                            <td style="text-align: center; color: red; font-weight:bold">
-                                @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
-                            </td>
-                            }                            
-                        </tr>
-
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="6" style="text-align:center;">No Record Found</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                                    <tr>
+                                        <td colspan="8" style="text-align:center;">No Record Found</td>
+                                    </tr>
+                                }*@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br />
             </div>
-        </div>
-        <br />
-    </div>
 </body>
 </html>

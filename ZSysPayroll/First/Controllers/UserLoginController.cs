@@ -79,11 +79,15 @@ namespace First.Controllers
 
                         while (sdr1.Read())
                         {
-                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();
+                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();                            
                             Session["LastLogoutTime"] = sdr1["LastLogoutTime"] == DBNull.Value ? "" : Convert.ToDateTime(sdr1["LastLogoutTime"]).ToShortTimeString();
                         }
                     }
                     con1.Close();
+                    if (Convert.ToString(Session["LastLoginTime"]) == "00:00")
+                    {
+                        Session["LastLoginTime"] = "";
+                    }
                 }
             }
             //Attendance Disable For Leave Applied Employees

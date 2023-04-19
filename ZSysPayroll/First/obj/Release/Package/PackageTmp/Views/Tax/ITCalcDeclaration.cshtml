@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<First.Models.Emp> Employeelist = ViewBag.employees as List<First.Models.Emp>;
     List<First.Models.Setting> SettingsList = ViewBag.Settings as List<First.Models.Setting>;
-    List<First.Models.PayslipGradeEntry> PayslipGradeEntryList = ViewBag.payslips as List<First.Models.PayslipGradeEntry>;
+    List<First.Models.PayslipGradeEntry> PayslipGradeEntryList = ViewBag.payslips as List<First.Models.PayslipGradeEntry>;    
     First.Models.TaxCalculation taxCalculation = ViewBag.taxcalculations as First.Models.TaxCalculation;
 }
 
@@ -45,27 +45,45 @@
             text-align: left;
             margin-left: 30px;
         }
+    .card-layout1 {
+        background: #fff;
+        box-shadow: 0 0 6px #340452;
+        padding: 100px;
+        margin-top: -10%;
+    }
+    }
+
+    .card-layout {
+        box-shadow: 0 0 15px #322f2f37;
+        padding: 2%;
+        background: #dbaaef30;
+        margin-bottom: 2%;
+        margin-top: 2%;
+    }
 </style>
 
 <body>
-    <div class="container-fluid row">
+    <div class="container-fluid row" style=" overflow-x: scroll;">        
         <div class="col-12">
             <div class="container-fluid card" style="margin-bottom:2rem">
                 <div class="card-body">
                     <h2 class="mt-0 header-title" style="text-align:center;"><b>Tax Calculation - Declaration</b></h2>
-                    <u><h3 class="mb-3" style="text-align:center;"> Statement of Income Tax Calculation for the Year 
-                        
-                        @foreach (var setting in SettingsList)
-                        {
-                            if (setting.SettingName == "FinancialYear")
-                            {
-                                   <label class="lblFinancialYear">
-                                       @setting.SettingValue
-                                   </label>
-                            }
-                        }
+                    <u>
+                        <h3 class="mb-3" style="text-align:center;">
+                            Statement of Income Tax Calculation for the Year 2022-23
 
-                        </h3></u>
+                            @foreach (var setting in SettingsList)
+                            {
+                                if (setting.SettingName == "FinancialYear")
+                                {
+                                    <label class="lblFinancialYear">
+                                        @setting.SettingValue
+                                    </label>
+                                }
+                            }
+
+                        </h3>
+                    </u>
                     <br />
                     <div class="col-lg-12 row">
                         <div class="col-lg-6">
@@ -171,153 +189,211 @@
 
                     </div>
                     <br />
-                    <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th colspan="8">
-                                    <h5 style="float:left"><b>Income Details</b></h5>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    @*<table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+            <thead>
+                <tr>
+                    <th colspan="8">
+                        <h5 style="float:left"><b>Income Details</b></h5>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
 
-                            @for (int i = 0; i < PayslipGradeEntryList.Count(); i++)
-                            {
+                @for (int i = 0; i < PayslipGradeEntryList.Count(); i++)
+                {
+
+                    <tr>
+                        <td class="dt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthYear.ToString().Split(' ')[0]) </td>
+                        <td class="des">  @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].Description)</td>
+                        <td class="amt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthlyAmount)  </td>
+                    </tr>
+                }
+            </tbody>
+        </table>*@
+
+
+
+                    @*<button class="registerbtn" style="padding: 5px; color: red; background: #fff; width: 100px; float: right;" title="Export To Excel" id="btnExport">Export</button>*@
+                    <div class="col-lg-12 row" style=" overflow-x: scroll;">
+                        <table id="tblpayslipreport" class="table table-striped table-bordered table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th colspan="17">
+                                        <h5 style="align-content:center"><b>Income Details</b></h5>
+                                    </th>
+                                </tr>
 
                                 <tr>
-                                    <td class="dt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthYear.ToString().Split(' ')[0]) </td>
-                                    <td class="des">  @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].Description)</td>
-                                    <td class="amt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthlyAmount)  </td>
+                                    @foreach (First.Models.ReportField oReportField in Model.ReportRowList[0].ReportFieldList)
+                                    {
+
+                                        <th style="text-align: left;">
+                                            @Html.Label(oReportField.FieldName)
+                                        </th>
+                                    }
+
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+
+                                @foreach (First.Models.ReportRow oReportRow in Model.ReportRowList)
+                                {
+                                    <tr>
+                                        @foreach (First.Models.ReportField oReportField in oReportRow.ReportFieldList)
+                                        {
+                                            <td style="text-align:left;">
+                                                @Html.DisplayFor(item => oReportField.FieldValue)
+                                            </td>
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+</div>
+                        <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Income from Salary</th>
+                                    <th rowspan="2">Deductions from Salary</th>
+                                    <th rowspan="2">Income from Other sources</th>
+                                    <th colspan="3">Deductions from Other sources  @Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80), new { style = "color:red" })</th>
+                                    <th rowspan="2">Taxable Income (Old Regime)</th>
+                                    <th rowspan="2">Taxable Income (New Regime)</th>
+                                </tr>
+                                <tr>                                    
+                                    <th>HRA Deductions</th>
+                                    <th>Other Deductions</th>
+                                    <th>Standard Deductions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningpayslip))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionpayslip))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningform80))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.HRADeductions))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OtherDeductions))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.standardDedusctions))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.Oldtaxableamount))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.taxableAmount))</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                        <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Particulars</th>
+                                    <th>Old Tax Regime (Rs)</th>
+                                    <th>New Tax Regime (Rs)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight:bold">Tax Slab (OLD)</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>0 to 2.5 Lakh</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxone))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>2.5 to 5 Lakh at 5%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxtwo))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>5 Lakh to 10 Lakh at 20%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxthree))</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Greater than 10 Lakh at 30%</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxfour))</td>
+                                    <td>-</td>
+                                </tr>
 
 
-                    <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Income from Salary</th>
-                                <th>Deductions from Salary</th>
-                                <th>Income from Other sources</th>
-                                <th>Deductions from Other sources</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningpayslip))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionpayslip))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningform80))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80))</td>
-                            </tr>
+                                <tr>
+                                    <td style="font-weight:bold">Greater than Tax Slab (NEW)</td>
+                                    <th>-</th>
+                                    <th>-</th>
+                                </tr>
+                                <tr>
+                                    <td>0 to 5 Lakh</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxone))</td>
+                                </tr>
+                                <tr>
+                                    <td>2.5 to 5 Lakh at 5%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxtwo))</td>
+                                </tr>
+                                <tr>
+                                    <td>5 to 7.5 Lakh at 10%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxthree))</td>
+                                </tr>
+                                <tr>
+                                    <td>7.5 Lakh to 10 Lakh at 15%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfour))</td>
+                                </tr>
+                                <tr>
+                                    <td>10 Lakh to 12.5 Lakh at 20%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfive))</td>
+                                </tr>
+                                <tr>
+                                    <td>12.5 Lakh to 15 Lakh at 25%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxsix))</td>
+                                </tr>
 
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <td>Greater than 15 Lakh at 30%</td>
+                                    <td>-</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxseven))</td>
+                                </tr>
+                                <tr>
+                                    <th><b>Income Tax</b></th>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldTotalTax))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.TotalTax))</td>
+                                </tr>
 
-                    <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Particulars</th>
-                                <th>Old Tax Regime (Rs)</th>
-                                <th>New Tax Regime (Rs)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Tax Slab (OLD)</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>0 to 2.5 Lakh</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxone))</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>2.5 to 5 Lakh at 5%</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxtwo))</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>5 Lakh to 10 Lakh at 20%</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxthree))</td>
-                                <td>-</td>
-                            </tr>
-                            <tr>
-                                <td>Greater than 10 Lakh at 30%</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxfour))</td>
-                                <td>-</td>
-                            </tr>
+                                <tr>
+                                    <th><b>Cess at 4%</b></th>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldEducationcess))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.Educationcess))</td>
+                                </tr>
+                                <tr>
+                                    <th><b>Total Tax Outgo</b></th>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxOutGo))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.TaxOutGo))</td>
+                                </tr>
 
-
-                            <tr>
-                                <td>Greater than Tax Slab (NEW)</td>
-                                <th>-</th>
-                                <th>-</th>
-                            </tr>
-                            <tr>
-                                <td>0 to 5 Lakh</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxone))</td>
-                            </tr>
-                            <tr>
-                                <td>2.5 to 5 Lakh at 5%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxtwo))</td>
-                            </tr>
-                            <tr>
-                                <td>5 to 7.5 Lakh at 10%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxthree))</td>
-                            </tr>
-                            <tr>
-                                <td>7.5 Lakh to 10 Lakh at 15%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfour))</td>
-                            </tr>
-                            <tr>
-                                <td>10 Lakh to 12.5 Lakh at 20%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfive))</td>
-                            </tr>
-                            <tr>
-                                <td>12.5 Lakh to 15 Lakh at 25%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxsix))</td>
-                            </tr>
-
-                            <tr>
-                                <td>Greater than 15 Lakh at 30%</td>
-                                <td>-</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxseven))</td>
-                            </tr>
-                            <tr>
-                                <th><b>Income Tax</b></th>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTotalTax))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.TotalTax))</td>
-                            </tr>
-
-                            <tr>
-                                <th><b>Cess at 4%</b></th>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldEducationcess))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Educationcess))</td>
-                            </tr>
-                            <tr>
-                                <th><b>Total Tax Outgo</b></th>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxOutGo))</td>
-                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.TaxOutGo))</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                        <p>Under both income tax regimes, tax rebate of up to Rs 12,500 is available to an individual taxpayer under section 87A of the Income-tax Act, 1961. This would effectively mean that individuals having net taxable income of up to Rs 5 lakh would not pay any income tax irrespective of the tax regime chose by them.</p>
+                    </div>
                 </div>
-                <p>Under both income tax regimes, tax rebate of up to Rs 12,500 is available to an individual taxpayer under section 87A of the Income-tax Act, 1961. This would effectively mean that individuals having net taxable income of up to Rs 5 lakh would not pay any income tax irrespective of the tax regime chose by them.</p>
             </div>
+            <!-- end col -->
         </div>
-        <!-- end col -->
-    </div>
 </body>
 <script src="~/Js/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#tblpayslipreport").width($(window).width());
+        }
+   
+</script>
 
 <script type="text/javascript">
 

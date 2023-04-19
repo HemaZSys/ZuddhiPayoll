@@ -2373,45 +2373,6 @@ namespace First.Controllers
             }
             ViewBag.taxcalculations = taxCalculation;
 
-            //PAYSLIP
-
-            //using (SqlConnection con2 = new SqlConnection(constr))
-            //{
-            //    using (SqlCommand cmd2 = new SqlCommand("sp_paysilp_getbyempid"))
-            //    {
-            //        cmd2.Connection = con2;
-            //        cmd2.CommandType = CommandType.StoredProcedure;
-            //        cmd2.Parameters.AddWithValue("@empid", id);
-            //        con2.Open();
-
-            //        using (SqlDataReader sdr = cmd2.ExecuteReader())
-            //        {
-            //            while (sdr.Read())
-            //            {
-            //                if (sdr["MonthYear"].ToString() != "")
-            //                {
-
-            //                    PayslipGradeEntry payslipGradeEntry = new PayslipGradeEntry();
-            //                    payslipGradeEntry.EmployeeId = Convert.ToString(sdr["EmployeeId"]);
-            //                    payslipGradeEntry.EmpId = Convert.ToInt32(sdr["Id"]);
-            //                    payslipGradeEntry.MonthYear = Convert.ToDateTime(sdr["MonthYear"]);
-            //                    payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
-            //                    payslipGradeEntry.MonthlyAmount = Convert.ToDecimal(sdr["MonthlyAmount"]);
-            //                    payslipGradeEntry.AnnualAmount = Convert.ToDecimal(sdr["AnnualAmount"]);
-            //                    payslipGradeEntry.PayslipGradeid = Convert.ToInt32(sdr["gradeid"]);
-            //                    payslipGradeHeader.PayslipGradeEntryList.Add(payslipGradeEntry);
-            //                }
-            //            }
-            //        }
-            //        con2.Close();
-            //    }
-            //    if (payslipGradeHeader.PayslipGradeEntryList.Count == 0)
-            //    {
-            //        payslipGradeHeader.PayslipGradeEntryList.Add(new PayslipGradeEntry());
-            //    }
-            //}
-            //ViewBag.payslips = payslipGradeHeader.PayslipGradeEntryList;
-
             List<PayslipGradeHeader> payslipGradeHeaderList = new List<PayslipGradeHeader>();
 
            // Form80CHeader oPaySlipReport = new Form80CHeader();

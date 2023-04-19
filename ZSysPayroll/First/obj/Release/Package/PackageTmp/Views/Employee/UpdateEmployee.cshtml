@@ -140,7 +140,9 @@
                     // $("#Aadhar").val("");
                     //alert("invalid PAN no");
                     lblErrAadhar.innerHTML = "<br/>Please enter valid Aadhar Number";
-                    return regex.test(inputvalues);
+                    inputvalues = "";
+                   return regex.test(inputvalues);
+                   
                 }
                 else {
                     lblErrAadhar.innerHTML = "";

@@ -235,7 +235,7 @@
                                 <th rowspan="2">Income from Salary</th>
                                 <th rowspan="2">Deductions from Salary</th>
                                 <th rowspan="2">Income from Other sources</th>
-                                <th colspan="3">Deductions from Other sources  @Html.LabelForModel(taxCalculation.deductionform80.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")), new { style = "color:red" })</th>
+                                <th colspan="3">Deductions from Other sources  @Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80), new { style = "color:red" })</th>
                                 <th rowspan="2">Taxable Income (Old Regime)</th>
                                 <th rowspan="2">Taxable Income (New Regime)</th>
                             </tr>
@@ -247,15 +247,14 @@
                         </thead>
                         <tbody>
                             <tr>
-
-                                <td>@Html.LabelForModel(taxCalculation.earningpayslip.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td>@Html.LabelForModel(taxCalculation.deductionpayslip.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td>@Html.LabelForModel(taxCalculation.earningform80.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td>@Html.LabelForModel(taxCalculation.HRADeductions.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td>@Html.LabelForModel(taxCalculation.OtherDeductions.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td>@Html.LabelForModel(taxCalculation.standardDedusctions.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.Oldtaxableamount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.taxableAmount.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningpayslip))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionpayslip))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningform80))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.HRADeductions))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OtherDeductions))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.standardDedusctions))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.Oldtaxableamount))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.taxableAmount))</td>
                             </tr>
 
                         </tbody>
@@ -277,22 +276,22 @@
                             </tr>
                             <tr>
                                 <td>0 to 2.5 Lakh</td>
-                                <td>@Html.LabelForModel(taxCalculation.OldTaxone.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxone))</td>
                                 <td>-</td>
                             </tr>
                             <tr>
                                 <td>2.5 to 5 Lakh at 5%</td>
-                                <td>@Html.LabelForModel(taxCalculation.OldTaxtwo.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxtwo))</td>
                                 <td>-</td>
                             </tr>
                             <tr>
                                 <td>5 Lakh to 10 Lakh at 20%</td>
-                                <td>@Html.LabelForModel(taxCalculation.OldTaxthree.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxthree))</td>
                                 <td>-</td>
                             </tr>
                             <tr>
                                 <td>Greater than 10 Lakh at 30%</td>
-                                <td>@Html.LabelForModel(taxCalculation.OldTaxfour.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxfour))</td>
                                 <td>-</td>
                             </tr>
                             <tr>
@@ -303,49 +302,49 @@
                             <tr>
                                 <td>From 0 to 3,00,000 (0%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxone.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxone))</td>
                             </tr>
                             <tr>
                                 <td>From 3,00,001 to 6,00,000 (5%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxtwo.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxtwo))</td>
                             </tr>
                             <tr>
                                 <td>From 6,00,001 to 9,00,000 (10%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxthree.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxthree))</td>
                             </tr>
                             <tr>
                                 <td>From 9,00,001 to 12,00,000 (15%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxfour.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfour))</td>
                             </tr>
                             <tr>
                                 <td>From 12,00,001 to 15,00,000 (20%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxfive.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxfive))</td>
                             </tr>
                             <tr>
                                 <td>From 15,00,001 and above (30%)</td>
                                 <td>-</td>
-                                <td>@Html.LabelForModel(taxCalculation.Taxsix.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td>@Html.LabelForModel(Convert.ToString(taxCalculation.Taxsix))</td>
                             </tr>
 
                             <tr>
                                 <th><b>Income Tax</b></th>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.OldTotalTax.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.TotalTax.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldTotalTax))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.TotalTax))</td>
                             </tr>
 
                             <tr>
                                 <th><b>Cess at 4%</b></th>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.OldEducationcess.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.Educationcess.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldEducationcess))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.Educationcess))</td>
                             </tr>
                             <tr>
                                 <th><b>Total Tax Outgo</b></th>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.OldTaxOutGo.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
-                                <td style="color:red">@Html.LabelForModel(taxCalculation.TaxOutGo.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("hi-IN")))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.OldTaxOutGo))</td>
+                                <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.TaxOutGo))</td>
                             </tr>
 
                         </tbody>

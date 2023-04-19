@@ -104,7 +104,7 @@
                 <div class="container-fluid card" style="margin-bottom:2rem">
                     <div class="card-body">
                         <h2 class="mt-0 header-title" style="text-align:center;"><b>Tax Calculation - Submission</b></h2>
-                        <u><h3 class="mb-3" style="text-align:center;"> Statement of Income Tax Calculation for the Year 2021-22</h3></u>
+                        <h3 class="mb-3" style="text-align:center;"> Statement of Income Tax Calculation for the Year - 2022-2023</h3>
                         <br />
                         <div class="col-lg-12 row">
                             <div class="col-lg-6">
@@ -113,7 +113,7 @@
                                         <p><b>Employee Name</b></p>
                                     </div>
                                     <div class="col-lg-6">
-                                        <p class="clsUser" style="display:none">@Html.DisplayFor(Model => Model.EmployeeName)</p>
+                                        <p class="clsUser">@Html.DisplayFor(Model => Model.EmployeeName)</p>
                                         <select class="clsAdmin" style="display:none" id="empNames">
                                             @foreach (var employee in Employeelist)
                                             {
@@ -129,7 +129,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <p>@Html.DisplayFor(Model => Model.Employeeid)</p>
-                                        <p>@Html.Hidden("txt_Employeeid", Model.Empid, new { @readonly = "readonly" })</p>
+                                        <p>@Html.Hidden("txt_Employeeid", Model.Empid, new { @readonly = "readonly" })</p>                                      
                                     </div>
 
                                 </div>
@@ -211,37 +211,81 @@
 
                         </div>
                         <br />
-                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th colspan="8">
-                                        <h5 style="float:left"><b>Income Details</b></h5>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        @*<table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+            <thead>
+                <tr>
+                    <th colspan="8">
+                        <h5 style="float:left"><b>Income Details</b></h5>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
 
-                                @for (int i = 0; i < PayslipGradeEntryList.Count(); i++)
-                                {
+                @for (int i = 0; i < PayslipGradeEntryList.Count(); i++)
+                {
+
+                    <tr>
+                        <td class="dt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthYear.ToString().Split(' ')[0]) </td>
+                        <td class="des">  @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].Description)</td>
+                        <td class="amt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthlyAmount)  </td>
+                    </tr>
+                }
+            </tbody>
+        </table>*@
+
+                        <div class="col-lg-12 row" style=" overflow-x: scroll;">
+                            <table id="tblpayslipreport" class="table table-striped table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th colspan="17">
+                                            <h5 style="align-content:center"><b>Income Details</b></h5>
+                                        </th>
+                                    </tr>
 
                                     <tr>
-                                        <td class="dt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthYear.ToString().Split(' ')[0]) </td>
-                                        <td class="des">  @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].Description)</td>
-                                        <td class="amt"> @Html.DisplayFor(modelItem => PayslipGradeEntryList[i].MonthlyAmount)  </td>
+                                        @foreach (First.Models.ReportField oReportField in Model.ReportRowList[0].ReportFieldList)
+                                        {
+
+                                            <th style="text-align: left;">
+                                                @Html.Label(oReportField.FieldName)
+                                            </th>
+                                        }
+
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
 
+                                    @foreach (First.Models.ReportRow oReportRow in Model.ReportRowList)
+                                    {
+                                        <tr>
+                                            @foreach (First.Models.ReportField oReportField in oReportRow.ReportFieldList)
+                                            {
+                                                <td style="text-align:left;">
+                                                    @Html.DisplayFor(item => oReportField.FieldValue)
+                                                </td>
+                                            }
 
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
 
                         <table id="tblCalculation" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Income from Salary</th>
-                                    <th>Deductions from Salary</th>
-                                    <th>Income from Other sources</th>
-                                    <th>Deductions from Other sources</th>
+                                    <th rowspan="2">Income from Salary</th>
+                                    <th rowspan="2">Deductions from Salary</th>
+                                    <th rowspan="2">Income from Other sources</th>
+                                    <th colspan="3">Total Deductions from Other sources @Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80), new { style = "color:red" })</th>
+                                    <th rowspan="2">Taxable Income (Old Regime)</th>
+                                    <th rowspan="2">Taxable Income (New Regime)</th>
+                                </tr>
+                                <tr>
+                                    <th>HRA Deductions</th>
+                                    <th>Other Deductions</th>
+                                    <th>Standard Deductions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -249,7 +293,11 @@
                                     <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningpayslip))</td>
                                     <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionpayslip))</td>
                                     <td>@Html.LabelForModel(Convert.ToString(taxCalculation.earningform80))</td>
-                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.deductionform80))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.HRADeductions))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.OtherDeductions))</td>
+                                    <td>@Html.LabelForModel(Convert.ToString(taxCalculation.standardDedusctions))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.Oldtaxableamount))</td>
+                                    <td style="color:red">@Html.LabelForModel(Convert.ToString(taxCalculation.taxableAmount))</td>
                                 </tr>
 
                             </tbody>
@@ -353,7 +401,8 @@
 
                                 </tr>
                                 <tr>
-                                    <td colspan="3" style="text-align:right">Total Tax paid till now : 
+                                    <td colspan="3" style="text-align:right">
+                                        Total Tax paid till now :
                                         @Html.Hidden("txt_OldTaxOutGo", taxCalculation.OldTaxOutGo, new { @readonly = "readonly" })
                                         @Html.Hidden("txt_TaxOutGo", taxCalculation.TaxOutGo, new { @readonly = "readonly" })
                                         @Html.TextBox("txt_AvancepaiIncometax", Convert.ToString(taxCalculation.AvancepaiIncometax), new { @readonly = "readonly" })
@@ -389,7 +438,17 @@
     $(document).ready(function () {
         checkLogin();
 
-
+        var myear = $("#MonthYear").val();
+        // alert(myear);
+        if (myear.indexOf("/") > -1) {
+            myear = myear.split("/")[2].split(" ")[0];
+            myear = myear + "-" + (parseInt(myear) + 1);
+        }
+        else {
+            myear = myear.split("-")[2].split(" ")[0];
+            myear = myear + "-" + (parseInt(myear) + 1);
+        }
+        $("#fyear").html(myear);
 
         if (decrypt($("#userPrivilege").html()) == "Admin") {
 

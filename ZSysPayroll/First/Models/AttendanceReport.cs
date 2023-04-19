@@ -23,6 +23,6 @@ namespace First.Models
         public string LogOutTime { get; set; }
         [DataType(DataType.Time)]
         public string TotalTime { get; set; }
-        public string WorkStatus { get; set; }
+        public string WorkStatus { get; set; }        
     }
 }

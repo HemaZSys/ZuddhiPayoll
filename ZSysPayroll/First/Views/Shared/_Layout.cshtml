@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Dashboard";
 }
 <!DOCTYPE html>
@@ -182,14 +181,16 @@
                     `${date}-${month}-${year} `)
                     (_date.toISOString().split(/[^\d]/g));
 
-            const currentdate = new Date();            
+            const currentdate = new Date();
             //alert(((LeaveEndDate = formatDate(currentdate)) || (LeaveStartDate = formatDate(currentdate))) && LeaveStatus == 'Approved');
             if (((LeaveEndDate = formatDate(currentdate)) || (LeaveStartDate = formatDate(currentdate))) && LeaveStatus == 'Approved')
             {
-                $(".btnlogin").hide();
+                $(".btnlogin").hide();                
+                $(".btnlogout").hide();
             }
-            else {             
+            else {
                 $(".btnlogin").show();
+                $(".btnlogout").show();
             }
 
         }
@@ -324,6 +325,7 @@
         function Logout()
         {
             var EmployeeId1 =  @Session["id"];
+
             $.get("/Employee/SaveLogout", {
                 logintime: $("#txtlogin").val(), logouttime: $("#txtlogout").val(), comment: $("#txtComments").val(), EmployeeId: EmployeeId1, workingstatus: $("#cbLeave").val()
             }
@@ -372,30 +374,30 @@
                                 </div>
                                 @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                 {
-                                    <div class="col-lg-8" style="margin-bottom:5px; margin-top:5px;">
-                                        <input id="txtlogin" class="form-control" value="" type="time" width="100%" style="text-align: center;" readonly />
-                                    </div>
+                                <div class="col-lg-8" style="margin-bottom:5px; margin-top:5px;">
+                                    <input id="txtlogin" class="form-control" value="" type="time" width="100%" style="text-align: center;" readonly />
+                                </div>
                                 }
                                 else
                                 {
-                                    <div class="col-lg-8" style="margin-bottom:5px;margin-top:5px;">
-                                        <input id="txtlogin" class="form-control" value="10:00" type="time" width="100%" style="text-align: center;" readonly />
-                                    </div>
+                                <div class="col-lg-8" style="margin-bottom:5px;margin-top:5px;">
+                                    <input id="txtlogin" class="form-control" value="10:00" type="time" width="100%" style="text-align: center;" readonly />
+                                </div>
                                 }
                                 <div class="col-lg-4 " style="margin-bottom: 5px;">
                                     <p>Logout</p>
                                 </div>
                                 @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                 {
-                                    <div class="col-lg-8" style="margin-bottom: 6px;">
-                                        <input id="txtlogout" class="form-control" value="10:00" type="time" width="100%" style="text-align: center;" readonly />
-                                    </div>
+                                <div class="col-lg-8" style="margin-bottom: 6px;">
+                                    <input id="txtlogout" class="form-control" value="10:00" type="time" width="100%" style="text-align: center;" readonly />
+                                </div>
                                 }
                                 else
                                 {
-                                    <div class="col-lg-8" style="margin-bottom: 6px;">
-                                        <input id="txtlogout" class="form-control" value="" type="time" width="100%" style="text-align: center;" readonly />
-                                    </div>
+                                <div class="col-lg-8" style="margin-bottom: 6px;">
+                                    <input id="txtlogout" class="form-control" value="" type="time" width="100%" style="text-align: center;" readonly />
+                                </div>
                                 }
                                 <div class="col-lg-12" style="margin-bottom:12px;">
                                     <input id="txtComments" class="form-control" type="text" title=" Enter Status/Comments" placeholder="Enter Status/Comments" width="100%" />
@@ -411,34 +413,34 @@
                                     <div>
                                         @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                         {
-                                            if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
-                                            {
-                                                <h5 class="nav-link"><b>Total Working Hours :</b>&nbsp;&nbsp;<span id="sptotalhours" style="color: darkorange;"><b>&nbsp;&nbsp;Hrs : Mins</b></span></h5>
-                                            }
+                                        if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
+                                        {
+                                        <h5 class="nav-link"><b>Total Working Hours :</b>&nbsp;&nbsp;<span id="sptotalhours" style="color: darkorange;"><b>&nbsp;&nbsp;Hrs : Mins</b></span></h5>
+                                        }
                                         }
                                     </div>
                                     @if (Session["LastLoginTime"] != null && Session["LastLoginTime"] != "")
                                     {
-                                        if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
-                                        {
-                                            <div class="col-lg-6" style="text-align: center; display: none">
-                                                <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Logout</button>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="col-lg-6" style="text-align:center; ">
-                                                <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Logout</button>
-                                            </div>
-                                        }
+                                    if (Session["LastLogoutTime"] != null && Session["LastLogoutTime"] != "")
+                                    {
+                                    <div class="col-lg-6" style="text-align: center; display: none">
+                                        <button type="button" onclick="Logout()" href="#" class="btn btn-primary" width="120px;">Logout</button>
+                                    </div>
+                                    }
+                                    else
+                                    {
+                                    <div class="col-lg-6" style="text-align:center; ">
+                                        <button type="button" onclick="Logout()" href="#" class="btnlogout btn btn-primary" width="120px;">Logout</button>
+                                    </div>
+                                    }
 
                                     }
                                     else
                                     {
-                                           <div class="col-lg-6" style="text-align: center;">
-                                                <button type="button" onclick="Logout()" href="#" class="btnlogin btn btn-primary" width="120px;">Login</button>
-                                            </div>
-                                     
+                                    <div class="col-lg-6" style="text-align: center;">
+                                        <button type="button" onclick="Logout()" href="#" class="btnlogin btn btn-primary" width="120px;">Login</button>
+                                    </div>
+
                                     }
 
                                 </div>
@@ -454,25 +456,27 @@
                 </div>
             </nav>
 
-            @*<script>
+            @*
+            <script>
                                                     $(document).ready(function () {
                                                         $('#menuToggle').trigger('click');
                                                     });
-                </script>*@
+            </script>*@
 
 
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     @if (Session["Id"] != null && Session["Id"] != "")
                     {
-                        First.Models.Enroll user = (First.Models.Enroll)HttpContext.Current.Session["CurrentUser"];
-                        @*<li { list-style: none;}><a href="https://www.zuddhisystems.com/" >Contact us</a></li>
-                            <li>@Html.ActionLink("Logout", "Index", "UserLogin")</li>*@
+                    First.Models.Enroll user = (First.Models.Enroll)HttpContext.Current.Session["CurrentUser"];
+                    @*
+                    <li { list-style: none;}><a href="https://www.zuddhisystems.com/">Contact us</a></li>
+                    <li>@Html.ActionLink("Logout", "Index", "UserLogin")</li>*@
                     }
                     @if (Session["Email"] != null)
                     {
-                        <li style="margin-top: -4rem; z-index: 1111; margin-right: 22rem;"><b id="currentLoggedInUser" style="color:#fff;" class="menu-top-active">Welcome @Session["Email"].ToString()</b></li>
-                        <li><div id="userPrivilege" style="display:none;">@Session["AccessType"].ToString()</div></li>
+                    <li style="margin-top: -4rem; z-index: 1111; margin-right: 22rem;"><b id="currentLoggedInUser" style="color:#fff;" class="menu-top-active">Welcome @Session["Email"].ToString()</b></li>
+                    <li><div id="userPrivilege" style="display:none;">@Session["AccessType"].ToString()</div></li>
 
                     }
                 </ul>
@@ -502,21 +506,23 @@
                         <ul class="treeview-menu">
                             @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                             {
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Add Employee", "Index", "Employee", new { id = 0 }, null)</i></li>
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Add Employee", "Index", "Employee", new { id = 0 }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)</i></li>
 
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-users" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("All Employee", "Details", "Employee", new { id = Session["Id"] }, null)</i></li>
-                                @*<li style="text-indent: 5px" id="AdminEmpList"><a href="~/EmployeePayslip/GeneratePayslip"><i class="fa fa-money"></i> <span>Generate Payslip</span></a></li>*@
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-users" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("All Employee", "Details", "Employee", new { id = Session["Id"] }, null)</i></li>
+                            @*
+                            <li style="text-indent: 5px" id="AdminEmpList"><a href="~/EmployeePayslip/GeneratePayslip"><i class="fa fa-money"></i> <span>Generate Payslip</span></a></li>*@
 
                             }
                             else
                             {
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-user-circle-o" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-money" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = Session["Id"], mode = 2 }, null)</i></li>
 
                             }
-                            @*<li><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0, lid = 0, mode = "Apply" }, null)</i></li>*@
+                            @*
+                            <li><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0, lid = 0, mode = "Apply" }, null)</i></li>*@
                             <li><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply"><i class="fa fa-file-text"></i><span>Apply Leave</span></a></li>
                         </ul>
                     </li>
@@ -533,22 +539,22 @@
                         <ul class="treeview-menu">
                             @if (Session["Id"] != null)
                             {
-                                <li style="padding:1rem;text-indent:5px">
-                                    <i class="fa fa-file-text" style="color:#fff">
-                                        &nbsp;&nbsp;Declaration Form
-                                        <ul style="list-style:none;">
-                                            <li class="first fa-arrow-right" style="padding-top: 2rem;">&nbsp;&nbsp;@Html.ActionLink("Previous Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
-                                            <li class="first fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
-                                            <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
-                                            <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Upcoming Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
-                                        </ul>
+                            <li style="padding:1rem;text-indent:5px">
+                                <i class="fa fa-file-text" style="color:#fff">
+                                    &nbsp;&nbsp;Declaration Form
+                                    <ul style="list-style:none;">
+                                        <li class="first fa-arrow-right" style="padding-top: 2rem;">&nbsp;&nbsp;@Html.ActionLink("Previous Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
+                                        <li class="first fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
+                                        <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Current Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now.AddYears(-1) }, null)</li>
+                                        <li class="second fa-arrow-right" style="padding-top: 2rem; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Upcoming Year ", "Form80C", "Tax", new { id = Session["Id"], year = DateTime.Now }, null)</li>
+                                    </ul>
 
-                                    </i>
-                                </li>
+                                </i>
+                            </li>
 
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration", "ITCalcDeclaration", "Tax", new { id = Session["Id"] }, null)</i></li>
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration 2023", "ITCalcDeclaration2023", "Tax", new { id = Session["Id"] }, null)</i></li>
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Submission", "ITCalculation", "Tax", new { id = Session["Id"] }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration", "ITCalcDeclaration", "Tax", new { id = Session["Id"] }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Declaration 2023", "ITCalcDeclaration2023", "Tax", new { id = Session["Id"] }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-calculator" style="color:#fff">&nbsp;&nbsp;@Html.ActionLink("Tax on Submission", "ITCalculation", "Tax", new { id = Session["Id"] }, null)</i></li>
                             }
                         </ul>
                     </li>
@@ -563,59 +569,61 @@
 
                         </a>
                         <ul class="treeview-menu">
-                            @*<li>
-                    <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
-                </li>*@
+                            @*
+                            <li>
+                                <a href="~/Leaves/LeaveList?mode=ApplyList"><i class="fa fa-search"><span>&nbsp;&nbsp; Request Leave List</span></i></a>
+                            </li>*@
                             @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                             {
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApplyList" }, null)</i></li>
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApproveList" }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApplyList" }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = -2, mode = "ApproveList" }, null)</i></li>
                             }
                             else
                             {
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApplyList" }, null)</i></li>
-                                <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApproveList" }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Request Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApplyList" }, null)</i></li>
+                            <li style="padding: 5px 5px 5px 30px;"><i class="fa fa-search" style="color: #fff; line-height: 30px; text-indent: 5px">&nbsp;&nbsp;@Html.ActionLink("Approve Leave List", "LeaveList", "Leaves", new { id = Session["Id"], mode = "ApproveList" }, null)</i></li>
                             }
                         </ul>
                     </li>
                     @if (Session["AccessType"] != null && Session["AccessType"].ToString() != "User")
                     {
-                        <li class="treeview" id="liSettings">
-                            <a href="#">
-                                <i class="fa fa-cog"></i>
-                                <span>Settings</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
+                    <li class="treeview" id="liSettings">
+                        <a href="#">
+                            <i class="fa fa-cog"></i>
+                            <span>Settings</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
 
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="~/Grade/GradeDetails"><i class="fa fa-search"></i> <span>Grade Details </span></a></li>
-                                <li><a href="~/Employee/Dropdownsettingslist"><i class="fa fa-search"></i> <span>Dropdown Settings </span></a></li>
-                                <li><a href="~/Tax/Form80Csettingslist"><i class="fa fa-search"></i> <span>TaxDecl Form Settings </span></a></li>
-                                <li><a href="~/Enrollment/EnrollmentList"><i class="fa fa-search"></i> <span>Enrollment Details </span></a></li>
-                                <li><a href="~/Leaves/LeaveSettingsList"><i class="fa fa-search"></i> <span>Leave Settings</span></a></li>
-                            </ul>
-                        </li>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="~/Grade/GradeDetails"><i class="fa fa-search"></i> <span>Grade Details </span></a></li>
+                            <li><a href="~/Employee/Dropdownsettingslist"><i class="fa fa-search"></i> <span>Dropdown Settings </span></a></li>
+                            <li><a href="~/Tax/Form80Csettingslist"><i class="fa fa-search"></i> <span>TaxDecl Form Settings </span></a></li>
+                            <li><a href="~/Enrollment/EnrollmentList"><i class="fa fa-search"></i> <span>Enrollment Details </span></a></li>
+                            <li><a href="~/Leaves/LeaveSettingsList"><i class="fa fa-search"></i> <span>Leave Settings</span></a></li>
+                        </ul>
+                    </li>
 
-                        <li class="treeview" id="liSettings">
-                            <a href="#">
-                                <i class="fa fa-file-excel-o"></i>
-                                <span>Reports</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
+                    <li class="treeview" id="liSettings">
+                        <a href="#">
+                            <i class="fa fa-file-excel-o"></i>
+                            <span>Reports</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
 
-                            </a>
-                            <ul class="treeview-menu">
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "PayslipReport", "PayslipEntry", new { id = -2, mode = 2 }, null)</i></li>
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Leave Balance", "LeaveBalanceReportList", "Leaves", new { id = -2, mode = 2 }, null)</i></li>
-                                <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Attendance", "AttendanceReport", "Employee", new { id = -2, mode = 2 }, null)</i></li>
-                            </ul>
-                        </li>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "PayslipReport", "PayslipEntry", new { id = -2, mode = 2 }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Leave Balance", "LeaveBalanceReportList", "Leaves", new { id = -2, mode = 2 }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Attendance", "AttendanceReport", "Employee", new { id = -2,month = DateTime.Now.ToString("yyyy-MM") }, null)</i></li>
+                        </ul>
+                    </li>
                     }
 
-                    @*<li style="padding: 1rem;text-indent: 5px"><i class="fa fa-sign-out" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("LOGOUT", "Logout", "UserLogin", null, null)</i></li>*@
+                    @*
+                    <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-sign-out" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("LOGOUT", "Logout", "UserLogin", null, null)</i></li>*@
                 </ul>
 
 

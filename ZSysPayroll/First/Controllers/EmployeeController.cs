@@ -72,11 +72,11 @@ namespace First.Controllers
                 using (SqlConnection con = new SqlConnection(constr))
                 {
                     //string query1 = " []";
-                    using (SqlCommand cmd1 = new SqlCommand("SP_Employee_Access",con))
+                    using (SqlCommand cmd1 = new SqlCommand("SP_Employee_Access", con))
                     {
                         cmd1.CommandType = CommandType.StoredProcedure;
                         cmd1.Connection = con;
-                        cmd1.Parameters.AddWithValue("@Email", e.offcEmail==null?"": e.offcEmail);
+                        cmd1.Parameters.AddWithValue("@Email", e.offcEmail == null ? "" : e.offcEmail);
                         cmd1.Parameters.AddWithValue("@AccessType", e.AccessType == null ? "" : e.AccessType);
                         con.Open();
                         cmd1.ExecuteNonQuery();
@@ -92,8 +92,8 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@Designation", e.Designation);
                         cmd.Parameters.AddWithValue("@EmployeeId", e.EmployeeId);
                         DateTime a;
-                        
-                        if (e.DateofJoin.Year > 1753 && e.DateofJoin.Year <9999)
+
+                        if (e.DateofJoin.Year > 1753 && e.DateofJoin.Year < 9999)
                         {
                             cmd.Parameters.AddWithValue("@DateofJoin", e.DateofJoin);
                         }
@@ -206,7 +206,7 @@ namespace First.Controllers
                         Environment.NewLine + "ORDER BY EmployeeId";
             }
             else
-            {               
+            {
                 query = "SELECT em.*,isnull(emgrd.description,'') as EmployeeStatus FROM EmployeeDetails em left join [Empalldropdown](nolock) emgrd on emgrd.Id = em.Empstatus where id = " + EmpID + " ORDER BY EmployeeId ";
             }
 
@@ -372,7 +372,7 @@ namespace First.Controllers
 
 
 
-            Employee emp = new Employee();            
+            Employee emp = new Employee();
             string query = "Get_Individual_Employee_Detail";
             using (SqlConnection con = new SqlConnection(constr))
             {
@@ -393,7 +393,7 @@ namespace First.Controllers
                                 Designation = Convert.ToString(sdr["DesignationName"] == DBNull.Value ? "" : sdr["DesignationName"]),
                                 EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
                                 DateofJoin = Convert.ToDateTime(sdr["DateofJoin"] == DBNull.Value ? DateTime.Now : sdr["DateofJoin"]),
-                                DateofRelieving = Convert.ToDateTime(sdr["DateofRelieving"] == DBNull.Value ? DateTime.Now : sdr["DateofRelieving"]),                                
+                                DateofRelieving = Convert.ToDateTime(sdr["DateofRelieving"] == DBNull.Value ? DateTime.Now : sdr["DateofRelieving"]),
                                 DateofConfirmation = Convert.ToDateTime(sdr["DateofConfirmation"] == DBNull.Value ? DateTime.Now : sdr["DateofConfirmation"]),
                                 Gender = Convert.ToString(sdr["Gender"] == DBNull.Value ? "" : sdr["Gender"]),
                                 Qualification = Convert.ToString(sdr["QualificationName"] == DBNull.Value ? "" : sdr["QualificationName"]),
@@ -471,7 +471,7 @@ namespace First.Controllers
                 //sort the employee and get the last insert employee.
                 //var lastemployee = db.Emps.OrderByDescending(c => c.EmployeeId).FirstOrDefault();
                 //var lastemployee = db.Emps.OrderByDescending(w => !w.EmployeeId.Contains("ZSPL")).FirstOrDefault();
-                var query1 =  "select top 1 EmployeeId from [dbo].[EmployeeDetails] where EmployeeId not like '%PL%' order by EmployeeId desc";
+                var query1 = "select top 1 EmployeeId from [dbo].[EmployeeDetails] where EmployeeId not like '%PL%' order by EmployeeId desc";
                 using (SqlConnection con = new SqlConnection(constr))
                 {
                     using (SqlCommand cmd = new SqlCommand(query1))
@@ -483,8 +483,8 @@ namespace First.Controllers
                             while (sdr.Read())
                             {
                                 emp = new Employee
-                                {                                    
-                                    EmployeeId = Convert.ToString(sdr["EmployeeId"] )
+                                {
+                                    EmployeeId = Convert.ToString(sdr["EmployeeId"])
 
                                 };
                             }
@@ -535,7 +535,7 @@ namespace First.Controllers
                                 Designation = Convert.ToString(sdr["Designation"] == DBNull.Value ? "" : sdr["Designation"]),
                                 EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
                                 DateofJoin = Convert.ToDateTime(sdr["DateofJoin"] == DBNull.Value ? DateTime.Now : sdr["DateofJoin"]),
-                                DateofRelieving =  Convert.ToDateTime(sdr["DateofRelieving"] == DBNull.Value ? DateTime.Now : sdr["DateofRelieving"]),
+                                DateofRelieving = Convert.ToDateTime(sdr["DateofRelieving"] == DBNull.Value ? DateTime.Now : sdr["DateofRelieving"]),
                                 DateofConfirmation = Convert.ToDateTime(sdr["DateofConfirmation"] == DBNull.Value ? DateTime.Now : sdr["DateofConfirmation"]),
                                 Gender = Convert.ToString(sdr["Gender"] == DBNull.Value ? "" : sdr["Gender"]),
                                 Qualification = Convert.ToString(sdr["Qualification"] == DBNull.Value ? "" : sdr["Qualification"]),
@@ -570,7 +570,7 @@ namespace First.Controllers
                                 Availability = Convert.ToString(sdr["Availability"] == DBNull.Value ? "" : sdr["Availability"]),
                                 AccessType = Convert.ToString(sdr["AccessType"] == DBNull.Value ? "" : sdr["AccessType"]),
                                 CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"])
-                               
+
                             };
                         }
                     }
@@ -627,12 +627,12 @@ namespace First.Controllers
         {
             //if (ModelState.IsValid)
             //{
-            
+
             string query = " [SP_Employee_update]";
             using (SqlConnection con = new SqlConnection(constr))
             {
 
-                
+
                 using (SqlCommand cmd = new SqlCommand(query))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -642,7 +642,7 @@ namespace First.Controllers
                     cmd.Parameters.AddWithValue("@Designation", Employee.Designation);
                     cmd.Parameters.AddWithValue("@EmployeeId", Employee.EmployeeId);
                     cmd.Parameters.AddWithValue("@DateofJoin", Employee.DateofJoin);
-                    cmd.Parameters.AddWithValue("@DateofRelieving", Employee.DateofRelieving);                    
+                    cmd.Parameters.AddWithValue("@DateofRelieving", Employee.DateofRelieving);
                     cmd.Parameters.AddWithValue("@DateofConfirmation", Employee.DateofConfirmation);
                     cmd.Parameters.AddWithValue("@Gender", Employee.Gender);
                     cmd.Parameters.AddWithValue("@Maritalstatus", Employee.Maritalstatus);
@@ -683,7 +683,7 @@ namespace First.Controllers
                     con.Close();
                 }
 
-                
+
             }
             // return RedirectToAction("Index");
             //}
@@ -725,7 +725,7 @@ namespace First.Controllers
                                 Designation = Convert.ToString(sdr["Designation"]),
                                 EmployeeId = Convert.ToString(sdr["EmployeeId"]),
                                 DateofJoin = Convert.ToDateTime(sdr["DateofJoin"]),
-                                DateofRelieving = Convert.ToDateTime(sdr["DateofRelieving"]),                                
+                                DateofRelieving = Convert.ToDateTime(sdr["DateofRelieving"]),
                                 DateofConfirmation = Convert.ToDateTime(sdr["DateofConfirmation"]),
                                 Gender = Convert.ToString(sdr["Gender"]),
                                 Qualification = Convert.ToString(sdr["Qualification"]),
@@ -1097,7 +1097,7 @@ namespace First.Controllers
         // GET: Home/UpdatePayslipDetails/5
         [HandleError]
         public ActionResult UpdatePayslipDetails(int? id, DateTime month)
-        {            
+        {
             if (Convert.ToInt32(Session["Id"]) != id && Convert.ToString(Session["AccessType"]).ToUpper() != "ADMIN")
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -1387,35 +1387,61 @@ namespace First.Controllers
             return RedirectToAction("Index", "UserLogin");
 
         }
-        public string SaveLogout(string logintime, string logouttime,string comment, string EmployeeId, string workingstatus)
-        {            
+        public string SaveLogout(string logintime, string logouttime, string comment, string EmployeeId, string workingstatus)
+        {
             if (EmployeeId == null)
             {
                 return "";
-            }            
-            string query = "sp_Attendance_createupdate";
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd = new SqlCommand(query))
-                {
-                    cmd.Connection = con;
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Clear();                    
-                    cmd.Parameters.AddWithValue("@ID", 0);
-                    cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);                    
-                    cmd.Parameters.AddWithValue("@LogIn", logintime == "" ? DateTime.Now : Convert.ToDateTime(logintime));
-                    cmd.Parameters.AddWithValue("@LogOut", logouttime ==  "" ? Convert.ToDateTime("1900-01-01 00:00:00.000") : Convert.ToDateTime(logouttime));
-                    cmd.Parameters.AddWithValue("@Comments", comment);
-                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                    cmd.Parameters.AddWithValue("@CreatedBy",Convert.ToInt32(Session["id"]));
-                    cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus ==  null ? "" : workingstatus);
-                    con.Open();
-                    string result = Convert.ToString(cmd.ExecuteScalar());
-                    con.Close();
-                }
             }
-            return "success";
-        }
+            //update working status for on leave employee
+            //string qry = "SELECT d.Name,cast(l.StartDate as date) as StartDate,cast(l.EndDate as date) as EndDate,l.ApproveAction" +
+            //                Environment.NewLine + " FROM EmployeeLeaves l join EmployeeDetails d on l.EmployeeId = d.Id" +
+            //                Environment.NewLine + " WHERE(StartDate = cast(GETDATE() as date) or EndDate = cast(GETDATE() as date)) and l.ApproveAction = 'Approved'";
+
+            //using (SqlConnection con1 = new SqlConnection(constr))
+            //{
+            //    using (SqlCommand cmd1 = new SqlCommand(qry))
+            //    {
+            //        cmd1.Connection = con1;
+            //        con1.Open();
+            //        using (SqlDataReader sdr1 = cmd1.ExecuteReader())
+            //        {
+
+            //            while (sdr1.Read())
+            //            {
+            //                if (Convert.ToString(sdr1["ApproveAction"]) == "Approved")
+            //                {
+            //                    workingstatus = "Leave";
+            //                }
+            //            }
+            //            con1.Close();
+            //        }
+            //    }
+            //}
+            //Attendance Create or Update
+            string query = "sp_Attendance_createupdate";
+                    using (SqlConnection con = new SqlConnection(constr))
+                    {
+                        using (SqlCommand cmd = new SqlCommand(query))
+                        {
+                            cmd.Connection = con;
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@ID", 0);
+                            cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                            cmd.Parameters.AddWithValue("@LogIn", logintime == "" ? DateTime.Now : Convert.ToDateTime(logintime));
+                            cmd.Parameters.AddWithValue("@LogOut", logouttime == "" ? Convert.ToDateTime("1900-01-01 00:00:00.000") : Convert.ToDateTime(logouttime));
+                            cmd.Parameters.AddWithValue("@Comments", comment);
+                            cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                            cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToInt32(Session["id"]));
+                            cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus == null ? "" : workingstatus);
+                            con.Open();
+                            string result = Convert.ToString(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                    }
+                    return "success";
+                }
 
         //public void ExportHTML(string ExportData)
         //{
@@ -1483,52 +1509,78 @@ namespace First.Controllers
         //Leave Balance Report List
         [HandleError]
         [HttpGet]
-        public ActionResult AttendanceReport(int id)
-        {            
+        public ActionResult AttendanceReport(int? id, DateTime? month)
+        {
+            using (AppEntities1 db = new AppEntities1())
+            {
+                List<Emp> employees = db.Emps.Where(s => s.Availability == "Active").ToList();
+                List<Setting> Settings = db.Settings.ToList();
+                if (employees != null)
+                {
+                    ViewBag.employees = employees;
+                }
+            }
+            if (id == null || id == 0)
+            {
+                id = -2;
+            }
 
-            return View(GetAttendanceReportList(id));
+            if (month == null)
+            {
+                month = DateTime.Now;
+            }
+
+            return View(GetAttendanceReportList(id,month));
         }
         [HandleError]
-        public AttendanceReportHeader GetAttendanceReportList(int id)
-        {
-            AttendanceReportHeader attendanceReportHeaderList = new AttendanceReportHeader();
-
-            string attendancereport = "sp_attendance_Report";
-
-            using (SqlConnection con2 = new SqlConnection(constr))
-            {
-                using (SqlCommand cmd2 = new SqlCommand(attendancereport))
+                public AttendanceReportHeader GetAttendanceReportList(int? id, DateTime? month)
                 {
+            
+                    AttendanceReportHeader attendanceReportHeaderList = new AttendanceReportHeader();
+            //attendanceReportHeaderList.EmpName = id;
+            attendanceReportHeaderList.MonthYear = Convert.ToDateTime(month);
 
-                    ReportRow oReportRow = new ReportRow();
-                    cmd2.Connection = con2;
-                    cmd2.CommandType = CommandType.StoredProcedure;
-                    cmd2.Parameters.AddWithValue("@id", id);
+                    string attendancereport = "sp_attendance_Report";
 
+                    using (SqlConnection con2 = new SqlConnection(constr))
+                    {
+                        using (SqlCommand cmd2 = new SqlCommand(attendancereport))
+                        {
+
+                            ReportRow oReportRow = new ReportRow();
+                            cmd2.Connection = con2;
+                            cmd2.CommandType = CommandType.StoredProcedure;
+                            cmd2.Parameters.AddWithValue("@id", id);
+                    cmd2.Parameters.AddWithValue("@monthYear", month);
                     con2.Open();
 
-                    using (SqlDataReader sdr = cmd2.ExecuteReader())
-                    {
-                        while (sdr.Read())
-                        {
-                            attendanceReportHeaderList.AttendanceReportList.Add(new AttendanceReport
+                            using (SqlDataReader sdr = cmd2.ExecuteReader())
                             {
-                                EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
-                                EmployeeName = Convert.ToString(sdr["Name"] == DBNull.Value ? "" : sdr["Name"]),
-                                shiftDate = Convert.ToString(sdr["shiftDate"] == DBNull.Value ? DateTime.Now : sdr["shiftDate"]),
-                                LogInTime = Convert.ToString(sdr["LogInTime"] == DBNull.Value ? "" : sdr["LogInTime"]),
-                                LogOutTime = Convert.ToString(sdr["LogOutTime"] == DBNull.Value ? "" : sdr["LogOutTime"]),
-                                TotalTime = Convert.ToString(sdr["Total_Time"] == DBNull.Value ? "" : sdr["Total_Time"]),
-                                WorkStatus = Convert.ToString(sdr["WorkStatus"] == DBNull.Value ? "" : sdr["WorkStatus"])
-                            });
-                        }   
+                                while (sdr.Read())
+                                {
+                                    attendanceReportHeaderList.AttendanceReportList.Add(new AttendanceReport
+                                    {
+                                        EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
+                                        EmployeeName = Convert.ToString(sdr["Name"] == DBNull.Value ? "" : sdr["Name"]),
+                                        shiftDate = Convert.ToString(sdr["shiftDate"] == DBNull.Value ? DateTime.Now : sdr["shiftDate"]),
+                                        LogInTime = Convert.ToString(sdr["LogInTime"] == DBNull.Value ? "" : sdr["LogInTime"]),
+                                        LogOutTime = Convert.ToString(sdr["LogOutTime"] == DBNull.Value ? "" : sdr["LogOutTime"]),
+                                        TotalTime = Convert.ToString(sdr["Total_Time"] == DBNull.Value ? "" : sdr["Total_Time"]),
+                                        WorkStatus = Convert.ToString(sdr["WorkStatus"] == DBNull.Value ? "" : sdr["WorkStatus"])
+                                       
+                                    });
+                                }
 
-                        con2.Close();
+                                con2.Close();
+                            }
+                        }
+                if (id != -2)
+                {
+                    attendanceReportHeaderList.EmpName = attendanceReportHeaderList.AttendanceReportList[0].EmployeeName;
+                }                
+                        ViewBag.leavedetails = attendanceReportHeaderList.AttendanceReportList;
+                        return attendanceReportHeaderList;
                     }
                 }
-                ViewBag.leavedetails = attendanceReportHeaderList.AttendanceReportList;
-                return attendanceReportHeaderList;
             }
         }
-    }
-}
