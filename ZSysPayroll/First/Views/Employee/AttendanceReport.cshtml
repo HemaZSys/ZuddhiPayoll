@@ -30,10 +30,16 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            checkLogin();
+            var options = $("#EmpName").html();
+            options = "<option value='-2' selected>- Select All-</option>" + options;
+            $("#EmpName").html(options);
+
+            
             $('#tblAttendanceReport').DataTable({
                 select: true
             });
-            checkLogin();
+           
             
             if (decrypt($("#userPrivilege").html()) == "Admin") {
 
@@ -54,9 +60,7 @@
                 });
             }
            
-            var options = $("#EmpName").html();
-            options = "<option value='-2' selected>- Select All-</option>" + options;
-            $("#EmpName").html(options);
+           
            
 
             var tmpURL = document.location.href.split("/");
@@ -64,7 +68,10 @@
             $("#EmpName").val(tmpURL);
            
 
-            $("#EmpName").change(function () {                
+            $("#EmpName").change(function () {
+                var selectedValue = $(this).val();
+                localStorage.setItem('myDropdownValue', selectedValue);
+                
                 var tmpURL = document.location.href;               
                 tmpURL = tmpURL.split("AttendanceReport")[0]
                 $("#datepicker").val()
@@ -74,9 +81,7 @@
                 $("#EmpName").val()
                 if ($("#EmpName").val() == "") {
                     $("#EmpName").val() = -2;
-                }
-                alert($("#EmpName").val());
-                alert($("#datepicker").val());
+                }               
                 
                 document.location.href = tmpURL + "AttendanceReport/" + $("#EmpName").val() + "?month=" + $("#datepicker").val();
                 
@@ -88,7 +93,9 @@
             $("#datepicker").val(tmpURL);
 
 
-            $("#datepicker").change(function () {               
+            $("#datepicker").change(function () {
+                var selectedValue = $(this).val();
+                localStorage.setItem('myDropdownValue1', selectedValue);
                 var tmpURL = document.location.href;                
                 tmpURL = tmpURL.split("AttendanceReport")[0]
                 $("#EmpName").val()
@@ -98,14 +105,29 @@
                 $("#datepicker").val()
                 if ($("#datepicker").val() == "") {
                     $("#datepicker").val(DateTime.Now.ToString("yyyy - MM"));
-                }
-                alert($("#EmpName").val());
-                alert($("#datepicker").val());
+                }               
+                var nextMonth = new Date();
+                nextMonth.setMonth(nextMonth.getMonth() + 1);             
                 
-                document.location.href = tmpURL + "AttendanceReport/" + $("#EmpName").val() + "?month=" + $("#datepicker").val();                
+                if ($("#datepicker").val() < nextMonth) {
+                    // Current date and time is within the next month
+                    alert("Please select current month or Previous Month!")
+                }
+                else {
+                    // Current date and time is not within the next month
+                    document.location.href = tmpURL + "AttendanceReport/" + $("#EmpName").val() + "?month=" + $("#datepicker").val();
+                }
+                              
             });
             
-
+            var savedValue = localStorage.getItem('myDropdownValue');           
+            if (savedValue) {
+                $('#EmpName').val(savedValue);
+            }
+            var savedValue = localStorage.getItem('myDropdownValue1');            
+            if (savedValue) {
+                $('#datepicker').val(savedValue);
+            }
 
         });
     </script>
@@ -252,7 +274,7 @@
                                     @for (int i = 0; i < Model.AttendanceReportList.Count(); i++)
                                     {                                       
 
-                                <tr class="info">                                    
+                                <tr class="info">
                                     <td style="text-align:center;">
                                         @Html.HiddenFor(modelItem => Model.AttendanceReportList[i].id)
                                         @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].EmployeeId)
@@ -278,12 +300,18 @@
                                             @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
                                         </td>
                                     }
+                                    else if (Model.AttendanceReportList[i].WorkStatus == "Leave")
+                                    {
+                                        <td style="text-align: center; color: cornflowerblue; font-weight:bold">
+                                            @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
+                                        </td>
+                                    }
                                     else
                                     {
                                         <td style="text-align: center; color: red; font-weight:bold">
                                             @Html.DisplayFor(modelItem => Model.AttendanceReportList[i].WorkStatus)
                                         </td>
-                                    }                                   
+                                    }
                                 </tr>
 
                                     }

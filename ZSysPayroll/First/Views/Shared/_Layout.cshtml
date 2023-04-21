@@ -617,7 +617,8 @@
                         <ul class="treeview-menu">
                             <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("PaySlips", "PayslipReport", "PayslipEntry", new { id = -2, mode = 2 }, null)</i></li>
                             <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Leave Balance", "LeaveBalanceReportList", "Leaves", new { id = -2, mode = 2 }, null)</i></li>
-                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Attendance", "AttendanceReport", "Employee", new { id = -2,month = DateTime.Now.ToString("yyyy-MM") }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Attendance Time Report", "AttendanceReport", "Employee", new { id = -2, month = DateTime.Now.ToString("yyyy-MM") }, null)</i></li>
+                            <li style="padding: 1rem;text-indent: 5px"><i class="fa fa-search" style="color: #fff">&nbsp;&nbsp;@Html.ActionLink("Monthly Attendance Report", "MonthlyAttendanceReport", "Employee", new { id = -2, month = DateTime.Now.ToString("yyyy-MM") }, null)</i></li>
                         </ul>
                     </li>
                     }

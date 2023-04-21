@@ -1420,28 +1420,28 @@ namespace First.Controllers
             //}
             //Attendance Create or Update
             string query = "sp_Attendance_createupdate";
-                    using (SqlConnection con = new SqlConnection(constr))
-                    {
-                        using (SqlCommand cmd = new SqlCommand(query))
-                        {
-                            cmd.Connection = con;
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@ID", 0);
-                            cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
-                            cmd.Parameters.AddWithValue("@LogIn", logintime == "" ? DateTime.Now : Convert.ToDateTime(logintime));
-                            cmd.Parameters.AddWithValue("@LogOut", logouttime == "" ? Convert.ToDateTime("1900-01-01 00:00:00.000") : Convert.ToDateTime(logouttime));
-                            cmd.Parameters.AddWithValue("@Comments", comment);
-                            cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
-                            cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToInt32(Session["id"]));
-                            cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus == null ? "" : workingstatus);
-                            con.Open();
-                            string result = Convert.ToString(cmd.ExecuteScalar());
-                            con.Close();
-                        }
-                    }
-                    return "success";
+            using (SqlConnection con = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Connection = con;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@ID", 0);
+                    cmd.Parameters.AddWithValue("@EmployeeId", EmployeeId);
+                    cmd.Parameters.AddWithValue("@LogIn", logintime == "" ? DateTime.Now : Convert.ToDateTime(logintime));
+                    cmd.Parameters.AddWithValue("@LogOut", logouttime == "" ? Convert.ToDateTime("1900-01-01 00:00:00.000") : Convert.ToDateTime(logouttime));
+                    cmd.Parameters.AddWithValue("@Comments", comment);
+                    cmd.Parameters.AddWithValue("@CreatedOn", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToInt32(Session["id"]));
+                    cmd.Parameters.AddWithValue("@WorkingStatus", workingstatus == null ? "" : workingstatus);
+                    con.Open();
+                    string result = Convert.ToString(cmd.ExecuteScalar());
+                    con.Close();
                 }
+            }
+            return "success";
+        }
 
         //public void ExportHTML(string ExportData)
         //{
@@ -1525,62 +1525,121 @@ namespace First.Controllers
                 id = -2;
             }
 
-            if (month == null)
+            if (month == null && month != DateTime.Now.AddMonths(1))
             {
                 month = DateTime.Now;
             }
 
-            return View(GetAttendanceReportList(id,month));
+            return View(GetAttendanceReportList(id, month));
         }
+
         [HandleError]
-                public AttendanceReportHeader GetAttendanceReportList(int? id, DateTime? month)
-                {
-            
-                    AttendanceReportHeader attendanceReportHeaderList = new AttendanceReportHeader();
+        public AttendanceReportHeader GetAttendanceReportList(int? id, DateTime? month)
+        {
+
+            AttendanceReportHeader attendanceReportHeaderList = new AttendanceReportHeader();
             //attendanceReportHeaderList.EmpName = id;
             attendanceReportHeaderList.MonthYear = Convert.ToDateTime(month);
 
-                    string attendancereport = "sp_attendance_Report";
+            string attendancereport = "sp_attendance_Report";
 
-                    using (SqlConnection con2 = new SqlConnection(constr))
-                    {
-                        using (SqlCommand cmd2 = new SqlCommand(attendancereport))
-                        {
+            using (SqlConnection con2 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand(attendancereport))
+                {
 
-                            ReportRow oReportRow = new ReportRow();
-                            cmd2.Connection = con2;
-                            cmd2.CommandType = CommandType.StoredProcedure;
-                            cmd2.Parameters.AddWithValue("@id", id);
+                    ReportRow oReportRow = new ReportRow();
+                    cmd2.Connection = con2;
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@id", id);
                     cmd2.Parameters.AddWithValue("@monthYear", month);
                     con2.Open();
 
-                            using (SqlDataReader sdr = cmd2.ExecuteReader())
+                    using (SqlDataReader sdr = cmd2.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            attendanceReportHeaderList.AttendanceReportList.Add(new AttendanceReport
                             {
-                                while (sdr.Read())
-                                {
-                                    attendanceReportHeaderList.AttendanceReportList.Add(new AttendanceReport
-                                    {
-                                        EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
-                                        EmployeeName = Convert.ToString(sdr["Name"] == DBNull.Value ? "" : sdr["Name"]),
-                                        shiftDate = Convert.ToString(sdr["shiftDate"] == DBNull.Value ? DateTime.Now : sdr["shiftDate"]),
-                                        LogInTime = Convert.ToString(sdr["LogInTime"] == DBNull.Value ? "" : sdr["LogInTime"]),
-                                        LogOutTime = Convert.ToString(sdr["LogOutTime"] == DBNull.Value ? "" : sdr["LogOutTime"]),
-                                        TotalTime = Convert.ToString(sdr["Total_Time"] == DBNull.Value ? "" : sdr["Total_Time"]),
-                                        WorkStatus = Convert.ToString(sdr["WorkStatus"] == DBNull.Value ? "" : sdr["WorkStatus"])
-                                       
-                                    });
-                                }
+                                EmployeeId = Convert.ToString(sdr["EmployeeId"] == DBNull.Value ? "" : sdr["EmployeeId"]),
+                                EmployeeName = Convert.ToString(sdr["Name"] == DBNull.Value ? "" : sdr["Name"]),
+                                shiftDate = Convert.ToString(sdr["shiftDate"] == DBNull.Value ? DateTime.Now : sdr["shiftDate"]),
+                                LogInTime = Convert.ToString(sdr["LogInTime"] == DBNull.Value ? "" : sdr["LogInTime"]),
+                                LogOutTime = Convert.ToString(sdr["LogOutTime"] == DBNull.Value ? "" : sdr["LogOutTime"]),
+                                TotalTime = Convert.ToString(sdr["Total_Time"] == DBNull.Value ? "" : sdr["Total_Time"]),
+                                WorkStatus = Convert.ToString(sdr["WorkStatus"] == DBNull.Value ? "" : sdr["WorkStatus"])
 
-                                con2.Close();
-                            }
+                            });
                         }
-                if (id != -2)
-                {
-                    attendanceReportHeaderList.EmpName = attendanceReportHeaderList.AttendanceReportList[0].EmployeeName;
-                }                
-                        ViewBag.leavedetails = attendanceReportHeaderList.AttendanceReportList;
-                        return attendanceReportHeaderList;
+
+                        con2.Close();
                     }
                 }
+                if (id != -2)
+                {
+                    if (attendanceReportHeaderList.AttendanceReportList.Count > 0)
+                    {
+                        attendanceReportHeaderList.EmpName = attendanceReportHeaderList.AttendanceReportList[0].EmployeeName;
+                    }
+                    
+                }
+                ViewBag.leavedetails = attendanceReportHeaderList.AttendanceReportList;
+                return attendanceReportHeaderList;
             }
         }
+
+
+        //For Export Monthly Attendance Report
+        public ActionResult MonthlyAttendanceReport(int? id, DateTime? month)
+        {
+            if (Convert.ToInt32(Session["Id"]) != id && Convert.ToString(Session["AccessType"]).ToUpper() != "ADMIN")
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            MonthlyAttendanceReport oMonthlyAttendanceReport = new MonthlyAttendanceReport();
+            oMonthlyAttendanceReport.MonthYear = Convert.ToDateTime(month);
+            string attendanceReport = "sp_attendance_Monthly_Report";
+
+            using (SqlConnection con2 = new SqlConnection(constr))
+            {
+                using (SqlCommand cmd2 = new SqlCommand(attendanceReport))
+                {
+
+                    ReportRow oReportRow = new ReportRow();
+                    cmd2.Connection = con2;
+                    cmd2.CommandType = CommandType.StoredProcedure;
+                    cmd2.Parameters.AddWithValue("@id", id);
+                    cmd2.Parameters.AddWithValue("@monthYear", month);
+
+                    con2.Open();
+
+                    using (SqlDataReader sdr = cmd2.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            oReportRow = new ReportRow();
+                            for (int i = 0; i < sdr.FieldCount; i++)
+                            {
+                                ReportField oReportField = new ReportField();
+                                oReportField.FieldName = Convert.ToString(sdr.GetName(i));
+                                oReportField.FieldValue = Convert.ToString(sdr.GetValue(i));
+                                oReportRow.ReportFieldList.Add(oReportField);
+                            }
+                            oMonthlyAttendanceReport.ReportRowList.Add(oReportRow);
+                        }
+                    }
+                    con2.Close();
+
+
+                }
+            }
+            //ViewBag.payslips = payslipGradeHeaderList;
+
+            return View(oMonthlyAttendanceReport);
+        }
+    }
+}
+
