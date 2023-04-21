@@ -342,8 +342,8 @@ namespace First.Controllers
 
                         while (sdr1.Read())
                         {
-                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();
-                            Session["LastLogoutTime"] = sdr1["LastLogoutTime"] ==  "00:00" ? "" : Convert.ToDateTime(sdr1["LastLogoutTime"]).ToShortTimeString();
+                            Session["LastLoginTime"] = Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString() == "00:00" ? "" : Convert.ToDateTime(sdr1["LastLoginTime"]).ToShortTimeString();
+                            Session["LastLogoutTime"] = sdr1["LastLogoutTime"] == DBNull.Value ? "" : Convert.ToDateTime(sdr1["LastLogoutTime"]).ToShortTimeString();
                         }
                     }
                     con1.Close();
