@@ -167,6 +167,9 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@Created", DateTime.Now);
                         cmd.Parameters.AddWithValue("@modified", DateTime.Now);
                         cmd.Parameters.AddWithValue("@CompanyName", e.CompanyName);
+                        cmd.Parameters.AddWithValue("@UANNumber", e.UANNumber);
+                        cmd.Parameters.AddWithValue("@CreatedBy", Convert.ToInt32(Session["Id"]));
+                        cmd.Parameters.AddWithValue("@ModifiedBy", Convert.ToInt32(Session["Id"]));
                         con.Open();
                         ViewData["result"] = cmd.ExecuteNonQuery();
                         con.Close();
@@ -426,7 +429,8 @@ namespace First.Controllers
                                 Maritalstatus = Convert.ToString(sdr["Maritalstatus"] == DBNull.Value ? "" : sdr["Maritalstatus"]),
                                 BloodGroup = Convert.ToString(sdr["BloodgroupName"] == DBNull.Value ? "" : sdr["BloodgroupName"]),
                                 CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
-                                Availability = Convert.ToString(sdr["Availability"] == DBNull.Value ? "" : sdr["Availability"])
+                                Availability = Convert.ToString(sdr["Availability"] == DBNull.Value ? "" : sdr["Availability"]),
+                                UANNumber = Convert.ToString(sdr["UANNumber"] == DBNull.Value ? "" : sdr["UANNumber"])
                             };
                         }
                     }
@@ -569,7 +573,8 @@ namespace First.Controllers
                                 BloodGroup = Convert.ToString(sdr["Bloodgroup"] == DBNull.Value ? "" : sdr["Bloodgroup"]),
                                 Availability = Convert.ToString(sdr["Availability"] == DBNull.Value ? "" : sdr["Availability"]),
                                 AccessType = Convert.ToString(sdr["AccessType"] == DBNull.Value ? "" : sdr["AccessType"]),
-                                CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"])
+                                CompanyName = Convert.ToString(sdr["CompanyName"] == DBNull.Value ? "" : sdr["CompanyName"]),
+                                UANNumber = Convert.ToString(sdr["UANNumber"] == DBNull.Value ? "" : sdr["UANNumber"])
 
                             };
                         }
@@ -678,6 +683,8 @@ namespace First.Controllers
                     cmd.Parameters.AddWithValue("@Availability", Employee.Availability);
                     //cmd.Parameters.AddWithValue("@Created", DateTime.Now);
                     cmd.Parameters.AddWithValue("@modified", DateTime.Now);
+                    cmd.Parameters.AddWithValue("@ModifiedBy", Convert.ToInt32(Session["Id"]));
+                    cmd.Parameters.AddWithValue("@UANNumber", Employee.UANNumber);
                     con.Open();
                     ViewData["result"] = cmd.ExecuteNonQuery();
                     con.Close();
@@ -1121,7 +1128,7 @@ namespace First.Controllers
             string query = "SELECT em.id, em.EmployeeId, em.name +' '+ em.LName  as Name, em.Grade,em.DOB, em.DateofJoin,em.PFAccountNo, em.Grosspay,e.id as entryid, g.SequenceNumber as LineNumber,  e.MonthYear, isnull(g.Id, 0) as gradeid, " +
          Environment.NewLine + " g.SectionDescription, g.GradeName, " +
          Environment.NewLine + " g.description as Gradeval, " +
-         Environment.NewLine + " g.Percentage, g.Description, isnull(e.MonthlyAmount, 0) as MonthlyAmount, " +
+         Environment.NewLine + " g.Percentage, g.fixedAmount,g.Description, isnull(e.MonthlyAmount, 0) as MonthlyAmount, " +
          Environment.NewLine + " isnull(e.AnnualAmount, 0) as AnnualAmount, " +
          Environment.NewLine + " isnull(h.LOP, 0) as LOP ,isnull(h.[LeavesTaken],0) as LeavesTaken ,isnull(h.[PaymentMode],0) as PaymentMode " +
          Environment.NewLine + " , emgrd3.description as [Location]" +
@@ -1180,6 +1187,7 @@ namespace First.Controllers
                             payslipGradeEntry.SectionDescription = Convert.ToString(sdr["SectionDescription"]);
                             payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
                             payslipGradeEntry.Percentage = Convert.ToDecimal(sdr["Percentage"] == DBNull.Value ? 0.00 : sdr["Percentage"]);
+                            payslipGradeEntry.fixedAmount = Convert.ToDecimal(sdr["fixedAmount"] == DBNull.Value ? 0.00 : sdr["fixedAmount"]);
                             payslipGradeEntry.MonthlyAmount = Convert.ToDecimal(sdr["MonthlyAmount"]);
                             payslipGradeEntry.AnnualAmount = Convert.ToDecimal(sdr["AnnualAmount"]);
                             payslipGradeEntry.PayslipGradeid = Convert.ToInt32(sdr["gradeid"]);
@@ -1348,23 +1356,6 @@ namespace First.Controllers
             return RedirectToAction("Details");
         }
 
-        //// POST: Home/DeleteEmployee/5
-        //[HttpPost, ActionName("DeletePayslipDetails")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeletePayslipDetails(int id)
-        //{
-        //    using (SqlConnection con = new SqlConnection(constr))
-        //    {
-        //        string query = "Delete FROM PayslipEntry where Id='" + id + "'";
-        //        using (SqlCommand cmd = new SqlCommand(query, con))
-        //        {
-        //            con.Open();
-        //            cmd.ExecuteNonQuery();
-        //            con.Close();
-        //        }
-        //    }
-        //    return RedirectToAction("Details");
-        //}
         [HandleError]
         public ActionResult Logout()
         {
@@ -1393,31 +1384,7 @@ namespace First.Controllers
             {
                 return "";
             }
-            //update working status for on leave employee
-            //string qry = "SELECT d.Name,cast(l.StartDate as date) as StartDate,cast(l.EndDate as date) as EndDate,l.ApproveAction" +
-            //                Environment.NewLine + " FROM EmployeeLeaves l join EmployeeDetails d on l.EmployeeId = d.Id" +
-            //                Environment.NewLine + " WHERE(StartDate = cast(GETDATE() as date) or EndDate = cast(GETDATE() as date)) and l.ApproveAction = 'Approved'";
-
-            //using (SqlConnection con1 = new SqlConnection(constr))
-            //{
-            //    using (SqlCommand cmd1 = new SqlCommand(qry))
-            //    {
-            //        cmd1.Connection = con1;
-            //        con1.Open();
-            //        using (SqlDataReader sdr1 = cmd1.ExecuteReader())
-            //        {
-
-            //            while (sdr1.Read())
-            //            {
-            //                if (Convert.ToString(sdr1["ApproveAction"]) == "Approved")
-            //                {
-            //                    workingstatus = "Leave";
-            //                }
-            //            }
-            //            con1.Close();
-            //        }
-            //    }
-            //}
+            
             //Attendance Create or Update
             string query = "sp_Attendance_createupdate";
             using (SqlConnection con = new SqlConnection(constr))
@@ -1443,38 +1410,39 @@ namespace First.Controllers
             return "success";
         }
 
-        //public void ExportHTML(string ExportData)
-        //{
-        //    //HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
-        //    //HtmlNode.ElementsFlags["input"] = HtmlElementFlag.Closed;
-        //    //HtmlDocument doc = new HtmlDocument();
-        //    //doc.OptionFixNestedTags = true;
-        //    //doc.LoadHtml(ExportData);
-        //    //ExportData = doc.DocumentNode.OuterHtml;
-        //    //string HTMLContent = ExportData;
-        //    //Response.Clear();
-        //    //Response.ContentType = "application/pdf";
-        //    //Response.AddHeader("content-disposition", "attachment;filename=" + "PDFfile.pdf");
-        //    //Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        //    //Response.BinaryWrite(GetPDF(HTMLContent));
-        //    //Response.End();
-        //    using (MailMessage mm = new MailMessage(ConfigurationManager.AppSettings["EmailFrom"], "hemalatha@zuddhisystems.com"))
-        //    {
-        //        mm.Subject = "Payslip";
-        //        mm.Body = "Please Find the attachement for this month payslip";
-        //        mm.Attachments.Add(new Attachment(new MemoryStream(Convert.ToInt32(ExportData)), "PDFfile.pdf"));
-        //        mm.IsBodyHtml = true;
-        //        SmtpClient smtp = new SmtpClient();
-        //        smtp.UseDefaultCredentials = false;
-        //        smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
-        //        smtp.EnableSsl = true;
-        //        NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
-        //        smtp.UseDefaultCredentials = true;
-        //        smtp.Credentials = NetworkCred;
-        //        smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
-        //        smtp.Send(mm);
-        //    }
-        //}
+        public string ExportHTML(string htmlcontent)
+        {
+            //HtmlNode.ElementsFlags["img"] = HtmlElementFlag.Closed;
+            //HtmlNode.ElementsFlags["input"] = HtmlElementFlag.Closed;
+            //HtmlDocument doc = new HtmlDocument();
+            //doc.OptionFixNestedTags = true;
+            //doc.LoadHtml(ExportData);
+            //ExportData = doc.DocumentNode.OuterHtml;
+            //string HTMLContent = ExportData;
+            //Response.Clear();
+            //Response.ContentType = "application/pdf";
+            //Response.AddHeader("content-disposition", "attachment;filename=" + "PDFfile.pdf");
+            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            //Response.BinaryWrite(GetPDF(HTMLContent));
+            //Response.End();
+            using (MailMessage mm = new MailMessage(ConfigurationManager.AppSettings["EmailFrom"], "hemalatha@zuddhisystems.com"))
+            {
+                mm.Subject = "Payslip";
+                mm.Body = "Please Find the attachement for this month payslip";
+                mm.Attachments.Add(new Attachment(new MemoryStream(Convert.ToInt32(htmlcontent)), "PDFfile.pdf"));
+                mm.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient();
+                smtp.UseDefaultCredentials = false;
+                smtp.Host = ConfigurationManager.AppSettings["EmailHost"];
+                smtp.EnableSsl = true;
+                NetworkCredential NetworkCred = new NetworkCredential(ConfigurationManager.AppSettings["EmailFrom"], ConfigurationManager.AppSettings["EmailPassword"]);
+                smtp.UseDefaultCredentials = true;
+                smtp.Credentials = NetworkCred;
+                smtp.Port = Convert.ToInt32(ConfigurationManager.AppSettings["EmailPort"]);
+                smtp.Send(mm);
+            }
+            return "success";
+        }
         //public byte[] GetPDF(string pHTML)
         //{
         //    byte[] bPDF = null;
@@ -1640,6 +1608,7 @@ namespace First.Controllers
 
             return View(oMonthlyAttendanceReport);
         }
+        
     }
 }
 

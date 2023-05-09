@@ -3,61 +3,241 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+
+    .small-box .icon > i.fa, .small-box .icon > i.fab, .small-box .icon > i.far, .small-box .icon > i.fas, .small-box .icon > i.glyphicon, .small-box .icon > i.ion {
+        background: #b8aac1 !important;
+        font-size: 50px;
+        top: 30px;
+    }
+
+    .small-box {
+        border-radius: 0.25rem !important;
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        display: block;
+        margin-bottom: 30px;
+        position: relative;
+        background: #b8aac1 !important;
+        font-size: 70px;
+        top: 20px;
+        padding: 30px;
+    }
+    #blink {
+        font-size: 10px;
+        font-weight: bold;
+        color: #e487d0;
+        transition: 0.2s;
+    }
+
+    .chartjs-size-monitor, .chartjs-size-monitor-expand, .chartjs-size-monitor-shrink {
+        position: absolute;
+        direction: ltr;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        pointer-events: none;
+        visibility: hidden;
+        z-index: -1;
+    }
+
+    .pagination li {
+        padding: 0.5rem;
+        border: 2px solid darkgray;
+        border-radius: 0.5rem;
+        padding-right: 0.5rem;
+        background: #343a40;
+        color: #babfc8;
+    }
+
+    table, td, th {
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+        table th, table td {
+            text-align: center;
+        }
+
+    
+
+    .card-body {
+        padding: 0px;
+    }
+
+    .flip-card {
+        background-color: transparent;
+        width: 100%;
+        height: 13rem;
+        perspective: 1000px;
+    }
+
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 13rem;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    }
+
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 13rem;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .flip-card-front {
+        color: black;
+    }
+
+    .flip-card-back {
+        background-color: #9fee00;
+        color: #141d2b;
+        transform: rotateY(180deg);
+    }
+
+    .small-box p {
+        font-size: 15px;
+    }
+</style>
 
 <div>
     <!-- Content Wrapper. Contains page content -->
     <div>
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h4>
-                Dashboard
+            <h4 style="font-size : 20pt">
+                Admin Dashboard
             </h4>
         </section>
         <!-- Main content -->
         <section class="content">
             <!-- Info boxes -->
             <div class="row">
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-primary"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("My Profile", "EmployeeDetails", "Employee", new { id = Session["Id"] }, null)<sup style="font-size: 10px;"></sup></h3>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text"><a href="/Products/Index">IT Details</a></span>
-                            <span class="info-box-number">@ViewBag.Form16</span>
+                            <p><a href="">My Profile</a></p>
                         </div>
-                        @*<font size="1" class="pad"><a href="/Tax/Form80C" size="2">Form16</a></font>*@
-                        <!-- /.info-box-content -->
+                        <div class="icon">
+                            <i class="fa fa-user-circle-o rainbow rainbow_text_animated"></i>
+                        </div>
                     </div>
-                    <!-- /.info-box -->
                 </div>
-                <!-- /.col -->
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-yellow"><i class="fa fa-truck"></i></span>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text"><a href="/PayslipEntry/PayslipGradeEntryview" size="2">Payslip</a></span>
-                            <span class="info-box-number">@ViewBag.Payslip</span>
-                        </div>
-                        <!-- /.info-box-content -->
-                        @*<font size="1" class="pad"><a href="/Employee/Details" size="2">New Payslip</a></font>*@
-                    </div>
-                    <!-- /.info-box -->
-                </div>
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-red"><i class="fa fa-users"></i></span>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("All Employee", "Details", "Employee", new { id = Session["Id"] }, null)<sup style="font-size: 10px;"></sup></h3>
 
-                        <div class="info-box-content">
-                            <span class="info-box-text"><a href="/Employee/Index" size="2">EMPLOYEES</a></span>
-                            <span class="info-box-number">@ViewBag.Employee</span>
+                            <p><a href="">All Employee</a></p>
                         </div>
-                        <!-- /.info-box-content -->
-                        <font size="1" class="pad"><a href="/Employee/Index" size="2">New Employee</a></font>
+                        <div class="icon">
+                            <i class="fa fa-users rainbow rainbow_text_animated"></i>
+                        </div>
                     </div>
-                    <!-- /.info-box -->
                 </div>
-            </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("PaySlips", "EmployeeDetails", "Employee", new { id = -1, mode = 2 }, null)<sup style="font-size: 10px;"></sup></h3>
+
+                            <p><a href="">All Payslips</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-money rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("Apply Leave", "ApplyLeave", "Leaves", new { id = 0, lid = 0, mode = "Apply" }, null)<sup style="font-size: 10px;"></sup></h3>
+
+                            <p><a href="~/Leaves/ApplyLeave?id=0&&lid=0&&mode=Apply">Apply Leave</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-file-text rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>               
+            <div class="row">
+                <section class="content-header">
+                    <h4 style="font-size : 20pt">
+                        Reports
+                    </h4>
+                </section>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("PaySlips", "PayslipReport", "PayslipEntry", new { id = -2, mode = 2 }, null)<sup style="font-size: 10px;"></sup></h3>
+
+                            <p><a href="">Payslip Report</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-search rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("Leave Balance", "LeaveBalanceReportList", "Leaves", new { id = -2, mode = 2 }, new { @style = "white-space: pre-wrap;text-align:center" })<sup style="font-size: 10px;"></sup></h3>
+
+                            <p><a href="">Leave Balance Report</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-search rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("Working Hours", "AttendanceReport", "Employee", new { id = -2, month = DateTime.Now.ToString("yyyy-MM") } , new { @style = "white-space: pre-wrap;text-align:center" })<sup style="font-size: 5px;"></sup></h3>
+
+                            <p><a href="">Attendance Time Report</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-search rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning" style="">
+                        <div class="inner">
+                            <h3>@Html.ActionLink("Attendance", "MonthlyAttendanceReport", "Employee", new { id = -2, month = DateTime.Now.ToString("yyyy-MM") }, new { @style = "white-space: pre-wrap;text-align:center" })<sup style="font-size: 5px;"></sup></h3>
+
+                            <p><a href="">Monthly Attendance Report</a></p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-search rainbow rainbow_text_animated"></i>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+               
+           
             <!-- /.row -->
 
         </section>

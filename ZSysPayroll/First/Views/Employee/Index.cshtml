@@ -151,7 +151,8 @@
                 }
                 else {
                   //  alert("not");
-                $("#adminEmpInformation").hide();
+                    $("#adminEmpInformation").hide();
+                    $("#adminBankDetails").hide();
                 $("#ClsAdminEmpAddBack").hide();
 
 
@@ -1250,8 +1251,9 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <div class="card">
+                        
+                        <div class="card" id="adminBankDetails">
+                            <hr>
                             <div class="card-header">
                                 <h3>
                                     <a onmousedown="displayarrow(5);"  class="collapsed" data-bs-toggle="collapse" href="#collapseFive">
@@ -1341,7 +1343,7 @@
                                                     <label for="Aadhar" style="margin-top: 15px;" class="required"><b>Aadhar Number</b></label>
                                                 </div>
                                                 <div class="col-lg-7">
-                                                    @Html.TextBoxFor(e => e.Aadhar, new { type = "text", maxLength = "12" })
+                                                    @Html.TextBoxFor(e => e.Aadhar, new { type = "text", maxLength = "14" })
                                                     @*Html.ValidationMessageFor(e => e.Aadhar)*@
                                                     <span id="lblErrAadhar" style="color:red"></span>
                                                 </div>
@@ -1370,6 +1372,18 @@
                                                 <div class="col-lg-7">
                                                     @Html.TextBoxFor(e => e.PFAccountNo, new { type = "text" })
                                                     <span id="lblErrPFAccountNo" style="color:red"></span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 p-3">
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label for="UANNumber" style="margin-top: 15px;"><b>UAN</b></label>
+                                                </div>
+                                                <div class="col-lg-7">
+                                                    @Html.TextBoxFor(e => e.UANNumber, new { type = "text", maxLength = "10" })
+                                                    <span id="lblErrUANNumber" style="color:red"></span>
                                                 </div>
 
                                             </div>

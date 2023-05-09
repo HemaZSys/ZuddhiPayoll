@@ -50,6 +50,7 @@ namespace First.Controllers
                         cmd.Parameters.AddWithValue("@SectionDescription", p.SectionDescription);
                         cmd.Parameters.AddWithValue("@Description", p.Description);
                         cmd.Parameters.AddWithValue("@Percentage", p.Percentage);
+                        cmd.Parameters.AddWithValue("@fixedAmount", p.fixedAmount);
                         cmd.Parameters.AddWithValue("@EarningOrDeduction", p.EarningOrDeduction);
                         con.Open();
                         ViewData["result"] = cmd.ExecuteNonQuery();
@@ -86,6 +87,7 @@ namespace First.Controllers
                                 SectionDescription = Convert.ToString(sdr["SectionDescription"]),
                                 Description = Convert.ToString(sdr["Description"]),
                                 Percentage = Convert.ToDecimal(sdr["Percentage"]),
+                                fixedAmount = Convert.ToDecimal(sdr["fixedAmount"]),
                                 EarningOrDeduction = Convert.ToInt32(sdr["EarningOrDeduction"])
                             });
                         }
@@ -133,6 +135,7 @@ namespace First.Controllers
                                 SectionDescription = Convert.ToString(sdr["SectionDescription"]),
                                 Description = Convert.ToString(sdr["Description"]),
                                 Percentage = Convert.ToDecimal(sdr["Percentage"]),
+                                fixedAmount = Convert.ToDecimal(sdr["fixedAmount"]),
                                 EarningOrDeduction = Convert.ToInt32(sdr["EarningOrDeduction"])
                             };
                         }
@@ -185,6 +188,7 @@ namespace First.Controllers
                                 SectionDescription = Convert.ToString(sdr["SectionDescription"]),
                                 Description = Convert.ToString(sdr["Description"]),
                                 Percentage = Convert.ToDecimal(sdr["Percentage"]),
+                                fixedAmount = Convert.ToDecimal(sdr["fixedAmount"]),
                                 EarningOrDeduction = Convert.ToInt32(sdr["EarningOrDeduction"])
                             };
                         }
@@ -203,11 +207,11 @@ namespace First.Controllers
         [HandleError]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdatePayslipGrade([Bind(Include = "Id,GradeName,LineNumber,SequenceNumber,SectionDescription,Description,Percentage,EarningOrDeduction")] PayslipGrade payslipGrade)
+        public ActionResult UpdatePayslipGrade([Bind(Include = "Id,GradeName,LineNumber,SequenceNumber,SectionDescription,Description,Percentage,fixedAmount,EarningOrDeduction")] PayslipGrade payslipGrade)
         {
             //if (ModelState.IsValid)
             //{
-            string query = "UPDATE PayslipGrade SET GradeName = @GradeName, LineNumber = @LineNumber, SequenceNumber = @SequenceNumber,SectionDescription=@SectionDescription,Description = @Description,Percentage=@Percentage,EarningOrDeduction=@EarningOrDeduction Where Id =@Id";
+            string query = "UPDATE PayslipGrade SET GradeName = @GradeName, LineNumber = @LineNumber, SequenceNumber = @SequenceNumber,SectionDescription=@SectionDescription,Description = @Description,Percentage=@Percentage,fixedAmount = @fixedAmount,EarningOrDeduction=@EarningOrDeduction Where Id =@Id";
             using (SqlConnection con = new SqlConnection(constr))
             {
                 using (SqlCommand cmd = new SqlCommand(query))
@@ -220,6 +224,7 @@ namespace First.Controllers
                     cmd.Parameters.AddWithValue("@SectionDescription", payslipGrade.SectionDescription);
                     cmd.Parameters.AddWithValue("@Description", payslipGrade.Description);
                     cmd.Parameters.AddWithValue("@Percentage", payslipGrade.Percentage);
+                    cmd.Parameters.AddWithValue("@fixedAmount", payslipGrade.fixedAmount);
                     cmd.Parameters.AddWithValue("@EarningOrDeduction", payslipGrade.EarningOrDeduction);
                     con.Open();
                     ViewData["result"] = cmd.ExecuteNonQuery();
@@ -233,44 +238,7 @@ namespace First.Controllers
         }
 
         // 3. *************Delete Payslip Grade ******************
-
-        //// GET: Home/DeletePayslipGrade/5
-        //public ActionResult DeletePayslipGrade(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    PayslipGrade grade = new PayslipGrade();
-        //    string query = "SELECT * FROM PayslipGrade where Id=" + id;
-        //    using (SqlConnection con = new SqlConnection(constr))
-        //    {
-        //        using (SqlCommand cmd = new SqlCommand(query))
-        //        {
-        //            cmd.Connection = con;
-        //            con.Open();
-        //            using (SqlDataReader sdr = cmd.ExecuteReader())
-        //            {
-        //                while (sdr.Read())
-        //                {
-        //                    grade = new PayslipGrade
-        //                    {
-        //                        Id = Convert.ToInt32(sdr["Id"]),
-        //                        GradeName = Convert.ToString(sdr["GradeName"]),
-        //                        LineNumber = Convert.ToInt32(sdr["LineNumber"]),
-        //                        SequenceNumber = Convert.ToInt32(sdr["SequenceNumber"]),
-        //                        SectionDescription = Convert.ToString(sdr["SectionDescription"]),
-        //                        Description = Convert.ToString(sdr["Description"]),
-        //                        Percentage = Convert.ToDecimal(sdr["Percentage"]),
-        //                        EarningOrDeduction = Convert.ToInt32(sdr["EarningOrDeduction"])
-        //                    };
-        //                }
-        //            }
-        //            con.Close();
-        //        }
-        //    }
-        //    return View(grade);
-        //}
+       
 
         // POST: Home/DeleteEmployee/5
         [HandleError]

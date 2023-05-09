@@ -104,28 +104,18 @@
         <div class="container" style="width: 70%" id="PrintPDF">
             <div style="border: 1px solid black;">
                 <div style="font-size:15pt;font-weight:bold;text-align:left;">
-                    <table id="tblHeader" style="width: 720px; text-align: left;">
-                        <tr>
-                            <td rowspan="3" style="text-align:center;width:18%;">
-                                <img src="~/images/zlogo.png" style="width:69px;height:auto;" />
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-size: 12pt; font-family: Garamond; font-weight: bold; padding-left: 250px; padding-top: 12px; padding-bottom: 3px; text-align: center; ">
-                                    <b>@Model.CompanyName</b>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 11pt; padding: 0px 3px; line-height: 16px; padding-bottom: 5px; font-family: Garamond; text-align: center; padding-left: 250px; ">No 2, Sri Nagar, 5th Street, Narayanapuram,<br />Pallikaranai, Chennai - 600 100, India</td>
-                            </tr>                      
+                    <div class="row">
+                        <div class="col-lg-3" style="text-align: center;">
+                            <img src="~/images/zlogo.png" style="width: 90px; padding-top: 12px;" />
+                        </div>
+                        <div class="col-lg-6">
+                            <h2 style="text-align: center; font-family: Garamond;"><b>@Model.CompanyName</b></h2>
+                            <p style="text-align: center; font-size: 12pt; font-family: Garamond; ">No 2, Sri Nagar, 5th Street, Narayanapuram,<br />Pallikaranai, Chennai - 600 100, India</p>
+                        </div>
+                        <div class="col-lg-3">
 
-                    </table>
-
-
-
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -389,7 +379,7 @@
                         <input type="button" value="Save As PDF" onclick="convertHTMLtoPDF()">&nbsp;&nbsp;
                         <input type="hidden" name="ExportData" />
                         @*<button type="submit" id="btnSubmit1" style="margin:10px;padding:3px 10px" class="registerbtn float-right">@Html.ActionLink("send mail", "UpdatePayslipDetails", "Employee")</button>*@
-                    @*<button type="submit" id="btnSubmit1" class="registerbtn" style="margin-top: 0%;">send mail</button>*@
+
                     </td>
                     <td>
                         @Html.EditorFor(model => model.isSalaryStructure)
@@ -402,8 +392,10 @@
                 </tr>
             </table>
         </center>
-
     }
+    @*<div class="col-lg-6" style="text-align: center;">
+        <button type="button" id="btnSubmit1" onclick="SendEmail()" href="~/Employee/ExportHTML" class="btn btn-primary" width="120px;">send mail</button>
+    </div>*@
 </body>
 </html>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -411,24 +403,39 @@
 <script src="~/Js/jquery.validate.min.js"></script>
 <script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $("#btnSubmit1").click(function () {
-                /*$("input[name='ExportData']").val($("#PrintPDF").html());*/
-                $("input[name='ExportData']").val($convertHTMLtoPDF().html2canvas());
-            });
-        });
-    </script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>   
 
 <script src="~/savepdfJS/jquery/3.2.1/jquery.min.js"></script>
 <script src="~/savepdfJS/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="~/savepdfJS/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script type="text/javascript">
+    function SendEmail() {
+       // alert("Hi");
+        //const { jsPDF } = window.jspdf;        
+        //html2canvas(document.querySelector('#PrintPDF'),
+        //    { scale: 4 }
+        //).then(canvas => {
+        //    const pdf = new jsPDF('p', 'mm', 'a4');
+        //    pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, 211, 298);           
+        //});
+        pdf.fromHTML('#PrintPDF', 15, 15, { 'width': 170 });
+        alert(pdf.output());
+        var pdfData = pdf.output();
+            //var pdf = new jsPDF();
+           
+            //pdf.fromHTML(document.querySelector('#PrintPDF'), 15, 15, { 'width': 170 });
+            //var pdfData = pdf.output();
+            alert(pdfData);
+            $.get("/Employee/ExportHTML", {
+                htmlcontent: pdfData
+            }
+                , function (data) { data; });     
+    }
+
     function convertHTMLtoPDF() {       
         const { jsPDF } = window.jspdf;
-        const quality = 1 // Higher the better but larger file
+        const quality = 4 // Higher the better but larger file
         html2canvas(document.querySelector('#PrintPDF'),
             { scale: quality }
         ).then(canvas => {
@@ -436,20 +443,9 @@
             pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, 211, 298);            
             pdf.save($("#lblPayslipMonth").html() + "_" + $("#EmployeeName").val() + '.pdf');
         });
-       // const { jsPDF } = window.jspdf;
-
-        ////var doc = new jsPDF('l', 'mm', [2500, 1800]);
-        //var doc = new jsPDF('p', 'mm', [2500, 1800]);
-        //var pdfjs = document.querySelector('#PrintPDF');
-
-        //doc.html(pdfjs, {
-        //    callback: function (doc) {
-        //        doc.save("newpdf.pdf");
-        //    },
-        //    //x: 12,
-        //    //y: 12
-        //});
+       
     }
+    
 </script>
 
 <script type="text/javascript">
@@ -586,21 +582,11 @@
             TotalMonthVal = TotalIncomeMonthVal - TotalDeductionMonthVal;
             TotalAnnualVal = TotalIncomeAnnualVal - TotalDeductionIncomeAnnualVal;
 
-        }
-        //alert(TotalIncomeMonthVal + ":" + TotalIncomeAnnualVal);
-        //alert(TotalDeductionMonthVal + ":" + TotalDeductionIncomeAnnualVal);
-        //alert(TotalMonthVal + ":" + TotalAnnualVal);
+        }        
 
         $(".td1TotalGrossPay").val(TotalIncomeMonthVal.toFixed(2));
         $(".td1TotalDeduction").val(TotalDeductionMonthVal.toFixed(2));
         $(".td1TotalNetPay").val(TotalMonthVal.toFixed(2));
-
-
-        //alert(TotalIncomeMonthVal.toFixed(2));
-        //$("#GrossSalary").html(TotalIncomeMonthVal.toFixed(2));
-        //$("#TotalDeductions").html(TotalDeductionMonthVal.toFixed(2));
-        //$("#NetSalary").html(TotalMonthVal.toFixed(2));
-
 
 
         $("#tdPayMonthWords").html("(Rupees " + convertNumberToWords(TotalMonthVal) + " Only.)");
@@ -900,99 +886,5 @@
 
         calcTotals();
     }
-
- //   //
- //   /************SAVE AS PDF*****************/
-
- //   var form = $('.container'), cache_width = form.width(), a4 = [595.28, 841.89];
-
- //   //create pdf 
- //   function createPDF(frm) {
- //       form = frm;
- //       cache_width = form.width();
-
- //       getCanvas().then(function (canvas) {
-
- //           img = canvas.toDataURL("image/png"),
- //               doc = new jsPDF({
- //                   unit: 'px',
- //                   format: 'a4'
- //               });
- //           doc.addImage(img, 'JPEG', 20, 20);
- //           doc.save($("#tdPayMonth").html() + "_" + $("#txtEmpName").val() + '.pdf');
- //           form.width(cache_width);
- //       });
- //   }
-
- //   // create canvas object 
- //   function getCanvas() {
- //       form.width((a4[0] * 1.33333) - 80).css('max-width', 'none');
- //       return html2canvas(form, {
- //           imageTimeout: 2000,
- //           removeContainer: true
- //       });
- //   }
-
-
- //// jQuery helper plugin for examples and tests
-
- //   (function ($) {
- //       $.fn.html2canvas = function (options) {
- //           var date = new Date(),
- //               $message = null,
- //               timeoutTimer = false,
- //               timer = date.getTime();
- //           html2canvas.logging = options && options.logging;
- //           html2canvas.Preload(this[0], $.extend({
- //               complete: function (images) {
- //                   var queue = html2canvas.Parse(this[0], images, options),
- //                       $canvas = $(html2canvas.Renderer(queue, options)),
- //                       finishTime = new Date();
-
- //                   $canvas.css({ position: 'absolute', left: 0, top: 0 }).appendTo(document.body);
- //                   $canvas.siblings().toggle();
-
- //                   $(window).click(function () {
- //                       if (!$canvas.is(':visible')) {
- //                           $canvas.toggle().siblings().toggle();
- //                           throwMessage("Canvas Render visible");
- //                       } else {
- //                           $canvas.siblings().toggle();
- //                           $canvas.toggle();
- //                           throwMessage("Canvas Render hidden");
- //                       }
- //                   });
- //                   throwMessage('Screenshot created in ' + ((finishTime.getTime() - timer) / 1000) + " seconds<br />", 4000);
- //               }
- //           }, options));
-
- //           function throwMessage(msg, duration) {
- //               window.clearTimeout(timeoutTimer);
- //               timeoutTimer = window.setTimeout(function () {
- //                   $message.fadeOut(function () {
- //                       $message.remove();
- //                   });
- //               }, duration || 2000);
- //               if ($message)
- //                   $message.remove();
- //               $message = $('<div ></div>').html(msg).css({
- //                   margin: 0,
- //                   padding: 10,
- //                   background: "#000",
- //                   opacity: 0.7,
- //                   position: "fixed",
- //                   top: 10,
- //                   right: 10,
- //                   fontFamily: 'Tahoma',
- //                   color: '#fff',
- //                   fontSize: 12,
- //                   borderRadius: 12,
- //                   width: 'auto',
- //                   height: 'auto',
- //                   textAlign: 'center',
- //                   textDecoration: 'none'
- //               }).hide().fadeIn().appendTo('body');
- //           }
- //       };
- //   })(jQuery);
+ 
 </script>

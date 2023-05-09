@@ -289,14 +289,21 @@
                 <td>
                     @if (Model.PayslipGradeEntryList[i].Description.ToString() == "IT")
                     {
-                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox IT" })
+                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}",new { type = "text", @class = "textbox IT" })
+                    }
+                    else if (Model.PayslipGradeEntryList[i].Percentage > 0)
+                    {
+                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}", new { type = "text", @class = "textbox" })
+                        @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
                     }
                     else
                     {
-                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, new { type = "text", @class = "textbox" })
+                        @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].fixedAmount, "{0:n2}", new { type = "text", @class = "textbox" })
+                        @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].fixedAmount)
                     }
 
-                    @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+
+
                 </td>
                 @*<td><div class="clsSplits" id="spliti" onclick="ShowSplits(this)">sp    </div></td>*@
             </tr>
@@ -944,6 +951,7 @@
             TotalDeductionMonthVal = Math.ceil(TotalDeductionMonthVal);
 
             TotalMonthVal = TotalIncomeMonthVal - TotalDeductionMonthVal;
+            alert(TotalMonthVal);
             TotalAnnualVal = TotalIncomeAnnualVal - TotalDeductionIncomeAnnualVal;
         }
         //alert(TotalIncomeMonthVal + ":" + TotalIncomeAnnualVal);

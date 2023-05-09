@@ -171,10 +171,16 @@ namespace First.Models
         [Display(Name = "PF Account No. ")]
         public string PFAccountNo { get; set; }
         public string AccessType { get; set; }
+        
         [Required(ErrorMessage = "Please select Company Name")]
         [Display(Name = "CompanyName")]
         public string CompanyName { get; set; }
 
+        [Display(Name = "UAN ")]
+        public string UANNumber { get; set; }
+
+        public int CreatedBy { get; set; }
+        public int ModifiedBy { get; set; }
         public Employee()
         {
             Gender = "Male";

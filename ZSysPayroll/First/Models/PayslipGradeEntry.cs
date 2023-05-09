@@ -66,6 +66,7 @@
         public int EarningOrDeduction { get; set; }
 
         public decimal Percentage { get; set; }
+        public decimal fixedAmount { get; set; }
         public int taxcollected { get; set; }
        
     }

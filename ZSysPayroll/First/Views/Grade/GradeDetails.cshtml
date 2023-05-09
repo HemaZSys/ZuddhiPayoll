@@ -81,6 +81,9 @@
                         Percentage
                     </th>
                     <th>
+                        Fixed Amount
+                    </th>
+                    <th>
                         Earning Or Deduction
                     </th>
                     <th>
@@ -112,6 +115,9 @@
                     </td>
                     <td style="text-align:right;padding-right:50px;">
                         @Html.DisplayFor(modelItem => item.Percentage) %
+                    </td>
+                    <td style="text-align:right;padding-right:50px;">
+                        @Html.DisplayFor(modelItem => item.fixedAmount)
                     </td>
                     <td>
                         @if (item.EarningOrDeduction == 0)

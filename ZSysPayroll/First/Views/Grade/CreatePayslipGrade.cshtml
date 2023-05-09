@@ -205,17 +205,41 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 p-3">
-                        <div class="row">
-                            <div class="col-lg-5 mt-4">
-                                <label for="ControlType" style="margin-top: 15px;"><b>Percentage</b></label>
-                                <i class="fa fa-info-circle" style="font-size:15px" title="Enter the number of % need to added/deducted"></i>
-                            </div>
-                            <div class="col-lg-7">
-                                @Html.TextBoxFor(e => e.Percentage, new { type = "text" })
-                            </div>
+                    @*<div class="col-sm-4 p-3">
+                        <div for="Gender"><b>Gender</b></div>
+                        <div class="alignContainer">
+
+                            @Html.RadioButtonFor(e => e.Percentage, "Percentage", new { @class = "radioinline" })<span> Percentage </span>
+                            @Html.RadioButtonFor(e => e.fixedAmount, "Fixed Amount", new { @class = "radioinline" })<span>Fixed Amount </span>
+
+                        </div>
+                    </div>*@
+                   
+                <div class="col-lg-4 p-3">
+                    <div class="row">
+                        <div class="col-lg-5 mt-4">
+                            <label for="ControlType" style="margin-top: 15px;"><b>Percentage</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Enter the number of % need to added/deducted"></i>
+                        </div>
+                        <div class="col-lg-7">
+                            @Html.TextBoxFor(e => e.Percentage, new { type = "text" })
                         </div>
                     </div>
+                </div>
+               
+                <div class="col-lg-4 p-3">
+                    <div class="row">
+                        <div class="col-lg-5 mt-4">
+                            <label for="ControlType" style="margin-top: 15px;"><b>Fixed Amount</b></label>
+                            <i class="fa fa-info-circle" style="font-size:15px" title="Enter the number of % need to added/deducted"></i>
+                        </div>
+                        <div class="col-lg-7">
+                            @Html.TextBoxFor(e => e.fixedAmount, new { type = "text" })
+                        </div>
+                    </div>
+                </div>               
+                    
+                    
                     <div class="col-lg-4 p-3">
                         <div class="row">
                             <div class="col-lg-5 mt-4">
@@ -238,7 +262,7 @@
 
                             </div>
                             <div class="col-lg-7">
-                                <div >
+                                <div>
                                     @Html.TextBoxFor(e => e.EarningOrDeduction, new { type = "text" })
                                 </div>
                             </div>

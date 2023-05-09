@@ -137,7 +137,7 @@ namespace First.Controllers
 
                 if(Convert.ToString(Session["AccessType"]).ToUpper() == "ADMIN")
                 { 
-                return RedirectToAction("Details", "Employee");
+                return RedirectToAction("Index", "Dashboard");
                 }
                 else
                 {

@@ -2333,8 +2333,6 @@ namespace First.Controllers
                     {
                         while (sdr.Read())
                         {
-
-
                             //taxCalculation.empid = Convert.ToInt32(sdr["Id"]);
                             //taxCalculation.empname = Convert.ToString(sdr["Name"]);
                             //taxCalculation.year = Convert.ToDateTime(sdr["Year"]);

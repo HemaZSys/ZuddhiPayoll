@@ -86,6 +86,9 @@ namespace First.Controllers
                             { 
                                 payslipGradeEntry.Percentage = Convert.ToInt32(sdr["Percentage"]);
                             }
+                            
+                                payslipGradeEntry.fixedAmount = Convert.ToDecimal(sdr["fixedAmount"]);
+                           
                             payslipGradeEntry.MonthlyAmount = Convert.ToDecimal(sdr["MonthlyAmount"]);
                             payslipGradeEntry.AnnualAmount = Convert.ToDecimal(sdr["AnnualAmount"]);
                             payslipGradeEntry.LOP = Convert.ToDecimal(sdr["LOP"]);
@@ -134,7 +137,10 @@ namespace First.Controllers
                             payslipGradeEntry.SectionDescription = Convert.ToString(sdr["SectionDescription"]);
 
                                 payslipGradeEntry.Description = Convert.ToString(sdr["Description"]);
-                                if (sdr["Percentage"].ToString() != "")
+                            
+                                payslipGradeEntry.fixedAmount = Convert.ToDecimal(sdr["fixedAmount"]);
+                          
+                            if (sdr["Percentage"].ToString() != "")
                                 {
                                     payslipGradeEntry.Percentage = Convert.ToInt32(sdr["Percentage"]);
                                 }
@@ -262,7 +268,7 @@ namespace First.Controllers
                         }
                         cmd.Parameters.AddWithValue("@Id", payslipGradeEntry.Id);
                         cmd.Parameters.AddWithValue("@EmployeeId", payslipGradeHeader.EmpId);
-                        cmd.Parameters.AddWithValue("@MonthlyAmount", payslipGradeEntry.MonthlyAmount);
+                        cmd.Parameters.AddWithValue("@MonthlyAmount", payslipGradeEntry.MonthlyAmount != 0 ? payslipGradeEntry.MonthlyAmount : payslipGradeEntry.fixedAmount);
                         cmd.Parameters.AddWithValue("@AnnualAmount", payslipGradeEntry.AnnualAmount);
                         cmd.Parameters.AddWithValue("@LOP", payslipGradeHeader.LOP);
                         cmd.Parameters.AddWithValue("@PayslipGradeid", payslipGradeEntry.PayslipGradeid);

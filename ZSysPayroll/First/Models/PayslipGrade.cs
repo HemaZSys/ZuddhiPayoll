@@ -22,6 +22,8 @@
 
         public decimal Percentage { get; set; }
 
+        public decimal fixedAmount { get; set; }
+
         [StringLength(300)]
         public string SectionDescription { get; set; }
 

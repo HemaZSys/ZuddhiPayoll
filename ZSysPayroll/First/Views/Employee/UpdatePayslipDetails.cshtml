@@ -104,25 +104,6 @@
         <div class="container" style="width: 70%" id="PrintPDF">
             <div style="border: 1px solid black;">
                 <div style="font-size:15pt;font-weight:bold;text-align:left;">
-                    <!--<table id="tblHeader" style="width: 720px; text-align: left;">
-        <tr>
-            <td rowspan="3" style="text-align:center;width:18%;">
-                <img src="~/images/zlogo.png" style="width:69px;height:auto;" />
-            </td>
-
-        </tr>
-        <tr>
-            <td style="font-size: 11pt; font-weight: bold; text-align: center; padding: 10px 0px; font-family: Garamond;">-->
-                    @*<div style=" font-size: 11pt; font-weight: bold; text-align: center; padding: 10px 0px; font-family: Garamond;">*@
-                    <!--<b>@Model.CompanyName</b>-->
-                    @*</div>*@
-                    <!--</td>
-        </tr>
-        <tr>
-            <td style="font-size: 11pt; font-weight: bold; text-align: center; padding: 10px 0px; font-family: Garamond;">No 2, Sri Nagar, 5th Street, Narayanapuram,<br />Pallikaranai, Chennai - 600 100, India</td>
-        </tr>
-
-    </table>-->
                     <div class="row">
                         <div class="col-lg-3" style="text-align: center;">
                             <img src="~/images/zlogo.png" style="width: 90px; padding-top: 12px;" />
@@ -132,14 +113,9 @@
                             <p style="text-align: center; font-size: 12pt; font-family: Garamond; ">No 2, Sri Nagar, 5th Street, Narayanapuram,<br />Pallikaranai, Chennai - 600 100, India</p>
                         </div>
                         <div class="col-lg-3">
-                            
+
                         </div>
                     </div>
-                     
-
-         
-
-
                 </div>
             </div>
 
@@ -335,8 +311,18 @@
                             @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].AnnualAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
                         </td>
                         <td style="width: 21%; text-align: right; ">
-                            @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
-                            @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+                            @if (Model.PayslipGradeEntryList[i].Percentage > 0)
+                            {
+                                @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].MonthlyAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
+                                @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].Percentage)
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(modelItem => Model.PayslipGradeEntryList[i].fixedAmount, "{0:n2}", new { type = "text", style = "text-align:right", @class = "textbox" })
+                                @Html.HiddenFor(modelItem => Model.PayslipGradeEntryList[i].fixedAmount)
+                            }
+
+
                         </td>
                     </tr>
                 }
@@ -403,7 +389,7 @@
                         <input type="button" value="Save As PDF" onclick="convertHTMLtoPDF()">&nbsp;&nbsp;
                         <input type="hidden" name="ExportData" />
                         @*<button type="submit" id="btnSubmit1" style="margin:10px;padding:3px 10px" class="registerbtn float-right">@Html.ActionLink("send mail", "UpdatePayslipDetails", "Employee")</button>*@
-                    @*<button type="submit" id="btnSubmit1" class="registerbtn" style="margin-top: 0%;">send mail</button>*@
+
                     </td>
                     <td>
                         @Html.EditorFor(model => model.isSalaryStructure)
@@ -416,8 +402,10 @@
                 </tr>
             </table>
         </center>
-
     }
+    @*<div class="col-lg-6" style="text-align: center;">
+        <button type="button" id="btnSubmit1" onclick="SendEmail()" href="~/Employee/ExportHTML" class="btn btn-primary" width="120px;">send mail</button>
+    </div>*@
 </body>
 </html>
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -425,20 +413,36 @@
 <script src="~/Js/jquery.validate.min.js"></script>
 <script src="~/Js/jquery.validate.unobtrusive.min.js"></script>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            $("#btnSubmit1").click(function () {               
-                $("input[name='ExportData']").val($convertHTMLtoPDF().html2canvas());
-            });
-        });
-    </script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>   
 
 <script src="~/savepdfJS/jquery/3.2.1/jquery.min.js"></script>
 <script src="~/savepdfJS/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="~/savepdfJS/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script type="text/javascript">
+    function SendEmail() {
+       // alert("Hi");
+        //const { jsPDF } = window.jspdf;        
+        //html2canvas(document.querySelector('#PrintPDF'),
+        //    { scale: 4 }
+        //).then(canvas => {
+        //    const pdf = new jsPDF('p', 'mm', 'a4');
+        //    pdf.addImage(canvas.toDataURL('image/jpeg'), 'JPEG', 0, 0, 211, 298);           
+        //});
+        pdf.fromHTML('#PrintPDF', 15, 15, { 'width': 170 });
+        alert(pdf.output());
+        var pdfData = pdf.output();
+            //var pdf = new jsPDF();
+           
+            //pdf.fromHTML(document.querySelector('#PrintPDF'), 15, 15, { 'width': 170 });
+            //var pdfData = pdf.output();
+            alert(pdfData);
+            $.get("/Employee/ExportHTML", {
+                htmlcontent: pdfData
+            }
+                , function (data) { data; });     
+    }
+
     function convertHTMLtoPDF() {       
         const { jsPDF } = window.jspdf;
         const quality = 4 // Higher the better but larger file
@@ -451,6 +455,7 @@
         });
        
     }
+    
 </script>
 
 <script type="text/javascript">

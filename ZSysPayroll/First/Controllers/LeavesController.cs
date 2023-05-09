@@ -79,7 +79,7 @@ namespace First.Controllers
                                 Reportingmanager = Convert.ToString(sdr["ReportingPerson"] == DBNull.Value ? "" : sdr["ReportingPerson"]),
                                 LeaveBalance = Convert.ToInt32(sdr["LeaveBalance"] == DBNull.Value ? 0 : sdr["LeaveBalance"]),
                                 ApproveAction = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "" : sdr["ApproveAction"]),
-                                ReportingmanagerId = Convert.ToInt32(sdr["ReportingmanagerId"] == DBNull.Value ? 0 : sdr["ReportingmanagerId"]),
+                                ReportingmanagerId = Convert.ToInt32(sdr["ReportingmanagerId"] == DBNull.Value ? 1 : sdr["ReportingmanagerId"]),
                                 CasualLeaveBalance = Convert.ToInt32(sdr["CasualLeaveBalance"] == DBNull.Value ? 0 : sdr["CasualLeaveBalance"]),
                                 SickLeaveBalance = Convert.ToInt32(sdr["SickLeaveBalance"] == DBNull.Value ? 0 : sdr["SickLeaveBalance"])
                             });
@@ -168,7 +168,7 @@ namespace First.Controllers
                             oEmployeeLeave.Reportingmanager = Convert.ToString(sdr["ReportingmanagerName"] == DBNull.Value ? "" : sdr["ReportingmanagerName"]);
                             oEmployeeLeave.ApproveAction = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "Pending" : sdr["ApproveAction"]);
                             oEmployeeLeave.ApproveActionStatus = Convert.ToString(sdr["ApproveAction"] == DBNull.Value ? "Pending" : sdr["ApproveAction"]);
-                            oEmployeeLeave.ReportingmanagerId = Convert.ToInt32(sdr["Reportingmanager"] == DBNull.Value ? 0 : sdr["Reportingmanager"]);
+                            oEmployeeLeave.ReportingmanagerId = Convert.ToInt32(sdr["Reportingmanager"] == DBNull.Value ? 1 : sdr["Reportingmanager"]);
                             oEmployeeLeave.CasualLeaveBalance = Convert.ToInt32(sdr["CasualLeaveBalance"] == DBNull.Value ? 0 : sdr["CasualLeaveBalance"]);
                             oEmployeeLeave.SickLeaveBalance = Convert.ToInt32(sdr["SickLeaveBalance"] == DBNull.Value ? 0 : sdr["SickLeaveBalance"]);
                         }
@@ -524,7 +524,7 @@ namespace First.Controllers
             {
                 var getFromMail = (from s in context.Enrollments where s.Email == FromEmail select s).FirstOrDefault();
                 var getToMail = (from s in context.Enrollments where s.Email == ToEmail select s).FirstOrDefault();
-                //string resetURL = "https://localhost:44360/UserLogin/Index";
+               // string resetURL = "https://localhost:44360/Leaves/LeaveList/-2?mode=ApproveList";
                 string resetURL = "http://122.165.55.128/payroll/UserLogin/Index";
                 if (getFromMail != null)
                 {                   
@@ -557,7 +557,7 @@ namespace First.Controllers
                 mm.Body = body;
                 mm.IsBodyHtml = true;
                 // Add a carbon copy recipient.
-               // mm.CC.Add("hemalatha90cs@gmail.com");
+                mm.CC.Add("hemalatha90cs@gmail.com");
                mm.CC.Add("saravanan@zuddhisystems.com");
                 SmtpClient smtp = new SmtpClient("smtp.office365.com",587);
                 smtp.UseDefaultCredentials = false;
